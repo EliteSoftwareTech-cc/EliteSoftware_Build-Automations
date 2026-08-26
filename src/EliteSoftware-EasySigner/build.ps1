@@ -5,12 +5,12 @@ Write-Host "Building EliteSoftware-EasySigner (C++)..." -ForegroundColor Cyan
 
 $SourceFile = Join-Path $ScriptDir "main.cpp"
 $RcFile = Join-Path $ScriptDir "resources.rc"
-$Outx64 = Join-Path (Split-Path -Parent $ScriptDir) "x64\EliteEasySigner.exe"
-$Outx86 = Join-Path (Split-Path -Parent $ScriptDir) "x86\EliteEasySigner.exe"
+$Outx64 = Join-Path (Split-Path -Parent (Split-Path -Parent $ScriptDir)) "BuildOutputx64\EliteEasySigner.exe"
+$Outx86 = Join-Path (Split-Path -Parent (Split-Path -Parent $ScriptDir)) "BuildOutputx86\EliteEasySigner.exe"
 
 # Create output dirs if missing
-$Rootx64 = Join-Path (Split-Path -Parent $ScriptDir) "x64"
-$Rootx86 = Join-Path (Split-Path -Parent $ScriptDir) "x86"
+$Rootx64 = Join-Path (Split-Path -Parent (Split-Path -Parent $ScriptDir)) "BuildOutputx64"
+$Rootx86 = Join-Path (Split-Path -Parent (Split-Path -Parent $ScriptDir)) "BuildOutputx86"
 if (-not (Test-Path $Rootx64)) { New-Item -ItemType Directory -Path $Rootx64 | Out-Null }
 if (-not (Test-Path $Rootx86)) { New-Item -ItemType Directory -Path $Rootx86 | Out-Null }
 
@@ -43,3 +43,7 @@ if (Test-Path $ResOut64) { Remove-Item $ResOut64 -Force }
 if (Test-Path $ResOut32) { Remove-Item $ResOut32 -Force }
 
 Write-Host "Build Complete!" -ForegroundColor Cyan
+
+
+
+

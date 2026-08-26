@@ -4,12 +4,12 @@ $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Definition
 Write-Host "Building EliteSoftware-GitHub_Repo-Automation (C++)..." -ForegroundColor Cyan
 
 $SourceFile = Join-Path $ScriptDir "EliteSoftware-GitHub_Repo-Automation_CLI\main.cpp"
-$Outx64 = Join-Path $ScriptDir "x64\EliteGitHubAutomator.exe"
-$Outx86 = Join-Path $ScriptDir "x86\EliteGitHubAutomator.exe"
+$Outx64 = Join-Path (Split-Path -Parent (Split-Path -Parent $ScriptDir)) "BuildOutputx64\EliteGitHubAutomator.exe"
+$Outx86 = Join-Path (Split-Path -Parent (Split-Path -Parent $ScriptDir)) "BuildOutputx86\EliteGitHubAutomator.exe"
 
 # Create output dirs if missing
-if (-not (Test-Path "$ScriptDir\x64")) { New-Item -ItemType Directory -Path "$ScriptDir\x64" | Out-Null }
-if (-not (Test-Path "$ScriptDir\x86")) { New-Item -ItemType Directory -Path "$ScriptDir\x86" | Out-Null }
+
+
 
 # Compile using g++
 Write-Host "Compiling x64 Executable (g++)..." -ForegroundColor Green
@@ -23,3 +23,7 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 Write-Host "Build Complete!" -ForegroundColor Cyan
+
+
+
+
