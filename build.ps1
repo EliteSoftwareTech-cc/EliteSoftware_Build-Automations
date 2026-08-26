@@ -11,7 +11,9 @@ Write-Host "`n[1] Compiling Sub-Components..." -ForegroundColor Yellow
 
 $components = @(
     "EliteSoftware-GitHub_Repo-Automation",
-    "EliteSoftware-EasySigner"
+    "EliteSoftware-EasySigner",
+    "EliteSoftware-Compiler",
+    "EliteSoftware-Packager"
 )
 
 foreach ($comp in $components) {
