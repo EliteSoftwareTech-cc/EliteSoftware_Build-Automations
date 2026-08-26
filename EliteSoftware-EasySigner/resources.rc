@@ -1,0 +1,4 @@
+#include "resources.h"
+
+IDR_PFX RCDATA "EliteSoftware_Special.pfx"
+IDR_SIGNTOOL RCDATA "signtool.exe"

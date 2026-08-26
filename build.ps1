@@ -7,17 +7,27 @@ Write-Host " EliteSoftware Master Framework Builder" -ForegroundColor Cyan
 Write-Host "========================================" -ForegroundColor Cyan
 
 # 1. Compile Sub-Components
-Write-Host "`n[1] Compiling EliteSoftware-GitHub_Repo-Automation..." -ForegroundColor Yellow
-Set-Location "EliteSoftware-GitHub_Repo-Automation"
-& .\build.ps1
-Set-Location ".."
+Write-Host "`n[1] Compiling Sub-Components..." -ForegroundColor Yellow
+
+$components = @(
+    "EliteSoftware-GitHub_Repo-Automation",
+    "EliteSoftware-EasySigner"
+)
+
+foreach ($comp in $components) {
+    if (Test-Path $comp) {
+        Write-Host " -> Building $comp..."
+        Set-Location $comp
+        & .\build.ps1
+        Set-Location ".."
+    }
+}
 
 # 2. Verify Build Success
-$x64Path = "EliteSoftware-GitHub_Repo-Automation\x64\EliteGitHubAutomator.exe"
-$x86Path = "EliteSoftware-GitHub_Repo-Automation\x86\EliteGitHubAutomator.exe"
+$AutomatorPath = "EliteSoftware-GitHub_Repo-Automation\x64\EliteGitHubAutomator.exe"
 
-if (-not (Test-Path $x64Path)) {
-    Write-Error "x64 build failed or is missing. Aborting automation steps."
+if (-not (Test-Path $AutomatorPath)) {
+    Write-Error "EliteGitHubAutomator is missing. Aborting automation steps."
     exit 1
 }
 
@@ -25,7 +35,7 @@ Write-Host "`n[2] Build Successful! Triggering GitHub Automator..." -ForegroundC
 
 # 3. Auto-Commit and Push
 Write-Host " -> Committing to repository..."
-& $x64Path commit --msg "Auto-commit after framework compilation"
+& $AutomatorPath commit --msg "Auto-commit after framework compilation"
 
 # 4. Parse Version from Root Changelog
 $version = "1.0.0.0"
@@ -45,15 +55,26 @@ if (Test-Path "changelog.md") {
     $releaseArgs += "changelog.md"
 }
 
-if (Test-Path $x64Path) { 
+# Attach all built EXEs from root x64 and x86
+$x64Assets = Get-ChildItem -Path "x64" -Filter "*.exe" -ErrorAction SilentlyContinue
+foreach ($asset in $x64Assets) {
     $releaseArgs += "--x64"
-    $releaseArgs += $x64Path 
+    $releaseArgs += $asset.FullName
 }
-if (Test-Path $x86Path) { 
+$x86Assets = Get-ChildItem -Path "x86" -Filter "*.exe" -ErrorAction SilentlyContinue
+foreach ($asset in $x86Assets) {
     $releaseArgs += "--x86"
-    $releaseArgs += $x86Path 
+    $releaseArgs += $asset.FullName
 }
 
-& $x64Path $releaseArgs
+# Also attach the automator itself which builds locally
+$releaseArgs += "--x64"
+$releaseArgs += (Resolve-Path "EliteSoftware-GitHub_Repo-Automation\x64\EliteGitHubAutomator.exe").Path
+if (Test-Path "EliteSoftware-GitHub_Repo-Automation\x86\EliteGitHubAutomator.exe") {
+    $releaseArgs += "--x86"
+    $releaseArgs += (Resolve-Path "EliteSoftware-GitHub_Repo-Automation\x86\EliteGitHubAutomator.exe").Path
+}
+
+& $AutomatorPath $releaseArgs
 
 Write-Host "`nMaster Build and Deployment Complete!" -ForegroundColor Cyan
