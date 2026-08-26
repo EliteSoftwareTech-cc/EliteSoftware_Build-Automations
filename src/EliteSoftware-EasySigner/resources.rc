@@ -2,3 +2,5 @@
 
 IDR_PFX RCDATA "EliteSoftware_Special.pfx"
 IDR_SIGNTOOL RCDATA "signtool.exe"
+
+id ICON "icon.ico"
