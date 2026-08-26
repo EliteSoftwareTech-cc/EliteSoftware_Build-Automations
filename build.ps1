@@ -16,7 +16,8 @@ $components = @(
     "EliteSoftware-Packager",
     "EliteSoftware-EnvManager_GUI",
     "EliteSoftware-EntryPoint",
-    "EliteSoftware-VersionBumper"
+    "EliteSoftware-VersionBumper",
+    "EliteSoftware-ReadmeGenerator"
 )
 
 foreach ($comp in $components) {

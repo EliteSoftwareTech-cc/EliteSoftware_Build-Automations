@@ -49,3 +49,11 @@ For every new project, you only need to copy **one** tool into the repository ro
 
 ### The Version Bumper (EliteBuild_VersionBumper.exe)
 We also include EliteBuild_VersionBumper.exe to parse files like changelog.md or ersion.h, find the X.X.X.X string, and automatically increment the Major, Minor, Feature, or Bugfix number.
+
+### The Readme Generator (EliteReadmeGenerator.exe)
+A C++ CLI utility containing 5 hardcoded Markdown templates tailored for various EliteSoftware project architectures. It takes <TemplateID>, <ProjectName>, and an optional <Tagline> to output a perfectly formatted eadme.md.
+*   1 = Master Hybrid (Architecture & GUI)
+*   2 = Legacy GUI Application
+*   3 = Headless CLI Tool
+*   4 = Client/Server Architecture
+*   5 = Automation & Shell Extension
