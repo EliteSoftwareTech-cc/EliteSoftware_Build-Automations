@@ -78,7 +78,7 @@ bool UpdateVersionInFile(const std::string& filePath, const std::string& newVers
     }
 
     // Regex for RC string blocks: VALUE "FileVersion", "1.0.0.0"
-    std::regex rcStringRegex(R"((VALUE\s+"(?:FileVersion|ProductVersion)",\s+")\d+\.\d+\.\d+\.\d+("))");
+    std::regex rcStringRegex(R"REGEX((VALUE\s+"(?:FileVersion|ProductVersion)",\s+")\d+\.\d+\.\d+\.\d+("))REGEX");
     if (std::regex_search(content, rcStringRegex)) {
         content = std::regex_replace(content, rcStringRegex, "$1" + newVersionStr + "$2");
         changed = true;
