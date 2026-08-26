@@ -30,3 +30,22 @@ All new components and standalone CLI tools built for this framework MUST adhere
 - **Argument-Driven Overrides:** Every project-specific command, string, or action that would normally be hardcoded must become an argument so the tool is 100% reusable across any project.
 - **Dedicated Component Documentation:** Every individual component must have its own `.md` file located at its root outlining its specific CLI features and parameters.
 - **Universal Help System:** Every tool and subcommand must implement robust help flag parsing responding to `/help`, `//help`, `-help`, `--help`, `-?`, and `--?`.
+
+## ⚙️ Environment Variables & Global Access
+
+We have instituted a new standard for reusing the **EliteBuild CLI Tools**. Instead of dropping these 8 components into every single project folder, they only need to exist **once** globally on the system (usually residing in Z:\EliteSoftware-Projects\EliteSoftware_Build-Automations\BuildOutputx64).
+
+To achieve this, we use the custom EliteSoftware Environment Manager UI to set up system environment variables:
+*   ELITE_BUILD_X64: Points to the 64-bit compiled EXEs.
+*   ELITE_BUILD_X86: Points to the 32-bit compiled EXEs.
+
+The **Environment Manager GUI** will also append these locations to your system %PATH%, meaning you can call EliteBuild_Compiler.exe from any terminal, anywhere.
+
+### The Entry Point (EliteBuild.exe)
+For every new project, you only need to copy **one** tool into the repository root: EliteBuild.exe (The Entry Point). 
+1. EliteBuild.exe reads the local .config file.
+2. It looks up %ELITE_BUILD_X64% in the environment variables.
+3. It seamlessly passes the instructions to the globally installed backend tools.
+
+### The Version Bumper (EliteBuild_VersionBumper.exe)
+We also include EliteBuild_VersionBumper.exe to parse files like changelog.md or ersion.h, find the X.X.X.X string, and automatically increment the Major, Minor, Feature, or Bugfix number.

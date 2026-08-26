@@ -13,7 +13,10 @@ $components = @(
     "EliteSoftware-GitHub_Repo-Automation",
     "EliteSoftware-EasySigner",
     "EliteSoftware-Compiler",
-    "EliteSoftware-Packager"
+    "EliteSoftware-Packager",
+    "EliteSoftware-EnvManager_GUI",
+    "EliteSoftware-EntryPoint",
+    "EliteSoftware-VersionBumper"
 )
 
 foreach ($comp in $components) {
