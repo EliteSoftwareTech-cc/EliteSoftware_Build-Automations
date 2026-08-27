@@ -62,10 +62,14 @@ $components = @(
 foreach ($comp in $components) {
     $compPath = "src\$comp"
     if (Test-Path $compPath) {
-        Write-Host " -> Building $comp..."
-        Set-Location $compPath
-        & .\build.ps1
-        Set-Location $ScriptDir
+        if (Test-Path (Join-Path $compPath "build.ps1")) {
+            Write-Host " -> Building $comp..."
+            Set-Location $compPath
+            & .\build.ps1
+            Set-Location $ScriptDir
+        } else {
+            Write-Host " -> Skipping $comp (No build.ps1 found)"
+        }
     }
 }
 
@@ -128,6 +132,7 @@ foreach ($asset in $x86Assets) {
 & $AutomatorPath $releaseArgs
 
 Write-Host "`nMaster Build and Deployment Complete!" -ForegroundColor Cyan
+
 
 
 
