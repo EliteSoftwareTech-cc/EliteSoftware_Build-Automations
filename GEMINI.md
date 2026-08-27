@@ -142,3 +142,7 @@ The master tools have been aggregated and compiled directly into the root BuildO
 - **Intent**: Direct replacement of the Main Application Icon (RT_GROUP_ICON) inside a compiled executable, immediately followed by a PE Checksum Recalculation (Rebase) using imagehlp.dll. This ensures the .exe remains structurally valid and ready for Authenticode signing.
 - **Location / File Structure**: Source is in src\EliteSoftware-IconReplacer. Executable is EliteIconReplacer.exe.
 - **Usage for Agents**: Pass --exe <target.exe> --icon <source.ico> to inject the new icon and repair the checksum.
+
+## 🛡️ File Access Protocol (The Symlink Rule)
+- **Rule:** When AI agents need to utilize or interact with files, scripts, or assets located in other directories or projects, you MUST use EliteSymlinker.exe to create a symbolic link or hard link instead of moving (Copy-Item / Move-Item) the files. 
+- **Why:** This guarantees you are always referencing the absolute latest master version of the file across the system and entirely eliminates the risk of accidentally moving or deleting the original source files.

@@ -22,3 +22,5 @@ This tracker monitors the status of our native C++ CLI rewrites.
 - [ ] **Tool #18:** EliteDummyDllGen.exe (Testing Stub Compiler)
 
 
+
+- [x] **Tool #19:** EliteTaskAssassin.exe (Dynamic Process Killer)
