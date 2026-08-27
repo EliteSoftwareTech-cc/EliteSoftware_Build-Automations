@@ -132,3 +132,13 @@ The master tools have been aggregated and compiled directly into the root BuildO
 
 ## Safe File Deletion Protocol
 - **Rule:** ALL file deletions performed by agents MUST utilize the Windows Recycle Bin (or equivalent safe-trash mechanism) instead of permanent deletion, UNLESS the file is too large to fit in the recycle bin.
+
+### 10. RC/RES Manager
+- **Intent**: Automates .rc (Resource Script) generation and acts as a direct wrapper for windres.exe to compile them into .res objects.
+- **Location / File Structure**: Source is in src\EliteSoftware-RCManager. Executable is EliteRCManager.exe.
+- **Usage for Agents**: Provide --rc <out.rc> --res <out.res> --icon <icon.ico> to generate and compile.
+
+### 11. Smart Icon Replacer & PE Rebuilder
+- **Intent**: Direct replacement of the Main Application Icon (RT_GROUP_ICON) inside a compiled executable, immediately followed by a PE Checksum Recalculation (Rebase) using imagehlp.dll. This ensures the .exe remains structurally valid and ready for Authenticode signing.
+- **Location / File Structure**: Source is in src\EliteSoftware-IconReplacer. Executable is EliteIconReplacer.exe.
+- **Usage for Agents**: Pass --exe <target.exe> --icon <source.ico> to inject the new icon and repair the checksum.

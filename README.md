@@ -85,6 +85,12 @@ Here’s the showroom lineup of tools included in this absolute unit of a framew
     *   **Why we built it:** Because git commits are great, but having an unbreakable native Windows Image archive of your source code when things go catastrophically wrong is even better.
 
 ### 🎨 The Precision Instruments
+*   **EliteRCManager.exe (The Resource Forger)**
+    *   **The Features:** Fully automates the dynamic generation of .rc files and wraps windres.exe to instantly compile them into bindable .res objects.
+    *   **Why we built it:** Because writing raw resource script coordinates by hand is masochism, and typing windres arguments over and over gets old fast.
+*   **EliteIconReplacer.exe (The PE Rebuilder)**
+    *   **The Features:** Directly rips and replaces the embedded RT_GROUP_ICON of any compiled executable, then instantly calculates and rewrites a perfectly valid PE Header Checksum using imagehlp.dll.
+    *   **Why we built it:** Standard resource hacking ruins the PE checksum, which makes Windows Authenticode signing fail. This tool does the dirty work *and* mathematically rebases the header so the binary remains pristine.
 
 *   **ResourceAlchemyHacker_CLI.exe (The PE Surgeon)**
     *   **The Features:** Rips open .exe and .dll files to inject, extract, or mutate RT_ICON and RT_STRING payloads without breaking the structural integrity of the binary.
@@ -125,4 +131,5 @@ Expect the unexpected. Embrace the chaos. And have fun!
 <div align="center"> <a href='https://i.postimg.cc/DZTjtNg1/Elite-Software-Company-Simulator-LOGO.png' target='_blank'><img src='https://i.postimg.cc/DZTjtNg1/Elite-Software-Company-Simulator-LOGO.png' border='0' alt='Elite-Software-Client' width="250"></a> &nbsp;&nbsp;&nbsp;&nbsp; <a href='https://i.postimg.cc/85mKDbX8/Elite-Software-Company-Logo.png' target='_blank'><img src='https://i.postimg.cc/85mKDbX8/Elite-Software-Company-Logo.png' border='0' alt='Elite-Software-LOGO' width="250"></a> </div>
 
 ---
+
 

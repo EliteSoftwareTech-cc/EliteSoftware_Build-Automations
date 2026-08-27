@@ -16,7 +16,7 @@ $components = @(
     "EliteSoftware-Packager",
     "EliteSoftware-EnvManager_GUI",
     "EliteSoftware-EntryPoint",
-    "EliteSoftware-VersionBumper",`n    "EliteSoftware-CLSIDGenerator",`n    "EliteSoftware-SmartRegsvr",`n    "EliteSoftware-InnoCreator",
+    "EliteSoftware-VersionBumper",`n    "EliteSoftware-CLSIDGenerator",`n    "EliteSoftware-SmartRegsvr",`n    "EliteSoftware-InnoCreator",`n    "EliteSoftware-RCManager",`n    "EliteSoftware-IconReplacer",
     "EliteSoftware-ReadmeGenerator",
     "EliteSoftware-BuildLocator"
 )
@@ -90,4 +90,5 @@ foreach ($asset in $x86Assets) {
 & $AutomatorPath $releaseArgs
 
 Write-Host "`nMaster Build and Deployment Complete!" -ForegroundColor Cyan
+
 
