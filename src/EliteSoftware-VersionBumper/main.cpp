@@ -29,7 +29,7 @@ void CheckEULA() {
         } else {
             SetConsoleTitleA("EliteSoftware Tool (Ai Mode)");
         }
-        WriteEliteLog("AI Mode active. Bypassing EULA prompt.");
+        std::cout << "AI Mode active. Bypassing EULA prompt.\n";
         return;
     }
     HKEY hKey;
@@ -241,6 +241,7 @@ int main(int argc, char* argv[]) {
     
     return 0;
 }
+
 
 
 

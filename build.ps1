@@ -10,13 +10,44 @@ Write-Host "========================================" -ForegroundColor Cyan
 Write-Host "`n[1] Compiling Sub-Components..." -ForegroundColor Yellow
 
 $components = @(
-    "EliteSoftware-GitHub_Repo-Automation",
-    "EliteSoftware-EasySigner",
-    "EliteSoftware-Compiler",
-    "EliteSoftware-Packager",
-    "EliteSoftware-EnvManager_GUI",
+    "FileSplitter_GUI",
+    "IconManager_CLI",
+    "IcoToPngConverter_CLI",
+    "PsExec64Launcher_GUI",
+    "ResourceAlchemyHacker_CLI",
+    "ResourceAlchemyHacker_GUI",
+    "ResourceAlchemyHacker_ShellExt",
     "EliteSoftware-EntryPoint",
-    "EliteSoftware-VersionBumper",`n    "EliteSoftware-CLSIDGenerator",`n    "EliteSoftware-SmartRegsvr",`n    "EliteSoftware-InnoCreator",`n    "EliteSoftware-RCManager",`n    "EliteSoftware-IconReplacer",`n    "EliteSoftware-Symlinker",`n    "EliteSoftware-DuplicateSweeper",`n    "EliteSoftware-SiteCompiler",`n    "EliteSoftware-ShortcutForge",`n    "EliteSoftware-DocConverter",`n    "EliteSoftware-PSWrapper",`n    "EliteSoftware-RegSnapshot",`n    "EliteSoftware-TaskAssassin",`n    "EliteSoftware-EnvManager",`n    "EliteSoftware-HostConfigurator",`n    "EliteSoftware-ComLoader",`n    "EliteSoftware-ServiceForge",`n    "EliteSoftware-DummyDllGen",`n    "EliteSoftware-CertManager",`n    "EliteSoftware-AssetManager",`n    "EliteSoftware-LaunchAsTI",`n    "EliteSoftware-MetaStamper",`n    "EliteSoftware-ADBManager",`n    "EliteSoftware-RepoCloner",`n    "EliteSoftware-ExecPolToggle",
+    "EliteSoftware-VersionBumper",
+    "EliteSoftware-CLSIDGenerator",
+    "EliteSoftware-SmartRegsvr",
+    "EliteSoftware-InnoCreator",
+    "EliteSoftware-RCManager",
+    "EliteSoftware-IconReplacer",
+    "EliteSoftware-Symlinker",
+    "EliteSoftware-DuplicateSweeper",
+    "EliteSoftware-SiteCompiler",
+    "EliteSoftware-ShortcutForge",
+    "EliteSoftware-DocConverter",
+    "EliteSoftware-PSWrapper",
+    "EliteSoftware-RegSnapshot",
+    "EliteSoftware-TaskAssassin",
+    "EliteSoftware-EnvManager",
+    "EliteSoftware-HostConfigurator",
+    "EliteSoftware-ComLoader",
+    "EliteSoftware-ServiceForge",
+    "EliteSoftware-DummyDllGen",
+    "EliteSoftware-CertManager",
+    "EliteSoftware-AssetManager",
+    "EliteSoftware-LaunchAsTI",
+    "EliteSoftware-MetaStamper",
+    "EliteSoftware-ADBManager",
+    "EliteSoftware-RepoCloner",
+    "EliteSoftware-ExecPolToggle",
+    "EliteSoftware-NetworkManager",
+    "EliteSoftware-ClipSaver",
+    "EliteSoftware-ProfileManager",
+    "EliteSoftware-Win7Enabler",
     "EliteSoftware-ReadmeGenerator",
     "EliteSoftware-BuildLocator"
 )
@@ -90,6 +121,10 @@ foreach ($asset in $x86Assets) {
 & $AutomatorPath $releaseArgs
 
 Write-Host "`nMaster Build and Deployment Complete!" -ForegroundColor Cyan
+
+
+
+
 
 
 
