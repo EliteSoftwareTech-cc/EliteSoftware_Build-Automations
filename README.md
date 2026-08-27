@@ -9,8 +9,11 @@ This project serves as the digital station for EliteSoftware's engineering initi
 
 ### 🔗 Quick Links
 - 📖 [Continuous Changelog](changelog.md)
-- 🌐 [Official Web Landing Page](index.html)
 - 🧠 [GEMINI AI Architecture Rules](GEMINI.md)
+- 🏗️ [Architecture Overview](EliteBuildChain_Architecture.md)
+- ⚙️ [Config Schema Documentation](EliteBuildChain_ConfigSchema.md)
+- 🔮 [Upcoming Features & Implementation Plan](ImplementationPlan.md)
+- 🌐 [Official Web Landing Page](index.html)
 
 ## 🚀 Mission Protocol
 EliteSoftwareTech rejects modern "flat" design in favor of skeuomorphic depth and absolute user agency. We believe software should be an immersive workstation environment, not a mobile-friendly toy.
@@ -122,3 +125,4 @@ Expect the unexpected. Embrace the chaos. And have fun!
 <div align="center"> <a href='https://i.postimg.cc/DZTjtNg1/Elite-Software-Company-Simulator-LOGO.png' target='_blank'><img src='https://i.postimg.cc/DZTjtNg1/Elite-Software-Company-Simulator-LOGO.png' border='0' alt='Elite-Software-Client' width="250"></a> &nbsp;&nbsp;&nbsp;&nbsp; <a href='https://i.postimg.cc/85mKDbX8/Elite-Software-Company-Logo.png' target='_blank'><img src='https://i.postimg.cc/85mKDbX8/Elite-Software-Company-Logo.png' border='0' alt='Elite-Software-LOGO' width="250"></a> </div>
 
 ---
+
