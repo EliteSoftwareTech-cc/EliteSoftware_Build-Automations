@@ -1,0 +1,32 @@
+F:
+Some more text here. Hello World! 😊 Alpha-β-γ-δ-ε 漢字-テスト. 
+Line 2 with LF:
+Line 3 with CRLF:
+Some more text here. Hello World! 😊 Alpha-β-γ-δ-ε 漢字-テスト. 
+Line 2 with LF:
+Line 3 with CRLF:
+Some more text here. Hello World! 😊 Alpha-β-γ-δ-ε 漢字-テスト. 
+Line 2 with LF:
+Line 3 with CRLF:
+Some more text here. Hello World! 😊 Alpha-β-γ-δ-ε 漢字-テスト. 
+Line 2 with LF:
+Line 3 with CRLF:
+Some more text here. Hello World! 😊 Alpha-β-γ-δ-ε 漢字-テスト. 
+Line 2 with LF:
+Line 3 with CRLF:
+Some more text here. Hello World! 😊 Alpha-β-γ-δ-ε 漢字-テスト. 
+Line 2 with LF:
+Line 3 with CRLF:
+Some more text here. Hello World! 😊 Alpha-β-γ-δ-ε 漢字-テスト. 
+Line 2 with LF:
+Line 3 with CRLF:
+Some more text here. Hello World! 😊 Alpha-β-γ-δ-ε 漢字-テスト. 
+Line 2 with LF:
+Line 3 with CRLF:
+Some more text here. Hello World! 😊 Alpha-β-γ-δ-ε 漢字-テスト. 
+Line 2 with LF:
+Line 3 with CRLF:
+Some more text here. Hello World! 😊 Alpha-β-γ-δ-ε 漢字-テスト. 
+Line 2 with LF:
+Line 3 with CRLF:
+Some more text here. Hello World! 😊 Alpha-β-γ-

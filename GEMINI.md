@@ -36,8 +36,8 @@ All new components and standalone CLI tools built for this framework MUST adhere
 We have instituted a new standard for reusing the **EliteBuild CLI Tools**. Instead of dropping these 8 components into every single project folder, they only need to exist **once** globally on the system (usually residing in Z:\EliteSoftware-Projects\EliteSoftware_Build-Automations\BuildOutputx64).
 
 To achieve this, we use the custom EliteSoftware Environment Manager UI to set up system environment variables:
-*   ELITE_BUILD_X64: Points to the 64-bit compiled EXEs.
-*   ELITE_BUILD_X86: Points to the 32-bit compiled EXEs.
+*   ELITE_BUILD_X64: Contains a semicolon-delimited list of the absolute file paths to each individual 64-bit compiled EXE.
+*   ELITE_BUILD_X86: Contains a semicolon-delimited list of the absolute file paths to each individual 32-bit compiled EXE.
 
 The **Environment Manager GUI** will also append these locations to your system %PATH%, meaning you can call EliteBuild_Compiler.exe from any terminal, anywhere.
 
@@ -57,3 +57,78 @@ A C++ CLI utility containing 5 hardcoded Markdown templates tailored for various
 *   3 = Headless CLI Tool
 *   4 = Client/Server Architecture
 *   5 = Automation & Shell Extension
+
+### 🤖 LLM Autonomous Execution (Secret Bypass)
+When invoking any native EliteSoftware C++ CLI tools (like EliteBuild.exe or EliteVersionBumper.exe), pass the --ai-mode argument. 
+This is an undocumented flag that completely bypasses the mandatory End User License Agreement (EULA) interactive prompts, allowing LLM agents to execute builds and scans completely headlessly without deadlocking the terminal. The terminal title will update to (Ai Mode) while the process runs.
+
+## 🧰 Integrated Master Tools & Utilities (Agent Reference Guide)
+
+This section serves as a comprehensive reference for AI agents interacting with the EliteSoftware Master Tools suite. These tools are natively integrated into the EliteSoftware_Build-Automations framework and must be utilized to maintain system purity.
+
+### ⚙️ Master Tool Environment Variables & Execution Rules
+The master tools have been aggregated and compiled directly into the root BuildOutputx64 and BuildOutputx86 folders.
+
+- **ELITE_BUILD_X64 & ELITE_BUILD_X86**: 
+  - These are **System and User Environment Variables** that contain a **semicolon-delimited list of absolute paths** to each individual executable (e.g., Z:\...\BuildOutputx64\FileSplitter.exe;Z:\...\BuildOutputx64\icon_maker.exe).
+  - You can parse these variables in PowerShell using $env:ELITE_BUILD_X64 -split ';' to programmatically locate a specific binary.
+  - Additionally, both variables have been injected into the system %PATH%. This means you can invoke these tools *headlessly by name* from any directory (e.g., executing icon_maker.exe directly).
+
+- **The --ai-mode Flag**:
+  - Most native C++ CLI tools in this suite (like EliteEasySigner.exe, EliteBuild.exe) require the --ai-mode argument when executed by an LLM agent. This flag bypasses mandatory EULA confirmation prompts and prevents terminal deadlocks.
+
+### 1. File Splitter For AI Upload
+- **Intent**: Safely splitting massive text, log, or source code files into chunked .txt files without breaking CR/LF boundaries. Crucial for overcoming LLM context window limits.
+- **Location / File Structure**: Source is in src\FileSplitter_GUI. Executable is FileSplitter.exe (x64/x86).
+- **Usage for Agents**: Currently a GUI-centric tool. If required to execute programmatically, verify if it accepts CLI arguments, otherwise invoke via UI automation or stick to standard powershell chunking for background tasks.
+- **Arguments**: N/A (GUI Tool).
+
+### 2. Icon Image Management CLI Tool
+- **Intent**: Pragmatically convert images (PNG, JPG, BMP, etc.) into high-quality multi-resolution .ico icon containers, OR perform batch extraction of all embedded RT_BITMAP/RT_ICON payloads from PE binaries (.exe, .dll).
+- **Location / File Structure**: Source is in src\IconManager_CLI. Executable is icon_maker.exe.
+- **Usage for Agents**: Native C++ Win32 execution. Highly recommended for all icon generation tasks. 
+- **Arguments**: icon_maker.exe <input_file(s)> [output_file] [options]
+  - <input_file>: Path to image or PE binary. If it's a PE binary and output_file is omitted, it extracts ALL icons into a subfolder.
+  - --remove-halo: Strips magenta/pink background colors (classic transparency key).
+  - --remove-bg: Smart background flood-fill removal.
+
+### 3. Ico To Png Converter
+- **Intent**: Lightweight utility to extract every resolution frame embedded within an .ico file and explode them into separate .png files inside a Converted_PNGs subdirectory.
+- **Location / File Structure**: Source is in src\IcoToPngConverter_CLI. Executable is IcoToPngConverter.exe.
+- **Usage for Agents**: Execute to break down multi-res icons into verifiable PNGs. 
+- **Arguments**: IcoToPngConverter.exe <file.ico>
+
+### 4. PsExec64 Launcher
+- **Intent**: A WinForms wrapper for PsExec64.exe designed to solve UIPI (User Interface Privilege Isolation) issues. It runs unelevated to preserve drag-and-drop mechanics but executes payloads with NT AUTHORITY\SYSTEM or other elevated tokens.
+- **Location / File Structure**: Source is in src\PsExec64Launcher_GUI. Executables are PsExec64-Launcher_x64.exe and PsExec64-Launcher_x86.exe.
+- **Usage for Agents**: Useful for configuring system-level execution shortcuts.
+
+### 5. Resource Alchemy Hacker
+- **Intent**: A native C++ Win32 PE resource editor and extractor. Replaces classic tools to offer high-performance modification of RT_ICON, RT_STRING, RT_DIALOG, and RT_VERSION blocks inside Windows binaries.
+- **Location / File Structure**: Source is split across src\ResourceAlchemyHacker_GUI, src\ResourceAlchemyHacker_CLI, and src\ResourceAlchemyHacker_ShellExt. The backend executables are ResourceAlchemyHacker_CLI.exe and ResourceAlchemyHacker_ShellExt.dll.
+- **Usage for Agents**: Use the CLI backend (ResourceAlchemyHacker_CLI.exe) to programmatically inject or extract .ico resources or manifest strings from compiled .exe or .dll files without breaking their structural integrity.
+
+### 6. CLSID / GUID Generator
+- **Intent**: Lightweight utility to generate unique CLSIDs, store them in a local clsid_database.txt, and cross-reference with the Windows Registry (HKCR\CLSID) to ensure they aren't already in use.
+- **Location / File Structure**: Source is in src\EliteSoftware-CLSIDGenerator. Executable is EliteCLSIDGenerator.exe.
+- **Usage for Agents**: Provide --name <program> to generate and log a GUID.
+
+### 7. Smart Drop Handler (DLL/PE Register)
+- **Intent**: Automatically detects whether a dropped PE/DLL file is 32-bit or 64-bit and routes it to the correct egsvr32.exe (SysWOW64 for 32-bit, System32 for 64-bit).
+- **Location / File Structure**: Source is in src\EliteSoftware-SmartRegsvr. Executable is EliteSmartRegsvr.exe.
+- **Usage for Agents**: Pass --file <path> to automatically register the DLL.
+
+### 8. Inno Setup Creator
+- **Intent**: Hosts 3 default installation templates (Basic EXE, DLL Service, Full Suite) and acts as a wrapper for ISCC.exe to quickly generate and compile Inno Setup installers.
+- **Location / File Structure**: Source is in src\EliteSoftware-InnoCreator. Executable is EliteInnoCreator.exe.
+- **Usage for Agents**: Use --generate --template <1|2|3> --out <path.iss> to generate, or --compile <path.iss> [args] to compile.
+
+### 9. EliteBuild (The Entry Point)
+- **Intent**: Orchestrator that natively reads the %ELITE_BUILD_X64% variable array, locates the backend tools, and executes them based on the local EliteBuild.config file. Eliminates the need for any uild.ps1 scripts in project repositories.
+- **Location / File Structure**: Source is in src\EliteSoftware-EntryPoint. Executable is EliteBuild.exe.
+- **Usage for Agents**: Drop a copy of EliteBuild.exe in the repo root. Run EliteBuild.exe --config <path> --tool <ToolName.exe> to selectively invoke tools.
+
+**Note on Interactive Mode**: All C++ CLI tools in this suite now feature an interactive console fallback mode. If executed directly (e.g., via double-click) without arguments, they will pause and prompt the user for the missing inputs. To suppress this behavior and run headlessly, agents MUST pass the --ai-mode argument.
+
+## Safe File Deletion Protocol
+- **Rule:** ALL file deletions performed by agents MUST utilize the Windows Recycle Bin (or equivalent safe-trash mechanism) instead of permanent deletion, UNLESS the file is too large to fit in the recycle bin.

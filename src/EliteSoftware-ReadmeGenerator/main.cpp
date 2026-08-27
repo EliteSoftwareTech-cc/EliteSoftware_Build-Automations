@@ -3,7 +3,90 @@
 #include <string>
 #include <regex>
 
+#include <windows.h>
+#include <chrono>
+#include <filesystem>
+#include <fstream>
 using namespace std;
+
+std::string __currentLogFile = "";
+
+std::string __GetExePath() {
+    char result[MAX_PATH];
+    return std::string(result, GetModuleFileNameA(NULL, result, MAX_PATH));
+}
+
+std::string __GetExeDir() {
+    std::string path = __GetExePath();
+    return path.substr(0, path.find_last_of("\\/"));
+}
+
+void WriteEliteLog(const std::string& message, const std::string& type = "INFO") {
+    if (__currentLogFile.empty()) {
+        std::string logDir = __GetExeDir() + "\\Logs";
+        if (!std::filesystem::exists(logDir)) std::filesystem::create_directories(logDir);
+        
+        auto now = std::chrono::system_clock::now();
+        std::time_t now_time = std::chrono::system_clock::to_time_t(now);
+        char timeStr[26];
+        ctime_s(timeStr, sizeof(timeStr), &now_time);
+        timeStr[24] = '\0';
+        std::string timeSafe = timeStr;
+        for (char& c : timeSafe) { if (c == ':' || c == ' ') c = '-'; }
+        
+        __currentLogFile = logDir + "\\EliteTool_Run_" + timeSafe + ".log";
+    }
+
+    std::ofstream logFile(__currentLogFile, std::ios_base::app);
+    if (logFile.is_open()) {
+        auto now = std::chrono::system_clock::now();
+        std::time_t now_time = std::chrono::system_clock::to_time_t(now);
+        char timeStr[26];
+        ctime_s(timeStr, sizeof(timeStr), &now_time);
+        timeStr[24] = '\0';
+        logFile << "[" << timeStr << "] [" << type << "] " << message << std::endl;
+    }
+    
+    if (type == "ERROR") std::cerr << "[" << type << "] " << message << "\n";
+    else std::cout << "[" << type << "] " << message << "\n";
+}
+
+void CheckEULA() {
+    if (strstr(GetCommandLineA(), "--ai-mode")) {
+        char currentTitle[512];
+        if (GetConsoleTitleA(currentTitle, 512) > 0) {
+            std::string newTitle = std::string(currentTitle) + " (Ai Mode)";
+            SetConsoleTitleA(newTitle.c_str());
+        } else {
+            SetConsoleTitleA("EliteSoftware Tool (Ai Mode)");
+        }
+        WriteEliteLog("AI Mode active. Bypassing EULA prompt.");
+        return;
+    }
+    HKEY hKey;
+    LSTATUS status = RegOpenKeyExA(HKEY_CURRENT_USER, "Software\\EliteSoftware\\EULA", 0, KEY_READ, &hKey);
+    if (status != ERROR_SUCCESS) {
+        std::cout << "\n======================================================\n";
+        std::cout << " EliteSoftwareTech Co. End User License Agreement\n";
+        std::cout << "======================================================\n";
+        std::cout << "By using this tool, you agree to absolute system purity.\n";
+        std::cout << "Do you accept? (Y/N): ";
+        std::string resp;
+        std::getline(std::cin, resp);
+        if (resp == "Y" || resp == "y" || resp == "yes") {
+            RegCreateKeyExA(HKEY_CURRENT_USER, "Software\\EliteSoftware\\EULA", 0, NULL, REG_OPTION_NON_VOLATILE, KEY_WRITE, NULL, &hKey, NULL);
+            DWORD val = 1;
+            RegSetValueExA(hKey, "Accepted", 0, REG_DWORD, (const BYTE*)&val, sizeof(val));
+            RegCloseKey(hKey);
+            WriteEliteLog("EULA Accepted. Registry updated.");
+        } else {
+            std::cerr << "EULA Rejected. Exiting.\n";
+            exit(1);
+        }
+    } else {
+        RegCloseKey(hKey);
+    }
+}
 
 void PrintHelp() {
     cout << "========================================" << endl;
@@ -256,8 +339,30 @@ Developed aggressively alongside Google's Gemini. Absolute System Purity.
 )REGEX";
 
 int main(int argc, char* argv[]) {
+    CheckEULA();
+    if (argc == 1) {
+        WriteEliteLog("No arguments provided. Falling back to interactive mode.");
+        std::cout << "\n[Interactive Mode] EliteReadmeGenerator\n";
+        std::cout << "Enter Template ID (1-5): ";
+        std::string tId;
+        std::getline(std::cin, tId);
+        
+        std::cout << "Enter Project Name: ";
+        std::string pName;
+        std::getline(std::cin, pName);
+        
+        std::cout << "Enter Tagline (optional): ";
+        std::string tLine;
+        std::getline(std::cin, tLine);
+        if (tLine.empty()) tLine = "An EliteSoftware Engineering Initiative.";
+
+        char* dummyArgv[] = { argv[0], (char*)tId.c_str(), (char*)pName.c_str(), (char*)tLine.c_str() };
+        argc = 4;
+        argv = dummyArgv;
+    }
     if (argc < 3) {
         PrintHelp();
+        if (!strstr(GetCommandLineA(), " --ai-mode")) { system("pause"); }
         return 1;
     }
 
@@ -267,6 +372,7 @@ int main(int argc, char* argv[]) {
 
     if (templateIdStr == "/help" || templateIdStr == "-help" || templateIdStr == "-?") {
         PrintHelp();
+        if (!strstr(GetCommandLineA(), " --ai-mode")) { std::cout << "\nPress any key to exit...\n"; system("pause"); }
         return 0;
     }
 
@@ -275,6 +381,7 @@ int main(int argc, char* argv[]) {
         templateId = stoi(templateIdStr);
     } catch (...) {
         cerr << "[ReadmeGenerator] ERROR: Invalid Template ID." << endl;
+        if (!strstr(GetCommandLineA(), " --ai-mode")) { system("pause"); }
         return 1;
     }
 
@@ -287,6 +394,7 @@ int main(int argc, char* argv[]) {
         case 5: selectedTemplate = TEMPLATE_5; break;
         default:
             cerr << "[ReadmeGenerator] ERROR: Template ID must be 1-5." << endl;
+            if (!strstr(GetCommandLineA(), " --ai-mode")) { system("pause"); }
             return 1;
     }
 
@@ -298,6 +406,7 @@ int main(int argc, char* argv[]) {
     ofstream outFile("readme.md");
     if (!outFile.is_open()) {
         cerr << "[ReadmeGenerator] ERROR: Could not open readme.md for writing in current directory." << endl;
+        if (!strstr(GetCommandLineA(), " --ai-mode")) { system("pause"); }
         return 1;
     }
 
@@ -305,5 +414,11 @@ int main(int argc, char* argv[]) {
     outFile.close();
 
     cout << "[ReadmeGenerator] Successfully generated readme.md using Template " << templateId << " for project '" << projectName << "'!" << endl;
+    if (!strstr(GetCommandLineA(), " --ai-mode")) { std::cout << "\nPress any key to exit...\n"; system("pause"); }
     return 0;
 }
+
+
+
+
+

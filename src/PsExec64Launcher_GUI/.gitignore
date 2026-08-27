@@ -1,0 +1,17 @@
+*.lnk
+.vscode/
+gh_bin/
+PsExec64-Launcher.xml
+Original_Unsigned-Components/
+PsExec64.exe
+test_icon.ps1
+test_paint2.ps1
+fix_events.ps1
+*.cab
+*.msi
+*.pdb
+*.log
+*.bak
+.DS_Store
+Thumbs.db
+Backups

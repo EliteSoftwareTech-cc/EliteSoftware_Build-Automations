@@ -1,0 +1,38 @@
+# ==============================================================================
+# .gitignore - File Splitter For AI Upload v1.2.0.0
+# EliteSoftwareTech Co.
+# ==============================================================================
+
+# Build Output Directories
+BuildOutput/
+BuildOutputx86/
+
+# Compiled Object Files
+*.o
+*.obj
+*.res.o
+
+# Binary Executables
+*.exe
+FileSplitter.exe
+test_engine.exe
+stress_harness.exe
+stress_test_engine.exe
+stress_test_engine_verify.exe
+test_x86.exe
+
+# Log Files
+*.log
+%SystemDrive%/EliteSoftware/Logs/
+
+# Temporary and Scratch Directories
+test_scratchpad/
+tests/py_test_scratchpad/
+*.tmp
+*.bak
+*.swp
+
+# OS Generated Files
+Thumbs.db
+Desktop.ini
+.ds_store

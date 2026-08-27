@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>EliteSoftware SDK Guide & Tools</title>
+    <style>
+        /* Classic 2010s Frutiger Aero / Win7 Aesthetic */
+        body {
+            font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+            background: linear-gradient(to bottom, #dbe9f4, #f5f8fa);
+            color: #333;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        #header {
+            background: linear-gradient(to bottom, #a7c7dc, #85b2d3);
+            border-bottom: 2px solid #5a88a8;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        #header h1 {
+            margin: 0;
+            color: #fff;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            font-size: 28px;
+        }
+        #container {
+            width: 900px;
+            margin: 20px auto;
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: flex;
+        }
+        #sidebar {
+            width: 200px;
+            background: #f0f4f8;
+            border-right: 1px solid #ddd;
+            padding: 10px;
+        }
+        #sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        #sidebar li {
+            margin-bottom: 5px;
+        }
+        #sidebar a {
+            text-decoration: none;
+            color: #005599;
+            font-weight: 600;
+            display: block;
+            padding: 8px;
+            border-radius: 4px;
+        }
+        #sidebar a:hover {
+            background: #dbe9f4;
+            color: #003366;
+        }
+        #content {
+            flex-grow: 1;
+            padding: 20px;
+        }
+        h2 {
+            color: #005599;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+        }
+        pre {
+            background: #f8f8f8;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        .tool-card {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            background: linear-gradient(to bottom, #fff, #f9f9f9);
+            box-shadow: inset 0 1px 0 #fff;
+        }
+        .tool-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #003366;
+        }
+    </style>
+</head>
+<body>
+
+<div id="header">
+    <h1>EliteSoftware Dev Platform & SDK Guide</h1>
+</div>
+
+<div id="container">
+    <div id="sidebar">
+        <ul>
+            <li><a href="#welcome">Welcome</a></li>
+            <li><a href="#setup">Environment Setup</a></li>
+            <li><a href="#tools">CLI Tools List</a></li>
+            <li><a href="#examples">Usage Examples</a></li>
+            <li><a href="#logging">Logging Standards</a></li>
+        </ul>
+    </div>
+    <div id="content">
+        <h2 id="welcome">Welcome to the EliteSoftware SDK</h2>
+        <p>This document serves as the official guide to the EliteSoftware native C++ build environment. Utilizing these tools allows you to maintain aesthetic compliance, enforce consistent versioning, generate rich documentation, and perfectly build Win32 applications.</p>
+
+        <h2 id="setup">Environment Setup & Global Paths</h2>
+        <p>The EliteSoftware Dev Environment uses custom nested path variables to ensure all tools are universally accessible without cluttering standard project directories.</p>
+        <div class="tool-card">
+            <div class="tool-title">EliteBuildLocator</div>
+            <p><strong>Description:</strong> Scans all drives to locate standard build tools (MSBuild, g++, windres, ISCC, etc.) and native Elite tools, injecting them into a custom system-wide path variable with newer tools prioritized.</p>
+            <p><strong>Path Variables Created:</strong> <code>%ELITE_BUILD_X64%</code> and <code>%ELITE_BUILD_X86%</code>.</p>
+            <p><strong>First Run:</strong> Automatically prompts the EliteSoftware EULA. Acceptance sets a registry marker under <code>HKCU\Software\EliteSoftware\EULA</code>.</p>
+        </div>
+
+        <h2 id="tools">CLI Tools & Utilities</h2>
+
+        <div class="tool-card">
+            <div class="tool-title">EliteBuild (The Entry Point)</div>
+            <p><strong>Description:</strong> The only executable required in a project root. Reads <code>EliteBuild.config</code> and orchestrates compilation via the global toolchain.</p>
+            <p><strong>Usage:</strong> <code>EliteBuild.exe</code></p>
+        </div>
+
+        <div class="tool-card">
+            <div class="tool-title">EliteVersionBumper</div>
+            <p><strong>Description:</strong> Natively parses C++, Headers, RC, and Config files to bump standard 4-decimal version numbers (Major.Minor.FeatureAdd.BugFix).</p>
+            <p><strong>Usage:</strong> <code>EliteBuild_VersionBumper.exe "C:\Path\To\File" major|minor|feature|bugfix</code></p>
+        </div>
+
+        <div class="tool-card">
+            <div class="tool-title">EliteReadmeGenerator</div>
+            <p><strong>Description:</strong> Flushes heavily formatted markdown templates directly into projects depending on the architecture type (1-5).</p>
+            <p><strong>Usage:</strong> <code>EliteReadmeGenerator.exe 1 "MyProject"</code></p>
+        </div>
+
+        <h2 id="examples">Usage & Examples</h2>
+        <p>If any tool is launched via double-click (no arguments provided), it falls back to an interactive console session to safely request parameters.</p>
+        <pre><code>C:\> EliteBuild_VersionBumper.exe
+[INFO] Interactive Mode Triggered.
+Please enter the file path to bump: changelog.md
+Please enter the part to bump (major/minor/feature/bugfix): bugfix
+[INFO] Successfully bumped version.
+</code></pre>
+
+        <h2 id="logging">Absolute Logging Standards</h2>
+        <p>Every single EliteSoftware CLI tool natively logs <strong>every action</strong> to its local directory (alongside the `.exe`). A timestamped `.log` file is instantiated upon every run, ensuring a perfect forensic trail of pipeline compilations.</p>
+    </div>
+</div>
+
+</body>
+</html>

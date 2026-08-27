@@ -5,7 +5,90 @@
 #include <algorithm>
 #include <direct.h> // For _getcwd
 
+#include <windows.h>
+#include <chrono>
+#include <filesystem>
+#include <fstream>
 using namespace std;
+
+std::string __currentLogFile = "";
+
+std::string __GetExePath() {
+    char result[MAX_PATH];
+    return std::string(result, GetModuleFileNameA(NULL, result, MAX_PATH));
+}
+
+std::string __GetExeDir() {
+    std::string path = __GetExePath();
+    return path.substr(0, path.find_last_of("\\/"));
+}
+
+void WriteEliteLog(const std::string& message, const std::string& type = "INFO") {
+    if (__currentLogFile.empty()) {
+        std::string logDir = __GetExeDir() + "\\Logs";
+        if (!std::filesystem::exists(logDir)) std::filesystem::create_directories(logDir);
+        
+        auto now = std::chrono::system_clock::now();
+        std::time_t now_time = std::chrono::system_clock::to_time_t(now);
+        char timeStr[26];
+        ctime_s(timeStr, sizeof(timeStr), &now_time);
+        timeStr[24] = '\0';
+        std::string timeSafe = timeStr;
+        for (char& c : timeSafe) { if (c == ':' || c == ' ') c = '-'; }
+        
+        __currentLogFile = logDir + "\\EliteTool_Run_" + timeSafe + ".log";
+    }
+
+    std::ofstream logFile(__currentLogFile, std::ios_base::app);
+    if (logFile.is_open()) {
+        auto now = std::chrono::system_clock::now();
+        std::time_t now_time = std::chrono::system_clock::to_time_t(now);
+        char timeStr[26];
+        ctime_s(timeStr, sizeof(timeStr), &now_time);
+        timeStr[24] = '\0';
+        logFile << "[" << timeStr << "] [" << type << "] " << message << std::endl;
+    }
+    
+    if (type == "ERROR") std::cerr << "[" << type << "] " << message << "\n";
+    else std::cout << "[" << type << "] " << message << "\n";
+}
+
+void CheckEULA() {
+    if (strstr(GetCommandLineA(), "--ai-mode")) {
+        char currentTitle[512];
+        if (GetConsoleTitleA(currentTitle, 512) > 0) {
+            std::string newTitle = std::string(currentTitle) + " (Ai Mode)";
+            SetConsoleTitleA(newTitle.c_str());
+        } else {
+            SetConsoleTitleA("EliteSoftware Tool (Ai Mode)");
+        }
+        WriteEliteLog("AI Mode active. Bypassing EULA prompt.");
+        return;
+    }
+    HKEY hKey;
+    LSTATUS status = RegOpenKeyExA(HKEY_CURRENT_USER, "Software\\EliteSoftware\\EULA", 0, KEY_READ, &hKey);
+    if (status != ERROR_SUCCESS) {
+        std::cout << "\n======================================================\n";
+        std::cout << " EliteSoftwareTech Co. End User License Agreement\n";
+        std::cout << "======================================================\n";
+        std::cout << "By using this tool, you agree to absolute system purity.\n";
+        std::cout << "Do you accept? (Y/N): ";
+        std::string resp;
+        std::getline(std::cin, resp);
+        if (resp == "Y" || resp == "y" || resp == "yes") {
+            RegCreateKeyExA(HKEY_CURRENT_USER, "Software\\EliteSoftware\\EULA", 0, NULL, REG_OPTION_NON_VOLATILE, KEY_WRITE, NULL, &hKey, NULL);
+            DWORD val = 1;
+            RegSetValueExA(hKey, "Accepted", 0, REG_DWORD, (const BYTE*)&val, sizeof(val));
+            RegCloseKey(hKey);
+            WriteEliteLog("EULA Accepted. Registry updated.");
+        } else {
+            std::cerr << "EULA Rejected. Exiting.\n";
+            exit(1);
+        }
+    } else {
+        RegCloseKey(hKey);
+    }
+}
 
 // Utility to get current directory name
 string getCurrentDirectoryName() {
@@ -36,8 +119,9 @@ void printGlobalHelp() {
 }
 
 void printInitHelp() {
-    cout << "Usage: EliteGitHubAutomator.exe init [options]\n\n";
+        cout << "Usage: EliteGitHubAutomator.exe init [options]\n\n";
     cout << "Options:\n";
+    cout << "  --org <string>      Target GitHub Organization (Defaults to personal account).\n";
     cout << "  --name <string>     Repository name. (Default: current directory name)\n";
     cout << "  --public            Make the remote repository public. (Default: private)\n";
     cout << "  --msg <string>      Initial commit message. (Default: 'Initial repository structure commit')\n";
@@ -69,18 +153,21 @@ int handleInit(const vector<string>& args) {
     for (const string& arg : args) {
         if (isHelpFlag(arg)) {
             printInitHelp();
+            if (!strstr(GetCommandLineA(), " --ai-mode")) { std::cout << "\nPress any key to exit...\n"; system("pause"); }
             return 0;
         }
     }
 
-    string name = getCurrentDirectoryName();
+        string name = getCurrentDirectoryName();
     bool isPublic = false;
     string msg = "Initial repository structure commit";
+    string orgName = "";
 
     for (size_t i = 0; i < args.size(); ++i) {
         if (args[i] == "--public") isPublic = true;
         else if (args[i] == "--name" && i + 1 < args.size()) name = args[++i];
         else if (args[i] == "--msg" && i + 1 < args.size()) msg = args[++i];
+        else if (args[i] == "--org" && i + 1 < args.size()) orgName = args[++i];
     }
     
     cout << "Initializing Local Repository: " << name << "\n";
@@ -92,7 +179,12 @@ int handleInit(const vector<string>& args) {
     cout << "Creating Remote GitHub Repository...\n";
     string visibility = isPublic ? "--public" : "--private";
     
-    string ghCommand = "gh repo create " + name + " " + visibility + " --source=. --remote=origin --push";
+    string targetName = name;
+    if (!orgName.empty()) {
+        targetName = orgName + "/" + name;
+    }
+    
+    string ghCommand = "gh repo create " + targetName + " " + visibility + " --source=. --remote=origin --push";
     int result = executeCommand(ghCommand);
     
     if (result != 0) {
@@ -101,6 +193,7 @@ int handleInit(const vector<string>& args) {
     }
     
     cout << "Repository " << name << " successfully created and pushed!\n";
+    if (!strstr(GetCommandLineA(), " --ai-mode")) { std::cout << "\nPress any key to exit...\n"; system("pause"); }
     return 0;
 }
 
@@ -108,6 +201,7 @@ int handleCommit(const vector<string>& args) {
     for (const string& arg : args) {
         if (isHelpFlag(arg)) {
             printCommitHelp();
+            if (!strstr(GetCommandLineA(), " --ai-mode")) { std::cout << "\nPress any key to exit...\n"; system("pause"); }
             return 0;
         }
     }
@@ -134,6 +228,7 @@ int handleCommit(const vector<string>& args) {
     }
     
     cout << "Changes successfully pushed!\n";
+    if (!strstr(GetCommandLineA(), " --ai-mode")) { std::cout << "\nPress any key to exit...\n"; system("pause"); }
     return 0;
 }
 
@@ -141,6 +236,7 @@ int handleRelease(const vector<string>& args) {
     for (const string& arg : args) {
         if (isHelpFlag(arg)) {
             printReleaseHelp();
+            if (!strstr(GetCommandLineA(), " --ai-mode")) { std::cout << "\nPress any key to exit...\n"; system("pause"); }
             return 0;
         }
     }
@@ -162,6 +258,7 @@ int handleRelease(const vector<string>& args) {
     if (version.empty()) {
         cerr << "Error: --version parameter is required for release.\n";
         printReleaseHelp();
+        if (!strstr(GetCommandLineA(), " --ai-mode")) { system("pause"); }
         return 1;
     }
 
@@ -189,12 +286,15 @@ int handleRelease(const vector<string>& args) {
     }
     
     cout << "Release v" << version << " successfully published!\n";
+    if (!strstr(GetCommandLineA(), " --ai-mode")) { std::cout << "\nPress any key to exit...\n"; system("pause"); }
     return 0;
 }
 
 int main(int argc, char* argv[]) {
+    CheckEULA();
     if (argc < 2) {
         printGlobalHelp();
+        if (!strstr(GetCommandLineA(), " --ai-mode")) { system("pause"); }
         return 1;
     }
     
@@ -202,6 +302,7 @@ int main(int argc, char* argv[]) {
     
     if (isHelpFlag(command)) {
         printGlobalHelp();
+        if (!strstr(GetCommandLineA(), " --ai-mode")) { std::cout << "\nPress any key to exit...\n"; system("pause"); }
         return 0;
     }
     
@@ -219,6 +320,12 @@ int main(int argc, char* argv[]) {
     } else {
         cerr << "Unknown command: " << command << "\n";
         printGlobalHelp();
+        if (!strstr(GetCommandLineA(), " --ai-mode")) { system("pause"); }
         return 1;
     }
 }
+
+
+
+
+

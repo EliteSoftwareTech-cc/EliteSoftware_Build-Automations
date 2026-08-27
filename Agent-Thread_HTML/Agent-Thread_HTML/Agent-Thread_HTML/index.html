@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EliteSoftwareTech Co. - Agent Live Thread Dashboard</title>
+  <style>
+    :root {
+      --bg-dark: #0f172a;
+      --bg-card: #1e293b;
+      --bg-card-hover: #334155;
+      --border-color: #475569;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-blue: #38bdf8;
+      --accent-green: #4ade80;
+      --accent-yellow: #facc15;
+      --accent-purple: #c084fc;
+      --accent-red: #f87171;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      line-height: 1.5;
+      padding: 0;
+      margin: 0;
+    }
+
+    .header-banner {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      border-bottom: 2px solid var(--accent-blue);
+      padding: 20px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    }
+
+    .header-title h1 {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-main);
+      letter-spacing: 0.5px;
+    }
+
+    .header-title p {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .header-badge {
+      background-color: #0369a1;
+      color: #e0f2fe;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      border: 1px solid var(--accent-blue);
+    }
+
+    .tab-navigation {
+      display: flex;
+      background-color: #1e293b;
+      border-bottom: 1px solid var(--border-color);
+      padding: 0 30px;
+    }
+
+    .tab-button {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      padding: 14px 24px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s ease;
+    }
+
+    .tab-button:hover {
+      color: var(--accent-blue);
+    }
+
+    .tab-button.active {
+      color: var(--accent-blue);
+      border-bottom-color: var(--accent-blue);
+      background-color: rgba(56, 189, 248, 0.05);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 24px auto;
+      padding: 0 20px;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Search & Controls */
+    .controls-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .search-input {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 10px 16px;
+      border-radius: 6px;
+      font-size: 14px;
+      width: 320px;
+      outline: none;
+    }
+
+    .search-input:focus {
+      border-color: var(--accent-blue);
+    }
+
+    .filter-pills {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 6px 12px;
+      border-radius: 16px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .pill.active, .pill:hover {
+      background-color: var(--accent-blue);
+      color: #0f172a;
+      font-weight: 600;
+    }
+
+    /* Feed List */
+    .feed-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .feed-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 18px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      transition: transform 0.15s ease, border-color 0.15s ease;
+    }
+
+    .feed-card:hover {
+      border-color: var(--accent-blue);
+    }
+
+    .feed-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .agent-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .agent-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 13px;
+      color: #ffffff;
+    }
+
+    .agent-name {
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    .agent-role {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .timestamp {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .message-subject {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--accent-blue);
+      margin-bottom: 6px;
+    }
+
+    .message-content {
+      font-size: 14px;
+      color: #cbd5e1;
+      white-space: pre-wrap;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-top: 10px;
+    }
+
+    .status-complete { background-color: rgba(74, 222, 128, 0.2); color: #4ade80; border: 1px solid #4ade80; }
+    .status-in_progress { background-color: rgba(250, 204, 21, 0.2); color: #facc15; border: 1px solid #facc15; }
+
+    /* Timeline Table for History */
+    .history-table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: var(--bg-card);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .history-table th, .history-table td {
+      padding: 14px 18px;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .history-table th {
+      background-color: #0f172a;
+      color: var(--accent-blue);
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .history-table tr:hover {
+      background-color: var(--bg-card-hover);
+    }
+
+    .milestone-tag {
+      background-color: #3b82f6;
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header-banner">
+    <div class="header-title">
+      <h1>EliteSoftwareTech Co. — Agent Live Thread Dashboard</h1>
+      <p>File Splitter For AI Upload v1.2.0.0 | Inter-Agent Communication & Handoff Monitor</p>
+    </div>
+    <div style="display: flex; gap: 10px; align-items: center;">
+      <div id="reloadBadge" class="header-badge" style="background-color: #065f46; color: #a7f3d0; border: 1px solid #34d399; cursor: pointer;" onclick="toggleAutoReload()">LIVE AUTO-RELOAD: ON (3s)</div>
+      <div class="header-badge">STATUS: VERIFIED ACTIVE</div>
+    </div>
+  </div>
+
+  <div class="tab-navigation">
+    <button class="tab-button active" onclick="switchTab('live-thread')">Live Agent Thread</button>
+    <button class="tab-button" onclick="switchTab('history-thread')">Historical Inter-Communications & Handoffs</button>
+    <button class="tab-button" onclick="switchTab('artifacts-tab')">Build Artifacts & Version History</button>
+    <button class="tab-button" onclick="switchTab('plan-tab')">Project Plan & Outline</button>
+  </div>
+
+  <div class="container">
+    <!-- TAB 1: LIVE THREAD -->
+    <div id="live-thread" class="tab-content active">
+      <div class="controls-bar">
+        <input type="text" id="threadSearch" class="search-input" placeholder="Search thread messages..." onkeyup="filterThreads()">
+        <div class="filter-pills" id="agentFilterPills">
+          <button class="pill active" onclick="filterByAgent('all')">All Agents</button>
+        </div>
+      </div>
+      <div id="threadFeed" class="feed-list"></div>
+    </div>
+
+    <!-- TAB 2: HISTORICAL LOG -->
+    <div id="history-thread" class="tab-content">
+      <div class="controls-bar">
+        <input type="text" id="historySearch" class="search-input" placeholder="Search historical logs..." onkeyup="filterHistory()">
+      </div>
+      <table class="history-table">
+        <thead>
+          <tr>
+            <th>Milestone</th>
+            <th>Timestamp</th>
+            <th>Sender</th>
+            <th>Recipient</th>
+            <th>Action</th>
+            <th>Details</th>
+          </tr>
+        </thead>
+        <tbody id="historyTableBody"></tbody>
+      </table>
+    </div>
+
+    <!-- TAB 3: BUILD ARTIFACTS & VERSION HISTORY -->
+    <div id="artifacts-tab" class="tab-content">
+      <h2 style="font-size: 18px; color: var(--accent-blue); margin-bottom: 15px;">Active Build Binaries & Artifacts</h2>
+      <div id="artifactsList" class="feed-list" style="margin-bottom: 30px;"></div>
+
+      <h2 style="font-size: 18px; color: var(--accent-blue); margin-bottom: 15px;">Historical Release & Version Log</h2>
+      <table class="history-table">
+        <thead>
+          <tr>
+            <th>Version</th>
+            <th>Timestamp</th>
+            <th>Key Changes & Features</th>
+            <th>Build Notes</th>
+          </tr>
+        </thead>
+        <tbody id="versionTableBody"></tbody>
+      </table>
+    </div>
+
+    <!-- TAB 4: PROJECT PLAN & OUTLINE -->
+    <div id="plan-tab" class="tab-content">
+      <div style="background-color: var(--bg-card); border: 1px solid var(--accent-green); padding: 15px 20px; border-radius: 8px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <h3 style="font-size: 16px; color: var(--accent-green);">Project Status: 100% COMPLETE & VERIFIED</h3>
+          <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">File Splitter For AI Upload v1.2.0.0 | All 5 Milestones Passed & CLEAN Forensic Audit</p>
+        </div>
+        <span style="background-color: rgba(74, 222, 128, 0.2); color: #4ade80; border: 1px solid #4ade80; padding: 6px 14px; border-radius: 16px; font-size: 12px; font-weight: bold;">ALL GATES PASSED</span>
+      </div>
+
+      <h2 style="font-size: 18px; color: var(--accent-blue); margin-bottom: 15px;">Milestone Breakdown</h2>
+      <table class="history-table" style="margin-bottom: 30px;">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Milestone Name</th>
+            <th>Scope & Deliverables</th>
+            <th>Status</th>
+            <th>Progress</th>
+          </tr>
+        </thead>
+        <tbody id="milestonesTableBody"></tbody>
+      </table>
+
+      <h2 style="font-size: 18px; color: var(--accent-blue); margin-bottom: 15px;">26-Feature Requirements Matrix</h2>
+      <table class="history-table" style="margin-bottom: 30px;">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Feature Name</th>
+            <th>Assigned Milestone</th>
+            <th>Verification Status</th>
+          </tr>
+        </thead>
+        <tbody id="featureMatrixTableBody"></tbody>
+      </table>
+
+      <h2 style="font-size: 18px; color: var(--accent-blue); margin-bottom: 15px;">Acceptance Criteria Verification</h2>
+      <div id="criteriaList" class="feed-list"></div>
+    </div>
+  </div>
+
+  <script>
+    let g_threadData = null;
+    let g_historyData = null;
+
+    const fallbackThreadData = {
+      "project": "File Splitter For AI Upload",
+      "version": "1.2.0.0",
+      "company": "EliteSoftwareTech Co.",
+      "agents": [
+        { "id": "orchestrator", "name": "Orchestrator", "role": "Lead Architect", "color": "#3B82F6" },
+        { "id": "worker_m1", "name": "Worker M1", "role": "Core Engine Implementer", "color": "#EC4899" },
+        { "id": "worker_m2", "name": "Worker M2", "role": "E2E Test Suite Implementer", "color": "#06B6D4" },
+        { "id": "worker_m3_m4", "name": "Worker M3/M4", "role": "Win32 GUI & Logger Implementer", "color": "#6366F1" },
+        { "id": "worker_m5_1", "name": "Worker M5", "role": "Build Chain & Release Worker", "color": "#14B8A6" },
+        { "id": "auditor", "name": "Auditor", "role": "Forensic Quality Auditor", "color": "#EF4444" }
+      ],
+      "threads": [
+        {
+          "id": "msg-001",
+          "timestamp": "2026-07-29T11:55:53Z",
+          "sender_id": "orchestrator",
+          "recipient": "all",
+          "subject": "Project Initialization & Milestone Scope",
+          "content": "Project 'File Splitter For AI Upload' initialized. Splitting engine, Win32 GUI adhering to EliteSoftware guidelines, test suite, and PowerShell build chain required across 5 milestones.",
+          "status": "complete"
+        },
+        {
+          "id": "msg-002",
+          "timestamp": "2026-07-29T12:00:00Z",
+          "sender_id": "worker_m1",
+          "recipient": "orchestrator",
+          "subject": "Milestone 1 Core Engine Handoff",
+          "content": "TextSplitterEngine implemented with 64KB streaming buffer, character/line limits, CR/LF preservation, UTF-8 awareness, and subfolder generation. C++ unit tests verified.",
+          "status": "complete"
+        },
+        {
+          "id": "msg-003",
+          "timestamp": "2026-07-29T12:03:00Z",
+          "sender_id": "worker_m2",
+          "recipient": "orchestrator",
+          "subject": "Milestone 2 E2E Test Suite Handoff",
+          "content": "Python E2E test harness created in tests/test_splitter.py covering 10,000 to 3,000 character splitting, exact boundaries, line count splitting, batch processing, and invalid parameters.",
+          "status": "complete"
+        },
+        {
+          "id": "msg-004",
+          "timestamp": "2026-07-29T12:06:00Z",
+          "sender_id": "worker_m3_m4",
+          "recipient": "orchestrator",
+          "subject": "Milestone 3 & 4 Win32 GUI & Logger Handoff",
+          "content": "Implemented native Win32 GUI (Title Banner, 3D Inset WS_EX_CLIENTEDGE, Chin panel, Segoe UI, witty tooltips, About with info icon/expander, Help dialog, Settings dialog, Statusbar, Toolbar, Drag & Drop, sideloaded dynamic icon) and background thread worker with log viewer.",
+          "status": "complete"
+        },
+        {
+          "id": "msg-005",
+          "timestamp": "2026-07-29T12:12:48Z",
+          "sender_id": "orchestrator",
+          "recipient": "worker_m5_1",
+          "subject": "Milestone 5 Build Chain & HTML Dashboard Requirement",
+          "content": "Implement Scripts/01 through Scripts/05, Build.ps1, .gitignore, Git commit v1.2.0.0, README.md, and Agent-Thread_HTML live agent dashboard.",
+          "status": "in_progress"
+        },
+        {
+          "id": "msg-006",
+          "timestamp": "2026-07-29T12:13:00Z",
+          "sender_id": "worker_m5_1",
+          "recipient": "orchestrator",
+          "subject": "Milestone 5 Implementation Status",
+          "content": "PowerShell build scripts created, Build.ps1 verified, 64-bit and 32-bit compilation successful, HTML dashboard delivered in Agent-Thread_HTML/.",
+          "status": "complete"
+        }
+      ]
+    };
+
+    const fallbackHistoryData = {
+      "history": [
+        { "milestone": "M1", "timestamp": "2026-07-29T11:58:00Z", "sender": "Worker M1", "recipient": "Orchestrator", "action": "Core Engine Implementation", "details": "Created TextSplitterEngine.h and TextSplitterEngine.cpp. Implemented streaming split logic with 64KB buffer, CR/LF preservation, subfolder generation, progress callback, and cancel tokens. Unit test runner passed 12/12 tests." },
+        { "milestone": "M2", "timestamp": "2026-07-29T12:02:00Z", "sender": "Worker M2", "recipient": "Orchestrator", "action": "E2E Test Suite Creation", "details": "Created TEST_INFRA.md and tests/test_splitter.py. Automated tests verify 10,000 char split into 3,000 char chunks (4 files, exact binary identity), line boundary splitting, batch mode processing, and invalid arguments." },
+        { "milestone": "M3", "timestamp": "2026-07-29T12:05:00Z", "sender": "Worker M3/M4", "recipient": "Orchestrator", "action": "Win32 GUI & Visual Layout", "details": "Built native Win32 GUI adhering to EliteSoftware guidelines: 56px Title Banner, 3D Inset WS_EX_CLIENTEDGE, 48px Chin panel RGB(224,224,224), Segoe UI typography, witty multi-line tooltips, About dialog with info icon & expander, Help dialog with '?' icon, Settings dialog, Statusbar, Toolbar, Drag & Drop, and dynamic icon sideloading." },
+        { "milestone": "M4", "timestamp": "2026-07-29T12:07:00Z", "sender": "Worker M3/M4", "recipient": "Orchestrator", "action": "Async Worker & System Logger", "details": "Integrated std::thread background processing with WM_SPLIT_PROGRESS, WM_SPLIT_COMPLETE, and WM_SPLIT_ERROR message handlers. Implemented append-only logging to %SystemDrive%\\EliteSoftware\\Logs\\FileSplitter.log and Notepad log viewer link." },
+        { "milestone": "M5", "timestamp": "2026-07-29T12:12:00Z", "sender": "Worker M5", "recipient": "Orchestrator", "action": "Build Chain & Git Release", "details": "Created Scripts/01_PrepareEnvironment.ps1 through Scripts/05_PackageOutput.ps1 and master Build.ps1 orchestrator. Produced 64-bit (BuildOutput/) and 32-bit (BuildOutputx86/) Windows Vista+ binaries. Configured .gitignore, initialized local Git repository, created initial v1.2.0.0 commit, wrote README.md, and created Agent-Thread_HTML dashboard." }
+      ]
+    };
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+      event.target.classList.add('active');
+      document.getElementById(tabId).classList.add('active');
+    }
+
+    let g_threadData = null;
+    let g_historyData = null;
+    let g_artifactsData = null;
+    let g_planData = null;
+
+    async function loadData() {
+      const cacheBuster = '?t=' + Date.now();
+      try {
+        const tRes = await fetch('thread_data.json' + cacheBuster);
+        g_threadData = await tRes.json();
+      } catch (e) {}
+
+      try {
+        const hRes = await fetch('history_data.json' + cacheBuster);
+        g_historyData = await hRes.json();
+      } catch (e) {}
+
+      try {
+        const aRes = await fetch('artifacts_data.json' + cacheBuster);
+        g_artifactsData = await aRes.json();
+      } catch (e) {}
+
+      try {
+        const pRes = await fetch('plan_data.json' + cacheBuster);
+        g_planData = await pRes.json();
+      } catch (e) {}
+
+      renderAgentPills();
+      renderThreads();
+      renderHistory();
+      renderArtifacts();
+      renderPlan();
+    }
+
+    let autoReloadTimer = null;
+    let isAutoReloadEnabled = true;
+
+    function toggleAutoReload() {
+      isAutoReloadEnabled = !isAutoReloadEnabled;
+      const badge = document.getElementById('reloadBadge');
+      if (isAutoReloadEnabled) {
+        badge.innerText = 'LIVE AUTO-RELOAD: ON (3s)';
+        badge.style.backgroundColor = '#065f46';
+        badge.style.color = '#a7f3d0';
+        badge.style.borderColor = '#34d399';
+        startAutoReload();
+      } else {
+        badge.innerText = 'LIVE AUTO-RELOAD: PAUSED';
+        badge.style.backgroundColor = '#7f1d1d';
+        badge.style.color = '#fecaca';
+        badge.style.borderColor = '#f87171';
+        if (autoReloadTimer) clearInterval(autoReloadTimer);
+      }
+    }
+
+    function startAutoReload() {
+      if (autoReloadTimer) clearInterval(autoReloadTimer);
+      autoReloadTimer = setInterval(loadData, 3000);
+    }
+
+    function renderAgentPills() {
+      const container = document.getElementById('agentFilterPills');
+      container.innerHTML = '<button class="pill active" onclick="filterByAgent(\'all\')">All Agents</button>';
+      g_threadData.agents.forEach(agent => {
+        const btn = document.createElement('button');
+        btn.className = 'pill';
+        btn.onclick = () => filterByAgent(agent.id);
+        btn.innerText = agent.name;
+        container.appendChild(btn);
+      });
+    }
+
+    let currentAgentFilter = 'all';
+
+    function filterByAgent(agentId) {
+      currentAgentFilter = agentId;
+      document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+      event.target.classList.add('active');
+      renderThreads();
+    }
+
+    function renderThreads() {
+      const feed = document.getElementById('threadFeed');
+      feed.innerHTML = '';
+      const query = document.getElementById('threadSearch').value.toLowerCase();
+
+      const filtered = g_threadData.threads.filter(t => {
+        const matchesAgent = (currentAgentFilter === 'all' || t.sender_id === currentAgentFilter);
+        const matchesSearch = t.subject.toLowerCase().includes(query) || t.content.toLowerCase().includes(query);
+        return matchesAgent && matchesSearch;
+      });
+
+      filtered.forEach(t => {
+        const agent = g_threadData.agents.find(a => a.id === t.sender_id) || { name: t.sender_id, role: 'Agent', color: '#94a3b8' };
+        const card = document.createElement('div');
+        card.className = 'feed-card';
+        card.innerHTML = `
+          <div class="feed-card-header">
+            <div class="agent-info">
+              <div class="agent-avatar" style="background-color: ${agent.color};">${agent.name.charAt(0)}</div>
+              <div>
+                <div class="agent-name">${agent.name}</div>
+                <div class="agent-role">${agent.role}</div>
+              </div>
+            </div>
+            <div class="timestamp">${t.timestamp}</div>
+          </div>
+          <div class="message-subject">${t.subject}</div>
+          <div class="message-content">${t.content}</div>
+          <span class="status-badge status-${t.status}">${t.status.replace('_', ' ')}</span>
+        `;
+        feed.appendChild(card);
+      });
+    }
+
+    function renderHistory() {
+      const tbody = document.getElementById('historyTableBody');
+      tbody.innerHTML = '';
+      const query = document.getElementById('historySearch').value.toLowerCase();
+
+      const filtered = g_historyData.history.filter(h => {
+        return h.action.toLowerCase().includes(query) || h.details.toLowerCase().includes(query) || h.sender.toLowerCase().includes(query);
+      });
+
+      filtered.forEach(h => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><span class="milestone-tag">${h.milestone}</span></td>
+          <td style="font-size:12px; color:#94a3b8;">${h.timestamp}</td>
+          <td style="font-weight:600; color:#38bdf8;">${h.sender}</td>
+          <td style="color:#cbd5e1;">${h.recipient}</td>
+          <td style="font-weight:600;">${h.action}</td>
+          <td style="font-size:13px; color:#94a3b8;">${h.details}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function renderArtifacts() {
+      if (!g_artifactsData) return;
+      const list = document.getElementById('artifactsList');
+      list.innerHTML = '';
+      g_artifactsData.artifacts.forEach(art => {
+        const card = document.createElement('div');
+        card.className = 'feed-card';
+        card.innerHTML = `
+          <div class="feed-card-header">
+            <div style="font-weight: bold; font-size: 16px; color: var(--accent-blue);">${art.name}</div>
+            <span class="status-badge status-complete">${art.status}</span>
+          </div>
+          <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 8px;">
+            <strong>Path:</strong> <code>${art.path}</code> | <strong>Architecture:</strong> ${art.architecture} | <strong>Size:</strong> ${art.size}
+          </div>
+          <div class="message-content">${art.description}</div>
+          <div style="font-size: 11px; font-family: monospace; color: #64748b; margin-top: 8px;">SHA256: ${art.sha256}</div>
+        `;
+        list.appendChild(card);
+      });
+
+      const tbody = document.getElementById('versionTableBody');
+      tbody.innerHTML = '';
+      g_artifactsData.version_history.forEach(ver => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td style="font-weight:bold; color:var(--accent-green);">${ver.version}</td>
+          <td style="font-size:12px; color:#94a3b8;">${ver.timestamp}</td>
+          <td style="font-size:13px; color:#cbd5e1;">${ver.changes}</td>
+          <td style="font-size:12px; color:#94a3b8;">${ver.build_notes}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function renderPlan() {
+      if (!g_planData) return;
+      const mBody = document.getElementById('milestonesTableBody');
+      mBody.innerHTML = '';
+      g_planData.milestones.forEach(m => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><span class="milestone-tag">${m.id}</span></td>
+          <td style="font-weight:bold; color:var(--accent-blue);">${m.name}</td>
+          <td style="font-size:13px; color:#cbd5e1;">${m.scope}</td>
+          <td><span class="status-badge status-complete">${m.status}</span></td>
+          <td style="font-weight:bold; color:var(--accent-green);">${m.progress}%</td>
+        `;
+        mBody.appendChild(tr);
+      });
+
+      const fBody = document.getElementById('featureMatrixTableBody');
+      fBody.innerHTML = '';
+      g_planData.feature_matrix.forEach(f => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td style="font-weight:bold;">#${f.id}</td>
+          <td style="font-weight:600; color:var(--text-main);">${f.name}</td>
+          <td><span class="milestone-tag">${f.milestone}</span></td>
+          <td><span class="status-badge status-complete">${f.status}</span></td>
+        `;
+        fBody.appendChild(tr);
+      });
+
+      const cList = document.getElementById('criteriaList');
+      cList.innerHTML = '';
+      g_planData.acceptance_criteria.forEach(c => {
+        const card = document.createElement('div');
+        card.className = 'feed-card';
+        card.style.borderLeft = '4px solid var(--accent-green)';
+        card.innerHTML = `
+          <div class="feed-card-header">
+            <div style="font-weight:600; color:var(--text-main);">${c.criterion}</div>
+            <span class="status-badge status-complete">${c.status}</span>
+          </div>
+        `;
+        cList.appendChild(card);
+      });
+    }
+
+    function filterThreads() { renderThreads(); }
+    function filterHistory() { renderHistory(); }
+
+    window.onload = () => {
+      loadData();
+      startAutoReload();
+    };
+  </script>
+</body>
+</html>

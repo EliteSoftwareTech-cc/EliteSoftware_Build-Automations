@@ -16,8 +16,9 @@ $components = @(
     "EliteSoftware-Packager",
     "EliteSoftware-EnvManager_GUI",
     "EliteSoftware-EntryPoint",
-    "EliteSoftware-VersionBumper",
-    "EliteSoftware-ReadmeGenerator"
+    "EliteSoftware-VersionBumper",`n    "EliteSoftware-CLSIDGenerator",`n    "EliteSoftware-SmartRegsvr",`n    "EliteSoftware-InnoCreator",
+    "EliteSoftware-ReadmeGenerator",
+    "EliteSoftware-BuildLocator"
 )
 
 foreach ($comp in $components) {
@@ -36,6 +37,18 @@ $AutomatorPath = "BuildOutputx64\EliteGitHubAutomator.exe"
 if (-not (Test-Path $AutomatorPath)) {
     Write-Error "EliteGitHubAutomator is missing. Aborting automation steps."
     exit 1
+}
+
+Write-Host "`n[2.5] Signing Binaries..." -ForegroundColor Yellow
+$SignerPath = "BuildOutputx64\EliteEasySigner.exe"
+if (Test-Path $SignerPath) {
+    $allExes = Get-ChildItem -Path "BuildOutputx64", "BuildOutputx86" -Filter "*.exe" -ErrorAction SilentlyContinue
+    foreach ($exe in $allExes) {
+        Write-Host " -> Signing $($exe.Name)..."
+        & $SignerPath --file $exe.FullName --ai-mode
+    }
+} else {
+    Write-Warning "EliteEasySigner is missing. Binaries will NOT be signed."
 }
 
 Write-Host "`n[2] Build Successful! Triggering GitHub Automator..." -ForegroundColor Green
@@ -77,3 +90,4 @@ foreach ($asset in $x86Assets) {
 & $AutomatorPath $releaseArgs
 
 Write-Host "`nMaster Build and Deployment Complete!" -ForegroundColor Cyan
+

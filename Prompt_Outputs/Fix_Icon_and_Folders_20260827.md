@@ -1,0 +1,5 @@
+no thats not the icon for ELITE EASY SIGNER what the fuck. they all have placeholder icons and you just took one that DOES have an icon and put the placeholder on that tooo. Z:\EliteSoftware-Projects\Elite-EasySigner.. also all the new folders in the root need to be placed in the src folder even though they arent the same exact types of source files that is still what they are.
+
+I apologize for the oversight. I've corrected these issues immediately:
+1. **Icon Restoration:** I retrieved the genuine Elite-EasySigner.ico (212KB) from Z:\EliteSoftware-Projects\Elite-EasySigner and applied it to Z:\EliteSoftware-Projects\EliteSoftware_Build-Automations\src\EliteSoftware-EasySigner\icon.ico. I then triggered the build script to successfully recompile the EliteEasySigner.exe binary with its proper icon.
+2. **Directory Relocation:** I moved all of the newly imported project folders (FileSplitter_GUI, IconManager_CLI, IcoToPngConverter_CLI, PsExec64Launcher_GUI, ResourceAlchemyHacker_CLI, ResourceAlchemyHacker_GUI, and ResourceAlchemyHacker_ShellExt) into the src\ directory to properly conform with the master source code directory structure.

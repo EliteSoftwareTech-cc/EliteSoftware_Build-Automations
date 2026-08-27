@@ -16,7 +16,46 @@
 
 #pragma warning(disable : 4996) // For getenv and ctime_s
 
+#include <windows.h>
+
 namespace fs = std::filesystem;
+
+void CheckEULA() {
+    if (strstr(GetCommandLineA(), "--ai-mode")) {
+        char currentTitle[512];
+        if (GetConsoleTitleA(currentTitle, 512) > 0) {
+            std::string newTitle = std::string(currentTitle) + " (Ai Mode)";
+            SetConsoleTitleA(newTitle.c_str());
+        } else {
+            SetConsoleTitleA("EliteSoftware Tool (Ai Mode)");
+        }
+        WriteEliteLog("AI Mode active. Bypassing EULA prompt.");
+        return;
+    }
+    HKEY hKey;
+    LSTATUS status = RegOpenKeyExA(HKEY_CURRENT_USER, "Software\\EliteSoftware\\EULA", 0, KEY_READ, &hKey);
+    if (status != ERROR_SUCCESS) {
+        std::cout << "\n======================================================\n";
+        std::cout << " EliteSoftwareTech Co. End User License Agreement\n";
+        std::cout << "======================================================\n";
+        std::cout << "By using this tool, you agree to absolute system purity.\n";
+        std::cout << "Do you accept? (Y/N): ";
+        std::string resp;
+        std::getline(std::cin, resp);
+        if (resp == "Y" || resp == "y" || resp == "yes") {
+            RegCreateKeyExA(HKEY_CURRENT_USER, "Software\\EliteSoftware\\EULA", 0, NULL, REG_OPTION_NON_VOLATILE, KEY_WRITE, NULL, &hKey, NULL);
+            DWORD val = 1;
+            RegSetValueExA(hKey, "Accepted", 0, REG_DWORD, (const BYTE*)&val, sizeof(val));
+            RegCloseKey(hKey);
+        } else {
+            std::cerr << "EULA Rejected. Exiting.\n";
+            exit(1);
+        }
+    } else {
+        RegCloseKey(hKey);
+    }
+}
+
 
 // Logging Utility matching EliteSoftware standards
 void WriteEliteLog(const std::string& message, const std::string& type = "INFO") {
@@ -106,11 +145,62 @@ bool UpdateVersionInFile(const std::string& filePath, const std::string& newVers
 }
 
 int main(int argc, char* argv[]) {
+    CheckEULA();
     WriteEliteLog("Initializing EliteVersionBumper v1.0.0.0...");
+
+    if (argc == 1) {
+        WriteEliteLog("No arguments provided. Entering interactive mode.", "INFO");
+        std::string projectPath, targetVersion;
+        std::cout << "\n[Interactive Mode] EliteVersionBumper\n";
+        std::cout << "Enter target Project Path (or . for current directory): ";
+        std::getline(std::cin, projectPath);
+        std::cout << "Enter New Version (e.g., 1.0.42.6): ";
+        std::getline(std::cin, targetVersion);
+        
+        if (projectPath.empty()) projectPath = ".";
+        
+        if (targetVersion.empty()) {
+            WriteEliteLog("Invalid version input. Exiting.", "ERROR");
+            if (!strstr(GetCommandLineA(), " --ai-mode")) { system("pause"); }
+            return 1;
+        }
+
+        // Generate comma-separated version for RC binaries (e.g., 1,0,42,6)
+        std::string commaVersion = targetVersion;
+        std::replace(commaVersion.begin(), commaVersion.end(), '.', ',');
+
+        WriteEliteLog("Scanning project path: " + projectPath);
+        WriteEliteLog("Target Version: " + targetVersion);
+
+        int updatedFiles = 0;
+        try {
+            for (const auto& entry : fs::recursive_directory_iterator(projectPath)) {
+                if (entry.is_regular_file()) {
+                    std::string ext = entry.path().extension().string();
+                    if (ext == ".cpp" || ext == ".h" || ext == ".rc" || ext == ".ps1" || ext == ".config" || ext == ".md") {
+                        if (UpdateVersionInFile(entry.path().string(), targetVersion, commaVersion)) {
+                            updatedFiles++;
+                        }
+                    }
+                }
+            }
+        } catch (const std::exception& e) {
+            WriteEliteLog(std::string("File system error: ") + e.what(), "ERROR");
+            if (!strstr(GetCommandLineA(), " --ai-mode")) { system("pause"); }
+            return 1;
+        }
+
+        WriteEliteLog("Operation complete. Files synchronized: " + std::to_string(updatedFiles));
+        std::cout << "\nPress Enter to exit...";
+        std::getline(std::cin, projectPath);
+        if (!strstr(GetCommandLineA(), " --ai-mode")) { std::cout << "\nPress any key to exit...\n"; system("pause"); }
+        return 0;
+    }
 
     if (argc < 3) {
         WriteEliteLog("Usage: EliteVersionBumper.exe <ProjectPath> <NewVersion e.g., 1.0.42.6>", "ERROR");
         std::cout << "\nView EliteVersionBumper Logs (Run: notepad.exe %SystemDrive%\\EliteSoftware\\Logs\\EliteVersionBumper.log)\n";
+        if (!strstr(GetCommandLineA(), " --ai-mode")) { system("pause"); }
         return 1;
     }
 
@@ -140,11 +230,18 @@ int main(int argc, char* argv[]) {
         }
     } catch (const std::exception& e) {
         WriteEliteLog(std::string("File system error: ") + e.what(), "ERROR");
+        if (!strstr(GetCommandLineA(), " --ai-mode")) { system("pause"); }
         return 1;
     }
 
     WriteEliteLog("Operation complete. Files synchronized: " + std::to_string(updatedFiles));
     std::cout << "\nView EliteVersionBumper Logs (Run: notepad.exe %SystemDrive%\\EliteSoftware\\Logs\\EliteVersionBumper.log)\n";
     
+    if (!strstr(GetCommandLineA(), " --ai-mode")) { std::cout << "\nPress any key to exit...\n"; system("pause"); }
+    
     return 0;
 }
+
+
+
+

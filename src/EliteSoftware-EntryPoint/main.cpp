@@ -4,99 +4,145 @@
 #include <vector>
 #include <windows.h>
 #include <sstream>
+#include <filesystem>
+#include <chrono>
 
 using namespace std;
 
-void PrintHelp() {
-    cout << "========================================" << endl;
-    cout << " EliteBuild EntryPoint (Native C++ Tool)" << endl;
-    cout << "========================================" << endl;
-    cout << "Usage: EliteBuild.exe [OPTIONS]" << endl;
-    cout << "Options:" << endl;
-    cout << "  /help, -help, -?    Show this help message." << endl;
-    cout << endl;
-    cout << "Description:" << endl;
-    cout << "  Reads EliteBuild.config, locates global build tools in ELITE_BUILD_X64, and" << endl;
-    cout << "  orchestrates the compiler, signer, packager, and publisher." << endl;
+bool IsAiMode() { return strstr(GetCommandLineA(), "--ai-mode") != nullptr; }
+
+vector<string> Split(const string& s, char delimiter) {
+    vector<string> tokens;
+    string token;
+    istringstream tokenStream(s);
+    while (getline(tokenStream, token, delimiter)) {
+        if (!token.empty()) tokens.push_back(token);
+    }
+    return tokens;
+}
+
+string FindToolInVar(const string& toolName) {
+    char* globalPath = nullptr;
+    size_t len = 0;
+    _dupenv_s(&globalPath, &len, "ELITE_BUILD_X64");
+    if (globalPath) {
+        vector<string> paths = Split(globalPath, ';');
+        free(globalPath);
+        for (const auto& p : paths) {
+            if (p.find(toolName) != string::npos) return p;
+        }
+    }
+    return toolName;
+}
+
+void CheckToolVersions() {
+    cout << "[EliteBuild] Checking local tool versions against master branch...\n";
+    char* globalPath = nullptr;
+    size_t len = 0;
+    _dupenv_s(&globalPath, &len, "ELITE_BUILD_X64");
+    if (!globalPath) return;
+    
+    vector<string> masterPaths = Split(globalPath, ';');
+    free(globalPath);
+
+    for (auto& p : std::filesystem::directory_iterator(std::filesystem::current_path())) {
+        if (p.is_regular_file() && p.path().extension() == ".exe") {
+            string localName = p.path().filename().string();
+            for (const auto& mp : masterPaths) {
+                if (mp.find(localName) != string::npos && std::filesystem::exists(mp)) {
+                    auto localTime = std::filesystem::last_write_time(p);
+                    auto masterTime = std::filesystem::last_write_time(mp);
+                    if (localTime < masterTime) {
+                        cout << "WARNING: Your local copy of " << localName << " is OUTDATED!\n";
+                        cout << " -> Master version was modified later. Please sync.\n";
+                    } else {
+                        cout << "INFO: " << localName << " is up to date.\n";
+                    }
+                }
+            }
+        }
+    }
 }
 
 int ExecuteCommand(const string& cmd) {
     cout << "[EliteBuild] Executing: " << cmd << endl;
-    
-    STARTUPINFO si;
+    STARTUPINFOA si;
     PROCESS_INFORMATION pi;
     ZeroMemory(&si, sizeof(si));
     si.cb = sizeof(si);
     ZeroMemory(&pi, sizeof(pi));
 
-    if (!CreateProcess(NULL, (LPSTR)cmd.c_str(), NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi)) {
-        cerr << "[EliteBuild] ERROR: Failed to execute command. Error code: " << GetLastError() << endl;
+    if (!CreateProcessA(NULL, (LPSTR)cmd.c_str(), NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi)) {
+        cerr << "[EliteBuild] ERROR: Failed to execute. Error: " << GetLastError() << endl;
         return 1;
     }
-
     WaitForSingleObject(pi.hProcess, INFINITE);
-    
     DWORD exitCode;
     GetExitCodeProcess(pi.hProcess, &exitCode);
-    
     CloseHandle(pi.hProcess);
     CloseHandle(pi.hThread);
-    
     return exitCode;
 }
 
 int main(int argc, char* argv[]) {
+    string configPath = "EliteBuild.config";
+    vector<string> toolsToRun;
+    bool checkVer = false;
+
     for (int i = 1; i < argc; ++i) {
         string arg = argv[i];
-        if (arg == "/help" || arg == "-help" || arg == "--help" || arg == "-?" || arg == "--?" || arg == "//help") {
-            PrintHelp();
+        if (arg == "--ai-mode") continue;
+        if (arg == "--config" && i + 1 < argc) { configPath = argv[++i]; }
+        else if (arg == "--tool" && i + 1 < argc) { toolsToRun.push_back(argv[++i]); }
+        else if (arg == "--check-version") { checkVer = true; }
+    }
+
+    if (checkVer) {
+        CheckToolVersions();
+        if (!IsAiMode()) system("pause");
+        return 0;
+    }
+
+    if (toolsToRun.empty() && !IsAiMode()) {
+        cout << "Enter tools to run (comma separated) or --check-version: ";
+        string t; getline(cin, t);
+        if (t == "--check-version") {
+            CheckToolVersions();
+            system("pause");
             return 0;
+        }
+        if (!t.empty()) {
+            vector<string> splitTools = Split(t, ',');
+            for(auto &st : splitTools) toolsToRun.push_back(st);
         }
     }
 
-    char* globalPath = nullptr;
-    size_t len = 0;
-    _dupenv_s(&globalPath, &len, "ELITE_BUILD_X64");
-    if (!globalPath) {
-        cerr << "[EliteBuild] FATAL ERROR: ELITE_BUILD_X64 environment variable not found." << endl;
-        cerr << "Please run the EliteSoftware Environment Manager to configure the toolchain." << endl;
-        return 1;
+    if (!std::filesystem::exists(configPath)) {
+        cout << "[EliteBuild] Config " << configPath << " not found, generating...\n";
+        ofstream autoConfig(configPath);
+        autoConfig << "AutoGenerated=true\n";
     }
-    
-    string toolchainPath(globalPath);
-    free(globalPath);
 
-    string compilerExe = toolchainPath + "\\EliteBuild_Compiler.exe";
-    string signerExe = toolchainPath + "\\EliteEasySigner.exe";
-    string packagerExe = toolchainPath + "\\EliteBuild_Packager.exe";
-    string publisherExe = toolchainPath + "\\EliteGitHubAutomator.exe";
+    if (toolsToRun.empty()) {
+        toolsToRun.push_back("EliteBuild_Compiler.exe");
+        toolsToRun.push_back("EliteEasySigner.exe");
+        toolsToRun.push_back("EliteBuild_Packager.exe");
+        toolsToRun.push_back("EliteProjectBackup.exe"); // Integrate Backup into default chain!
+    }
 
-    cout << "========================================" << endl;
-    cout << " EliteBuild Master Orchestrator" << endl;
-    cout << "========================================" << endl;
-    
-    // Step 1: Compiler
-    if (ExecuteCommand(compilerExe) != 0) {
-        cerr << "[EliteBuild] Compilation failed. Aborting." << endl;
-        return 1;
+    for (const string& tool : toolsToRun) {
+        string fullPath = FindToolInVar(tool);
+        string cmd = "\"" + fullPath + "\" --config \"" + configPath + "\" " + (IsAiMode() ? "--ai-mode" : "");
+        // If it's the backup tool, we might want to pass --dir . to just backup current dir
+        if (tool == "EliteProjectBackup.exe") {
+            cmd = "\"" + fullPath + "\" --dir . " + (IsAiMode() ? "--ai-mode" : "");
+        }
+        ExecuteCommand(cmd);
     }
-    
-    // Step 2: Signer
-    ExecuteCommand(signerExe); // If it fails, that's okay, maybe no cert or missing targets
-    
-    // Step 3: Packager
-    if (ExecuteCommand(packagerExe) != 0) {
-        cerr << "[EliteBuild] Packaging failed. Aborting." << endl;
-        return 1;
-    }
-    
-    // Step 4: Publisher
-    if (ExecuteCommand(publisherExe + " commit --msg \"Auto-commit via EliteBuild\"") != 0) {
-        cerr << "[EliteBuild] Publishing failed." << endl;
-        return 1;
-    }
-    ExecuteCommand(publisherExe + " release --version auto");
 
-    cout << "[EliteBuild] Master Pipeline Completed Successfully!" << endl;
+    if (!IsAiMode()) {
+        cout << "\nPress any key to exit...\n";
+        system("pause");
+    }
     return 0;
 }
