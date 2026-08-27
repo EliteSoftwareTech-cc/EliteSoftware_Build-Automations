@@ -11,16 +11,17 @@ This tracker monitors the status of our native C++ CLI rewrites.
 - [x] **Tool #7:** EliteDocConverter.exe (Markdown Converter)
 - [x] **Tool #8:** ElitePSWrapper.exe (PS2EXE Enforcement)
 - [x] **Tool #9:** EliteRegSnapshot.exe (Registry Hive Backup)
-- [ ] **Tool #10:** EliteMetaStamper.exe (PE RT_VERSION Editor)
-- [ ] **Tool #11:** EliteAssetManager.exe (Dependency Importer)
+- [x] **Tool #10:** EliteMetaStamper.exe (PE RT_VERSION Editor)
+- [x] **Tool #11:** EliteAssetManager.exe (Dependency Importer)
 - [ ] **Tool #12:** EliteHostConfigurator.exe (Hosts File Router)
-- [ ] **Tool #13:** EliteLaunchAsTI.exe (TrustedInstaller Elevation)
+- [x] **Tool #13:** EliteLaunchAsTI.exe (TrustedInstaller Elevation)
 - [ ] **Tool #14:** EliteComLoader.exe (Smart regsvr32 Wrapper)
-- [ ] **Tool #15:** EliteCertManager.exe (Root Store Installer)
-- [ ] **Tool #16:** EliteServiceForge.exe (Windows Service Creator)
+- [x] **Tool #15:** EliteCertManager.exe (Root Store Installer)
+- [x] **Tool #16:** EliteServiceForge.exe (Windows Service Creator)
 - [ ] **Tool #17:** EliteEnvManager.exe (System Path Injector)
-- [ ] **Tool #18:** EliteDummyDllGen.exe (Testing Stub Compiler)
+- [x] **Tool #18:** EliteDummyDllGen.exe (Testing Stub Compiler)
 
 
 
 - [x] **Tool #19:** EliteTaskAssassin.exe (Dynamic Process Killer)
+

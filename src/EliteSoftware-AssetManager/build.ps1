@@ -5,5 +5,6 @@ $Outx64 = Join-Path (Split-Path -Parent (Split-Path -Parent $ScriptDir)) "BuildO
 $Outx86 = Join-Path (Split-Path -Parent (Split-Path -Parent $ScriptDir)) "BuildOutputx86\$ExeName"
 
 & windres ($ScriptDir + "\app.rc") -O coff -o ($ScriptDir + "\app.res")
-& g++ -m64 -O3 -o $Outx64 ($ScriptDir + "\main.cpp") ($ScriptDir + "\app.res") -lole32 -luuid -lshell32
+& g++ -m64 -O3 -o $Outx64 ($ScriptDir + "\main.cpp") ($ScriptDir + "\app.res") -lurlmon
 if (Test-Path $Outx86 -ErrorAction SilentlyContinue) { & g++ -m32 -O3 -o $Outx86 ($ScriptDir + "\main.cpp") ($ScriptDir + "\app.res") -lole32 -luuid -lshell32 }
+
