@@ -25,3 +25,14 @@ This tracker monitors the status of our native C++ CLI rewrites.
 
 - [x] **Tool #19:** EliteTaskAssassin.exe (Dynamic Process Killer)
 
+
+## Phase 2: Environment & Network Shell Integration
+- [x] **Tool #20:** EliteADBManager.exe
+- [ ] **Tool #21:** EliteNetworkManager.exe
+- [ ] **Tool #22:** EliteClipSaver.exe
+- [ ] **Tool #23:** EliteProfileManager.exe
+- [x] **Tool #24:** EliteRepoCloner.exe
+- [ ] **Tool #25:** EliteWin7Enabler.exe
+- [x] **Tool #26:** EliteExecPolToggle.exe
+- [x] **Tool #27:** EliteDevServer.exe
+
