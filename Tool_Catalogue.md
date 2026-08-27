@@ -170,3 +170,16 @@ etsh invocation.
 **EliteOptiLink.exe**
 - **Purpose:** Local IPC / LAN Messaging.
 - **Features:** Replaces slow PowerShell IPC with blazing fast Named Pipe daemon for instant agent-to-agent communication.
+
+---
+
+### 🗡️ Phase 4: Active Interceptors
+
+**ElitePIDKiller.exe (PID-KILLER)**
+- **Purpose:** Targeted process termination by ID.
+- **Features:** Takes a Process ID (PID) as an argument or asks for one interactively, then natively executes OpenProcess with PROCESS_TERMINATE and kills it instantly.
+
+**EliteEXEKiller.exe (EXE-KILLER)**
+- **Purpose:** Targeted process termination by Name.
+- **Features:** Takes a filename (e.g., 
+otepad.exe), loops through CreateToolhelp32Snapshot to find all matching instances, and terminates them instantly.

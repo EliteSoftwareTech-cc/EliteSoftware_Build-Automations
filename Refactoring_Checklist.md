@@ -45,3 +45,7 @@ This tracker monitors the status of our native C++ CLI rewrites.
 - [x] **Tool #31:** EliteVSBuildTools.exe
 - [x] **Tool #32:** EliteOptiLink.exe
 
+
+## Phase 4: Active Interceptor Tools
+- [x] **Tool #33:** ElitePIDKiller.exe
+- [x] **Tool #34:** EliteEXEKiller.exe
