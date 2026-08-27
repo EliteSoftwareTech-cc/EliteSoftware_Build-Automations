@@ -37,3 +37,11 @@ This tracker monitors the status of our native C++ CLI rewrites.
 - [x] **Tool #27:** EliteDevServer.exe
 
 
+
+## Phase 3: System Resilience & Bootstrapping
+- [x] **Tool #28:** EliteSystemRestore.exe
+- [x] **Tool #29:** EliteFolderScanner.exe
+- [x] **Tool #30:** EliteDotNetEnv.exe
+- [x] **Tool #31:** EliteVSBuildTools.exe
+- [x] **Tool #32:** EliteOptiLink.exe
+

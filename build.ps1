@@ -49,7 +49,12 @@ $components = @(
     "EliteSoftware-ProfileManager",
     "EliteSoftware-Win7Enabler",
     "EliteSoftware-ReadmeGenerator",
-    "EliteSoftware-BuildLocator"
+    "EliteSoftware-BuildLocator",
+    "EliteSoftware-SystemRestore",
+    "EliteSoftware-FolderScanner",
+    "EliteSoftware-DotNetEnv",
+    "EliteSoftware-VSBuildTools",
+    "EliteSoftware-OptiLink"
 )
 
 foreach ($comp in $components) {
@@ -121,6 +126,7 @@ foreach ($asset in $x86Assets) {
 & $AutomatorPath $releaseArgs
 
 Write-Host "`nMaster Build and Deployment Complete!" -ForegroundColor Cyan
+
 
 
 

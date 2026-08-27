@@ -146,3 +146,27 @@ etsh invocation.
 **EliteInnoCreator.exe**
 - **Purpose:** Installer architect.
 - **Features:** Hosts 3 primary templates and cleanly wraps ISCC.exe to generate robust Inno Setup installers from arguments.
+
+---
+
+### 🚀 Phase 3: System Resilience & Bootstrapping
+
+**EliteSystemRestore.exe**
+- **Purpose:** Natively creates Windows System Restore points.
+- **Features:** Directly hooks srclient.dll and SRSetRestorePointW for lightning-fast, silent system state snapshots before destructive automated builds.
+
+**EliteFolderScanner.exe**
+- **Purpose:** Advanced native directory scanning and metrics.
+- **Features:** Utilizes native Win32 FindFirstFile/FindNextFile for blazing fast recursive directory traversal and space calculations.
+
+**EliteDotNetEnv.exe**
+- **Purpose:** Analyzes and provisions the .NET Framework ecosystem.
+- **Features:** Natively queries HKLM\SOFTWARE\Microsoft\NET Framework Setup\NDP to dynamically map installed frameworks.
+
+**EliteVSBuildTools.exe**
+- **Purpose:** Headless bootstrapper for MSVC build tools.
+- **Features:** Standardizes the C++ compilation environment identically across all EliteSoftware machines.
+
+**EliteOptiLink.exe**
+- **Purpose:** Local IPC / LAN Messaging.
+- **Features:** Replaces slow PowerShell IPC with blazing fast Named Pipe daemon for instant agent-to-agent communication.
