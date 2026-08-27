@@ -14,6 +14,7 @@ This project serves as the digital station for EliteSoftware's engineering initi
 - ⚙️ [Config Schema Documentation](EliteBuildChain_ConfigSchema.md)
 - 🔮 [Upcoming Features & Implementation Plan](ImplementationPlan.md)
 - 🗺️ [C++ Refactoring Roadmap](CPlusPlus_Refactoring_Roadmap.md)
+- ✅ [Live Refactoring Checklist](Refactoring_Checklist.md)
 - 🌐 [Official Web Landing Page](index.html)
 
 ## 🚀 Mission Protocol
@@ -132,6 +133,7 @@ Expect the unexpected. Embrace the chaos. And have fun!
 <div align="center"> <a href='https://i.postimg.cc/DZTjtNg1/Elite-Software-Company-Simulator-LOGO.png' target='_blank'><img src='https://i.postimg.cc/DZTjtNg1/Elite-Software-Company-Simulator-LOGO.png' border='0' alt='Elite-Software-Client' width="250"></a> &nbsp;&nbsp;&nbsp;&nbsp; <a href='https://i.postimg.cc/85mKDbX8/Elite-Software-Company-Logo.png' target='_blank'><img src='https://i.postimg.cc/85mKDbX8/Elite-Software-Company-Logo.png' border='0' alt='Elite-Software-LOGO' width="250"></a> </div>
 
 ---
+
 
 
 

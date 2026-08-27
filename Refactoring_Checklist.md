@@ -1,0 +1,23 @@
+# EliteSoftware C++ Refactoring Checklist
+
+This tracker monitors the status of our native C++ CLI rewrites.
+
+- [x] **Tool #1:** EliteRCManager.exe (Resource Forger)
+- [x] **Tool #2:** EliteIconReplacer.exe (PE Rebuilder)
+- [x] **Tool #3:** EliteSiteCompiler.exe (Dynamic Docs Generator)
+- [x] **Tool #4:** EliteSymlinker.exe (Win32 Link Creator)
+- [x] **Tool #5:** EliteDuplicateSweeper.exe (Filesystem Cleaner)
+- [ ] **Tool #6:** EliteShortcutForge.exe (COM IShellLink Creator)
+- [ ] **Tool #7:** EliteDocConverter.exe (Markdown Converter)
+- [ ] **Tool #8:** ElitePSWrapper.exe (PS2EXE Enforcement)
+- [ ] **Tool #9:** EliteRegSnapshot.exe (Registry Hive Backup)
+- [ ] **Tool #10:** EliteMetaStamper.exe (PE RT_VERSION Editor)
+- [ ] **Tool #11:** EliteAssetManager.exe (Dependency Importer)
+- [ ] **Tool #12:** EliteHostConfigurator.exe (Hosts File Router)
+- [ ] **Tool #13:** EliteLaunchAsTI.exe (TrustedInstaller Elevation)
+- [ ] **Tool #14:** EliteComLoader.exe (Smart regsvr32 Wrapper)
+- [ ] **Tool #15:** EliteCertManager.exe (Root Store Installer)
+- [ ] **Tool #16:** EliteServiceForge.exe (Windows Service Creator)
+- [ ] **Tool #17:** EliteEnvManager.exe (System Path Injector)
+- [ ] **Tool #18:** EliteDummyDllGen.exe (Testing Stub Compiler)
+
