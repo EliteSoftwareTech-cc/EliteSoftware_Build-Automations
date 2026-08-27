@@ -1,160 +1,454 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>EliteSoftware SDK Guide & Tools</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EliteSoftwareTech.cc :: Information-First Software Engineering</title>
+    <link rel="icon" type="image/png" href="https://i.postimg.cc/85mKDbX8/EliteSoftware-Company-Logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;700&family=Arial:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* Classic 2010s Frutiger Aero / Win7 Aesthetic */
+        /* --- Aero & Information-First Design Tokens --- */
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.45);
+            --glass-border: rgba(255, 255, 255, 0.7);
+            --vista-blue-top: #72b0e8;
+            --vista-blue-mid: #4e92d2;
+            --vista-blue-bottom: #2578c1;
+            --vista-blue-dark: #1a5ea3;
+            --elite-cyan: #00ffff;
+            --elite-turquoise: #40e0d0;
+            --elite-teal: #008080;
+            --radius-ui: 10px;
+        }
+
+        * { 
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* --- Desktop Hard-Lock & Fluid Scaling --- */
+        html, body {
+            min-width: 1024px; 
+            background-color: #002d5a;
+            height: 100%;
+            overflow-x: hidden; /* Prevent horizontal scrollbars */
+        }
+
         body {
-            font-family: "Segoe UI", Tahoma, Arial, sans-serif;
-            background: linear-gradient(to bottom, #dbe9f4, #f5f8fa);
-            color: #333;
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 180, 255, 0.6) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(0, 255, 150, 0.3) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(100, 150, 255, 0.4) 0%, transparent 100%),
+                url('https://www.transparenttextures.com/patterns/pinstriped-suit.png');
+            background-attachment: fixed;
+            color: #111;
+            font-size: 13px;
+            overflow-y: scroll;
+            line-height: 1.4;
         }
-        #header {
-            background: linear-gradient(to bottom, #a7c7dc, #85b2d3);
-            border-bottom: 2px solid #5a88a8;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        #header h1 {
-            margin: 0;
-            color: #fff;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-            font-size: 28px;
-        }
-        #container {
-            width: 900px;
-            margin: 20px auto;
-            background: #fff;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
-            overflow: hidden;
+
+        /* --- Full-Screen Sharp Container --- */
+        .app-wrapper {
+            width: 100%;
             display: flex;
+            justify-content: center;
         }
-        #sidebar {
-            width: 200px;
-            background: #f0f4f8;
-            border-right: 1px solid #ddd;
-            padding: 10px;
+
+        .main-container {
+            width: 100%;
+            min-height: 100vh;
+            background: var(--glass-bg);
+            backdrop-filter: blur(45px) saturate(220%);
+            -webkit-backdrop-filter: blur(45px) saturate(220%);
+            display: flex;
+            flex-direction: column;
+            border-radius: 0;
+            border: none;
+            box-shadow: 0 0 100px rgba(0,0,0,0.5);
         }
-        #sidebar ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
+
+        /* --- Header: Compact Vista Gloss --- */
+        header {
+            background: linear-gradient(to bottom, rgba(255,255,255,0.98) 0%, rgba(215,230,250,0.95) 100%);
+            padding: 10px 25px;
+            border-bottom: 1px solid rgba(0,0,0,0.3);
+            flex-shrink: 0;
+            z-index: 100;
         }
-        #sidebar li {
-            margin-bottom: 5px;
+
+        .header-flex {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1500px;
+            width: 98%;
+            margin: 0 auto;
         }
-        #sidebar a {
-            text-decoration: none;
-            color: #005599;
-            font-weight: 600;
-            display: block;
-            padding: 8px;
-            border-radius: 4px;
+
+        .logo-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
-        #sidebar a:hover {
-            background: #dbe9f4;
-            color: #003366;
+
+        .corporate-logo {
+            height: 65px;
+            width: auto;
+            filter: drop-shadow(0 3px 6px rgba(0,0,0,0.4));
         }
-        #content {
+
+        .brand-text h1 {
+            font-size: 30px;
+            font-weight: 700;
+            color: #003b75;
+            letter-spacing: -1.5px;
+            text-shadow: 0 1px 0 #fff;
+            line-height: 1;
+        }
+
+        .brand-text p {
+            font-size: 11px;
+            color: #4a5a6a;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 2px;
+        }
+
+        /* --- Navigation Strips --- */
+        .nav-strip {
+            background: linear-gradient(to bottom, #d8e6f5 0%, #adbcca 100%);
+            border-bottom: 1px solid #6a7a8a;
+            padding: 0 25px;
+            display: flex;
+            justify-content: center;
+            gap: 4px;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.8);
+            z-index: 90;
+        }
+
+        .nav-btn {
+            background: linear-gradient(to bottom, #f0f5fa, #d0dbe9);
+            border: 1px solid #8da1b5;
+            border-bottom: none;
+            padding: 6px 25px;
+            font-weight: 700;
+            color: #334455;
+            cursor: pointer;
+            font-size: 12px;
+            border-radius: 6px 6px 0 0;
+            margin-top: 5px;
+            text-shadow: 0 1px 0 rgba(255,255,255,0.8);
+            transition: all 0.1s;
+        }
+
+        .nav-btn:hover {
+            filter: brightness(1.05);
+            margin-top: 3px;
+            padding-top: 10px;
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(to bottom, #ffffff 0%, #f0f5fa 100%);
+            border-bottom: 2px solid #ffffff;
+            color: #000;
+            margin-bottom: -1px;
+            padding-bottom: 12px;
+            box-shadow: 0 -3px 8px rgba(0,0,0,0.15);
+        }
+
+        /* --- Unified Multi-Column Workspace --- */
+        main.workspace-grid {
+            max-width: 1500px;
+            width: 98%;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 20px;
+            padding: 20px;
             flex-grow: 1;
+        }
+
+        /* --- Internal Boxes: Rounded & 3D --- */
+        .glass-box {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid #99aac0;
+            border-radius: var(--radius-ui);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            margin-bottom: 20px;
+            overflow: hidden;
+            border-top: 1px solid #fff;
+            border-left: 1px solid #fff;
+        }
+
+        .box-header {
+            background: linear-gradient(to bottom, #72b0e8 0%, #4e92d2 50%, #2578c1 50%, #1a5ea3 100%);
+            color: white;
+            padding: 8px 20px;
+            font-weight: 700;
+            font-size: 15px;
+            text-shadow: 0 -1px 1px rgba(0,0,0,0.6);
+            border-bottom: 1px solid #0b2e4d;
+            position: relative;
+        }
+
+        .box-header::before {
+            content: '';
+            position: absolute;
+            top: 1px; left: 1px; right: 1px; height: 40%;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.5), transparent);
+            border-radius: 8px 8px 2px 2px;
+        }
+
+        .box-body {
             padding: 20px;
         }
-        h2 {
-            color: #005599;
+
+        .info-section h3 {
+            color: #003b75;
+            font-size: 18px;
+            margin-bottom: 10px;
             border-bottom: 1px solid #ddd;
             padding-bottom: 5px;
         }
-        pre {
-            background: #f8f8f8;
-            border: 1px solid #ddd;
-            padding: 10px;
-            border-radius: 4px;
-            overflow-x: auto;
-        }
-        .tool-card {
-            border: 1px solid #ddd;
+
+        /* --- Sidebar Modules --- */
+        .sidebar-module {
+            background: linear-gradient(135deg, #f0f7ff, #dae6f5);
+            border: 1px solid #a0b5cc;
+            border-radius: var(--radius-ui);
             padding: 15px;
             margin-bottom: 15px;
-            border-radius: 4px;
-            background: linear-gradient(to bottom, #fff, #f9f9f9);
-            box-shadow: inset 0 1px 0 #fff;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
         }
-        .tool-title {
-            font-size: 18px;
-            font-weight: bold;
-            color: #003366;
+
+        .sidebar-module h4 {
+            color: #003b75;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            font-size: 13px;
+            letter-spacing: 1px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            padding-bottom: 3px;
+        }
+
+        /* --- The 3D GEL Button (Wet Reflective Aero Style) --- */
+        .elite-button {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 30px;
+            background: linear-gradient(to bottom, 
+                #00d1d1 0%, 
+                #00a3a3 50%,
+                #008080 50%,
+                #004d4d 100%
+            );
+            border: 1px solid #002d2d;
+            border-radius: 50px;
+            color: white;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.4);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+            overflow: hidden;
+            font-size: 13px;
+            transition: transform 0.1s, filter 0.2s;
+        }
+
+        .elite-button:hover {
+            filter: brightness(1.15) saturate(1.2);
+        }
+
+        .elite-button:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+
+        .elite-button::before {
+            content: '';
+            position: absolute;
+            top: 1px; left: 5%; width: 90%; height: 42%;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%);
+            border-radius: 40px 40px 10px 10px;
+        }
+
+        /* --- Graphics & Visuals --- */
+        .tech-visual {
+            width: 100%;
+            height: 220px;
+            background-image: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80');
+            background-size: cover;
+            background-position: center;
+            border-radius: 8px;
+            margin-top: 15px;
+            border: 1px solid #fff;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3), inset 0 0 20px rgba(255,255,255,0.5);
+            position: relative;
+        }
+
+        .tech-tag {
+            display: inline-block;
+            background: #fff;
+            border: 1px solid #ccc;
+            padding: 3px 10px;
+            border-radius: 50px;
+            font-size: 11px;
+            font-weight: 700;
+            margin: 2px;
+            color: #003b75;
+        }
+
+        .conduit-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px;
+            background: rgba(255,255,255,0.6);
+            border: 1px solid #c0d1e3;
+            border-radius: 6px;
+            color: #2a7abc;
+            text-decoration: none;
+            font-weight: 700;
+            margin-bottom: 8px;
+            font-size: 12px;
+        }
+
+        /* --- Footer --- */
+        footer {
+            background: linear-gradient(to bottom, #2c3e50 0%, #000 100%);
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            font-size: 12px;
+            border-top: 3px solid #2a7abc;
+            flex-shrink: 0;
+        }
+
+        /* --- Liaison Terminal --- */
+        .terminal-box {
+            background: #000;
+            border: 1px solid #333;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: inset 0 0 10px #000;
+        }
+        .terminal-box code, .terminal-box pre {
+            display: block;
+            background: transparent;
+            color: var(--elite-cyan);
+            font-family: 'Consolas', monospace;
+            font-weight: 700;
+            font-size: 14px;
+            line-height: 1.5;
         }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 </head>
 <body>
+    <div class="app-wrapper">
+        <div class="main-container">
+            <!-- Corporate Header -->
+            <header>
+                <div class="header-flex">
+                    <div class="logo-group">
+                        <img src="https://i.postimg.cc/85mKDbX8/EliteSoftware-Company-Logo.png" alt="EliteSoftwareTech Logo" class="corporate-logo">
+                        <div class="brand-text">
+                            <h1>EliteSoftwareTech.cc</h1>
+                            <p>Information-First Engineering. Absolute System Purity.</p>
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div id="system-status-container" style="display: flex; align-items: center; gap: 8px; color: #2ecc71; font-weight: 800; font-size: 11px;">
+                            <div id="status-dot" style="width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; box-shadow: 0 0 8px #2ecc71;"></div>
+                            <span id="status-text">CORE SYSTEMS: NOMINAL</span>
+                        </div>
+                        <div style="font-size: 10px; color: #666; margin-top: 3px;">
+                            BUILD: 6.0.0.0_PRODUCTION | UPDATED: 03-APR-2026
+                        </div>
+                    </div>
+                </div>
+            </header>
+        <!-- Navigation Tabs -->
+        <nav class="nav-strip" id="dynamic-tabs">
+            <!-- Tabs injected by JS -->
+        </nav>
 
-<div id="header">
-    <h1>EliteSoftware Dev Platform & SDK Guide</h1>
-</div>
-
-<div id="container">
-    <div id="sidebar">
-        <ul>
-            <li><a href="#welcome">Welcome</a></li>
-            <li><a href="#setup">Environment Setup</a></li>
-            <li><a href="#tools">CLI Tools List</a></li>
-            <li><a href="#examples">Usage Examples</a></li>
-            <li><a href="#logging">Logging Standards</a></li>
-        </ul>
-    </div>
-    <div id="content">
-        <h2 id="welcome">Welcome to the EliteSoftware SDK</h2>
-        <p>This document serves as the official guide to the EliteSoftware native C++ build environment. Utilizing these tools allows you to maintain aesthetic compliance, enforce consistent versioning, generate rich documentation, and perfectly build Win32 applications.</p>
-
-        <h2 id="setup">Environment Setup & Global Paths</h2>
-        <p>The EliteSoftware Dev Environment uses custom nested path variables to ensure all tools are universally accessible without cluttering standard project directories.</p>
-        <div class="tool-card">
-            <div class="tool-title">EliteBuildLocator</div>
-            <p><strong>Description:</strong> Scans all drives to locate standard build tools (MSBuild, g++, windres, ISCC, etc.) and native Elite tools, injecting them into a custom system-wide path variable with newer tools prioritized.</p>
-            <p><strong>Path Variables Created:</strong> <code>%ELITE_BUILD_X64%</code> and <code>%ELITE_BUILD_X86%</code>.</p>
-            <p><strong>First Run:</strong> Automatically prompts the EliteSoftware EULA. Acceptance sets a registry marker under <code>HKCU\Software\EliteSoftware\EULA</code>.</p>
-        </div>
-
-        <h2 id="tools">CLI Tools & Utilities</h2>
-
-        <div class="tool-card">
-            <div class="tool-title">EliteBuild (The Entry Point)</div>
-            <p><strong>Description:</strong> The only executable required in a project root. Reads <code>EliteBuild.config</code> and orchestrates compilation via the global toolchain.</p>
-            <p><strong>Usage:</strong> <code>EliteBuild.exe</code></p>
-        </div>
-
-        <div class="tool-card">
-            <div class="tool-title">EliteVersionBumper</div>
-            <p><strong>Description:</strong> Natively parses C++, Headers, RC, and Config files to bump standard 4-decimal version numbers (Major.Minor.FeatureAdd.BugFix).</p>
-            <p><strong>Usage:</strong> <code>EliteBuild_VersionBumper.exe "C:\Path\To\File" major|minor|feature|bugfix</code></p>
-        </div>
-
-        <div class="tool-card">
-            <div class="tool-title">EliteReadmeGenerator</div>
-            <p><strong>Description:</strong> Flushes heavily formatted markdown templates directly into projects depending on the architecture type (1-5).</p>
-            <p><strong>Usage:</strong> <code>EliteReadmeGenerator.exe 1 "MyProject"</code></p>
-        </div>
-
-        <h2 id="examples">Usage & Examples</h2>
-        <p>If any tool is launched via double-click (no arguments provided), it falls back to an interactive console session to safely request parameters.</p>
-        <pre><code>C:\> EliteBuild_VersionBumper.exe
-[INFO] Interactive Mode Triggered.
-Please enter the file path to bump: changelog.md
-Please enter the part to bump (major/minor/feature/bugfix): bugfix
-[INFO] Successfully bumped version.
-</code></pre>
-
-        <h2 id="logging">Absolute Logging Standards</h2>
-        <p>Every single EliteSoftware CLI tool natively logs <strong>every action</strong> to its local directory (alongside the `.exe`). A timestamped `.log` file is instantiated upon every run, ensuring a perfect forensic trail of pipeline compilations.</p>
+        <main style="flex: 1; padding: 25px; position: relative;">
+            <div class="glass-box" style="width: 100%; min-height: 70vh; padding: 30px; font-size: 14px; background: rgba(255,255,255,0.8);">
+                <div id="markdown-viewer" style="line-height: 1.6; color: #111;">
+                    <h2>Welcome to the EliteSoftware Documentation Hub</h2>
+                    <p>Select a document from the tabs above to view it.</p>
+                </div>
+            </div>
+        </main>
+        
+        <footer style="padding: 15px; text-align: center; color: #fff; background: rgba(0,0,0,0.5); font-weight: bold;">
+            EliteSoftwareTech Co. Limited :: Secure Offline Documentation Viewer
+        </footer>
     </div>
 </div>
 
+<!-- Load Marked.js from CDN for Markdown Parsing -->
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<!-- Load our dynamically generated local data -->
+<script src="DocsData.js"></script>
+
+<script>
+    // Style the markdown output slightly
+    const renderer = new marked.Renderer();
+    renderer.heading = function(text, level) {
+        let sizes = ['28px', '22px', '18px', '16px', '14px', '12px'];
+        let borders = level <= 2 ? 'border-bottom: 1px solid #ccc; padding-bottom: 5px;' : '';
+        return <h + level +  style="color: #003b75; margin-top: 20px; margin-bottom: 10px; font-size:  + sizes[level-1] + ;  + borders + "> + text + </h + level + >;
+    };
+    renderer.code = function(code, lang) {
+        return <pre style="background: #222; color: #0f0; padding: 15px; border-radius: 5px; overflow-x: auto; font-family: monospace; border: 1px solid #555; margin: 15px 0;"><code> + code.replace(/</g, '&lt;').replace(/>/g, '&gt;') + </code></pre>;
+    };
+    renderer.codespan = function(code) {
+        return <code style="background: #e0e8f0; color: #c00; padding: 2px 4px; border-radius: 3px; font-family: monospace;"> + code + </code>;
+    };
+    marked.setOptions({ renderer: renderer });
+
+    const tabsContainer = document.getElementById('dynamic-tabs');
+    const viewer = document.getElementById('markdown-viewer');
+
+    if (typeof EliteDocsData !== 'undefined') {
+        const files = Object.keys(EliteDocsData);
+        
+        // Sort specifically to put readme.md and changelog.md first
+        files.sort((a, b) => {
+            if(a.toLowerCase() === 'readme.md') return -1;
+            if(b.toLowerCase() === 'readme.md') return 1;
+            if(a.toLowerCase() === 'changelog.md') return -1;
+            if(b.toLowerCase() === 'changelog.md') return 1;
+            return a.localeCompare(b);
+        });
+
+        files.forEach((file, index) => {
+            const btn = document.createElement('button');
+            btn.className = 'nav-btn';
+            btn.innerText = file;
+            btn.onclick = () => {
+                // Update active tab
+                document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                // Parse markdown
+                viewer.innerHTML = marked.parse(EliteDocsData[file]);
+            };
+            tabsContainer.appendChild(btn);
+            
+            // Auto-load first tab
+            if (index === 0) btn.click();
+        });
+    } else {
+        viewer.innerHTML = "<h3 style='color:red;'>Error: DocsData.js not found or empty. Please run EliteDocGenerator.ps1!</h3>";
+    }
+</script>
 </body>
 </html>
