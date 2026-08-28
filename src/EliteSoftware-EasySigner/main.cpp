@@ -13,9 +13,48 @@
 #include <fstream>
 using namespace std;
 
-int main(int argc, char* argv[]) {
-    EliteInit("EliteSoftware-EasySigner", argc, argv);
+// Logging and EULA handled by EliteLogger.h
 
+
+void printHelp() {
+    cout << "========================================\n";
+    cout << " EliteSoftware EasySigner (C++)\n";
+    cout << "========================================\n\n";
+    cout << "Usage: EliteEasySigner.exe [options]\n\n";
+    cout << "Options:\n";
+    cout << "  --file <path>       (Required) Path to the executable/DLL to sign.\n";
+    cout << "  --password <string> (Optional) PFX password. Defaults to internal EliteSoftware password.\n";
+    cout << "  --help              Display this help message.\n\n";
+    cout << "Behavior:\n";
+    cout << "  The tool extracts an embedded signtool.exe and EliteSoftware_Special.pfx.\n";
+    cout << "  It attempts Method A (Modern SHA256 RFC3161 Timestamping).\n";
+    cout << "  If Method A fails, it falls back to Legacy Method (SHA1 Authenticode Timestamping).\n";
+    cout << "  Even on total failure, the tool returns a success code to prevent pipeline blocking.\n";
+}
+
+bool extractResource(int resourceId, const string& outputPath) {
+    HRSRC hRes = FindResource(NULL, MAKEINTRESOURCE(resourceId), RT_RCDATA);
+    if (!hRes) return false;
+    
+    HGLOBAL hMem = LoadResource(NULL, hRes);
+    if (!hMem) return false;
+    
+    void* pData = LockResource(hMem);
+    DWORD size = SizeofResource(NULL, hRes);
+    if (!pData || size == 0) return false;
+    
+    ofstream outFile(outputPath, ios::binary);
+    if (!outFile) return false;
+    
+    outFile.write(reinterpret_cast<const char*>(pData), size);
+    outFile.close();
+    
+    return true;
+}
+
+
+
+int main(int argc, char* argv[]) {
     InitEliteLogger();
     CheckEULA();
     vector<string> args;

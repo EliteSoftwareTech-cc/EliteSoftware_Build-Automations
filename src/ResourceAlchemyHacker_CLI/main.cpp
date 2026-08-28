@@ -1,4 +1,3 @@
-#include "..\EliteLogger.h"
 #include <windows.h>
 #include <iostream>
 #include <fstream>
@@ -37,25 +36,8 @@ struct GRPICONDIRENTRY {
 
 using namespace std;
 
-void EliteLog(const wstring& msg) {
-    wchar_t sysDrive[MAX_PATH];
-    GetEnvironmentVariableW(L"SystemDrive", sysDrive, MAX_PATH);
-    wstring logDir = wstring(sysDrive) + L"\\EliteSoftware\\Logs";
-    CreateDirectoryW((wstring(sysDrive) + L"\\EliteSoftware").c_str(), NULL);
-    CreateDirectoryW(logDir.c_str(), NULL);
-    
-    wstring logFile = logDir + L"\\ResourceAlchemist.log";
-    
-    SYSTEMTIME st;
-    GetLocalTime(&st);
-    
-    wofstream out(logFile, ios::app);
-    if (out.is_open()) {
-        out << L"[" << setfill(L'0') << setw(4) << st.wYear << L"-" << setw(2) << st.wMonth << L"-" << setw(2) << st.wDay
-            << L" " << setw(2) << st.wHour << L":" << setw(2) << st.wMinute << L":" << setw(2) << st.wSecond << L"] "
-            << msg << endl;
-    }
-}
+// EliteLog(const wstring&) handled by EliteLogger.h
+
 
 void LogWin32Error(const wstring& context, DWORD errCode = GetLastError()) {
     wstring witty;

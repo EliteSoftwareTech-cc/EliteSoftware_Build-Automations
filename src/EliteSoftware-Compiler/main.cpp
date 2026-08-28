@@ -14,9 +14,82 @@
 #include <fstream>
 using namespace std;
 
-int main(int argc, char* argv[]) {
-    EliteInit("EliteSoftware-Compiler", argc, argv);
+// Logging and EULA handled by EliteLogger.h
 
+
+// Function to print help
+void PrintHelp() {
+    cout << "========================================" << endl;
+    cout << " EliteBuild Compiler (Native C++ Tool)" << endl;
+    cout << "========================================" << endl;
+    cout << "Usage: EliteBuild_Compiler.exe [OPTIONS]" << endl;
+    cout << "Options:" << endl;
+    cout << "  /help, -help, -?    Show this help message." << endl;
+    cout << "  --config <path>     Specify a custom .config path (default: EliteBuild.config)" << endl;
+    cout << endl;
+    cout << "Description:" << endl;
+    cout << "  Reads EliteBuild.config, kills conflicting processes, acquires a file lock, and" << endl;
+    cout << "  invokes MSBuild or GCC/windres targets based on the configuration." << endl;
+}
+
+// Function to kill a process by name
+void KillProcessByName(const string& processName) {
+    HANDLE hSnap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+    if (hSnap != INVALID_HANDLE_VALUE) {
+        PROCESSENTRY32 pe;
+        pe.dwSize = sizeof(PROCESSENTRY32);
+        if (Process32First(hSnap, &pe)) {
+            do {
+                if (string(pe.szExeFile) == processName) {
+                    cout << "[Compiler] Terminating conflicting process: " << processName << endl;
+                    HANDLE hProcess = OpenProcess(PROCESS_TERMINATE, FALSE, pe.th32ProcessID);
+                    if (hProcess) {
+                        TerminateProcess(hProcess, 0);
+                        CloseHandle(hProcess);
+                    }
+                }
+            } while (Process32Next(hSnap, &pe));
+        }
+        CloseHandle(hSnap);
+    }
+}
+
+
+
+// Simple JSON array regex extractor
+vector<string> ExtractJsonArray(const string& jsonContent, const string& key) {
+    vector<string> results;
+    size_t keyPos = jsonContent.find("\"" + key + "\"");
+    if (keyPos == string::npos) return results;
+    size_t bracketStart = jsonContent.find("[", keyPos);
+    size_t bracketEnd = jsonContent.find("]", bracketStart);
+    if (bracketStart == string::npos || bracketEnd == string::npos) return results;
+    string arrayStr = jsonContent.substr(bracketStart, bracketEnd - bracketStart);
+    
+    bool inString = false;
+    string currentStr = "";
+    for (size_t i = 0; i < arrayStr.length(); i++) {
+        if (arrayStr[i] == '\"' && (i == 0 || arrayStr[i-1] != '\\')) {
+            if (inString) {
+                results.push_back(currentStr);
+                currentStr = "";
+                inString = false;
+            } else {
+                inString = true;
+            }
+        } else if (inString) {
+            if (arrayStr[i] == '\\' && i + 1 < arrayStr.length() && arrayStr[i+1] == '\"') {
+                currentStr += '\"';
+                i++; // skip escaped quote
+            } else {
+                currentStr += arrayStr[i];
+            }
+        }
+    }
+    return results;
+}
+
+int main(int argc, char* argv[]) {
     InitEliteLogger();
     CheckEULA();
     if (argc == 1) {

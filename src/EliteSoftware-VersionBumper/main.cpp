@@ -1,4 +1,3 @@
-#include "..\EliteLogger.h"
 /*
  * Company: EliteSoftwareTech Co
  * Tool Name: EliteVersionBumper
@@ -21,60 +20,8 @@
 
 namespace fs = std::filesystem;
 
-// CheckEULA handled by EliteLogger.h else {
-            SetConsoleTitleA("EliteSoftware Tool (Ai Mode)");
-        }
-        std::cout << "AI Mode active. Bypassing EULA prompt.\n";
-        return;
-    }
-    HKEY hKey;
-    LSTATUS status = RegOpenKeyExA(HKEY_CURRENT_USER, "Software\\EliteSoftware\\EULA", 0, KEY_READ, &hKey);
-    if (status != ERROR_SUCCESS) {
-        std::cout << "\n======================================================\n";
-        std::cout << " EliteSoftwareTech Co. End User License Agreement\n";
-        std::cout << "======================================================\n";
-        std::cout << "By using this tool, you agree to absolute system purity.\n";
-        std::cout << "Do you accept? (Y/N): ";
-        std::string resp;
-        std::getline(std::cin, resp);
-        if (resp == "Y" || resp == "y" || resp == "yes") {
-            RegCreateKeyExA(HKEY_CURRENT_USER, "Software\\EliteSoftware\\EULA", 0, NULL, REG_OPTION_NON_VOLATILE, KEY_WRITE, NULL, &hKey, NULL);
-            DWORD val = 1;
-            RegSetValueExA(hKey, "Accepted", 0, REG_DWORD, (const BYTE*)&val, sizeof(val));
-            RegCloseKey(hKey);
-        } else {
-            std::cerr << "EULA Rejected. Exiting.\n";
-            exit(1);
-        }
-    } else {
-        RegCloseKey(hKey);
-    }
-}
+// Logging and EULA handled by EliteLogger.h
 
-
-// Logging Utility matching EliteSoftware standards
-// WriteEliteLog handled by EliteLogger.h
-
-    std::string logPath = logDir + "\\EliteVersionBumper.log";
-
-    std::ofstream logFile(logPath, std::ios_base::app);
-    if (logFile.is_open()) {
-        auto now = std::chrono::system_clock::now();
-        std::time_t now_time = std::chrono::system_clock::to_time_t(now);
-        char timeStr[26];
-        ctime_s(timeStr, sizeof(timeStr), &now_time);
-        timeStr[24] = '\0'; // Remove newline
-
-        logFile << "[" << timeStr << "] [" << type << "] " << message << std::endl;
-        logFile.close();
-    }
-    
-    if (type == "ERROR") {
-        std::cerr << "[" << type << "] " << message << "\n";
-    } else {
-        std::cout << "[" << type << "] " << message << "\n";
-    }
-}
 
 // Function to replace version strings in file content
 bool UpdateVersionInFile(const std::string& filePath, const std::string& newVersionStr, const std::string& newVersionComma) {
@@ -132,8 +79,6 @@ bool UpdateVersionInFile(const std::string& filePath, const std::string& newVers
 }
 
 int main(int argc, char* argv[]) {
-    EliteInit("EliteSoftware-VersionBumper", argc, argv);
-
     CheckEULA();
     WriteEliteLog("Initializing EliteVersionBumper v1.0.0.0...");
 

@@ -13,9 +13,51 @@
 #include <fstream>
 using namespace std;
 
-int main(int argc, char* argv[]) {
-    EliteInit("EliteSoftware-Packager", argc, argv);
+// Logging and EULA handled by EliteLogger.h
 
+
+void PrintHelp() {
+    cout << "========================================" << endl;
+    cout << " EliteBuild Packager (Native C++ Tool)" << endl;
+    cout << "========================================" << endl;
+    cout << "Usage: EliteBuild_Packager.exe [OPTIONS]" << endl;
+    cout << "Options:" << endl;
+    cout << "  /help, -help, -?    Show this help message." << endl;
+    cout << "  --config <path>     Specify a custom .config path (default: EliteBuild.config)" << endl;
+    cout << endl;
+    cout << "Description:" << endl;
+    cout << "  Reads EliteBuild.config, creates ZIP archives, and compiles InnoSetup scripts." << endl;
+}
+
+
+
+vector<string> ExtractJsonArray(const string& jsonContent, const string& key) {
+    vector<string> results;
+    regex r("\"" + key + "\"\\s*:\\s*\\[(.*?)\\]");
+    smatch match;
+    if (regex_search(jsonContent, match, r)) {
+        string arrayContent = match[1].str();
+        regex stringMatcher("\"([^\"]+)\"");
+        sregex_iterator currentMatch(arrayContent.begin(), arrayContent.end(), stringMatcher);
+        sregex_iterator lastMatch;
+        while (currentMatch != lastMatch) {
+            results.push_back(currentMatch->str(1));
+            currentMatch++;
+        }
+    }
+    return results;
+}
+
+string ExtractJsonString(const string& jsonContent, const string& key) {
+    regex r("\"" + key + "\"\\s*:\\s*\"([^\"]+)\"");
+    smatch match;
+    if (regex_search(jsonContent, match, r)) {
+        return match[1].str();
+    }
+    return "";
+}
+
+int main(int argc, char* argv[]) {
     InitEliteLogger();
     CheckEULA();
     if (argc == 1) {

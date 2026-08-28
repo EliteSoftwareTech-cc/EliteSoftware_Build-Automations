@@ -1,4 +1,3 @@
-#include "..\EliteLogger.h"
 #include <windows.h>
 #include <commctrl.h>
 #include <windowsx.h>
