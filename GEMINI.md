@@ -31,43 +31,44 @@ All new components and standalone CLI tools built for this framework MUST adhere
 - **Dedicated Component Documentation:** Every individual component must have its own `.md` file located at its root outlining its specific CLI features and parameters.
 - **Universal Help System:** Every tool and subcommand must implement robust help flag parsing responding to `/help`, `//help`, `-help`, `--help`, `-?`, and `--?`.
 
-## ⚙️ Environment Variables, Logging & Global Access
+### ⚙️ Environment Variables, Logging & Global Access
+
+### 📚 Documentation Bifurcation (Critical Cross-References)
+This project maintains a strict separation between human-facing and machine-facing documentation:
+- **`architecture_decisions.md`**: Engineering philosophy, design history, and rationale. For human developers.
+- **`agent_protocols.md`**: Strictly structured, zero-humor, machine-readable execution schemas. For AI agents.
+- **`EliteSoftware_MCP_Architecture.md`**: The Domain-Multiplexed Architecture vision and roadmap.
+
+### 🔒 Execution Environment (DEFINITIVE STANDARD)
+**The global PATH injection via `EliteSoftware-EnvManager_GUI.exe` is the STANDARD operating mode.**
+
+All compiled tools reside in a single canonical binary vault:
+- **64-bit:** `Z:\EliteSoftware-Projects\EliteSoftware_Build-Automations\BuildOutputx64\`
+- **32-bit:** `Z:\EliteSoftware-Projects\EliteSoftware_Build-Automations\BuildOutputx86\`
+
+These paths are permanently injected into the System `%PATH%` via the Environment Manager GUI. Tools are callable headlessly from any terminal, any directory, without initialization scripts.
+
+> **⚠️ DEPRECATED:** The earlier session-isolated `EliteEnv.cmd` approach is deprecated. It is preserved ONLY as a portable-mode fallback for air-gapped systems. It is NOT the standard execution context. Agents must NEVER source `EliteEnv.cmd` unless explicitly instructed by a human operator.
+
+#### System Environment Variables
+| Variable | Purpose |
+|---|---|
+| `ELITE_BUILD_X64` | Semicolon-delimited list of absolute paths to each 64-bit compiled EXE |
+| `ELITE_BUILD_X86` | Semicolon-delimited list of absolute paths to each 32-bit compiled EXE |
+| `ELITE_COMPILER_PATHS` | Semicolon-delimited map of third-party build tools (`gcc.exe`, `MSBuild.exe`, `ISCC.exe`, `signtool.exe`) |
+| `ELITE_IS_CHILD` | Set by parent orchestrators to prevent double-logging cascades in child processes |
 
 ### EliteLogger.h (Native Win32 Pipe IPC)
-All C++ CLI tools in this suite now natively include `src\EliteLogger.h`. This intercepts all `stdout` and `stderr` from external processes (like `g++` or `windres`) using Win32 Anonymous Pipes and streams it directly to a centralized `EliteBuild.log` file in the project root. It utilizes an `ELITE_IS_CHILD` environment variable to prevent double-logging cascades between parent orchestrators and child compilers.
+All C++ CLI tools natively include `src\EliteLogger.h`. This intercepts all `stdout` and `stderr` from external processes using Win32 Anonymous Pipes and streams output directly to a centralized `EliteBuild.log` file.
 
-### ELITE_COMPILER_PATHS (Nested Tool Localization)
-We use a dedicated system environment variable named `ELITE_COMPILER_PATHS` which contains a semicolon-delimited map of all third-party build tools (`gcc.exe`, `MSBuild.exe`, `ISCC.exe`, `signtool.exe`, etc.). This variable is dynamically appended to both the System `%PATH%` and Current User `%PATH%` to ensure edge-case projects never lose track of compilers.
+### 🤖 LLM Autonomous Execution (`--ai-mode`)
+**MANDATORY for all headless agent invocations.** This flag:
+- Bypasses the interactive EULA confirmation prompt
+- Suppresses all `Press any key to continue...` pauses
+- Forces strict exit code returns instead of interactive error dialogs
+- Updates the terminal title to `(Ai Mode)` while the process runs
 
-We have instituted a new standard for reusing the **EliteBuild CLI Tools**. Instead of dropping these 8 components into every single project folder, they only need to exist **once** globally on the system (usually residing in Z:\EliteSoftware-Projects\EliteSoftware_Build-Automations\Local_Build_Tools).
-
-To achieve this, we use the custom EliteSoftware Environment Manager UI to set up system environment variables:
-*   ELITE_BUILD_X64: Contains a semicolon-delimited list of the absolute file paths to each individual 64-bit compiled EXE.
-*   ELITE_BUILD_X86: Contains a semicolon-delimited list of the absolute file paths to each individual 32-bit compiled EXE.
-
-The **Environment Manager GUI** will also append these locations to your system %PATH%, meaning you can call EliteBuild_Compiler.exe from any terminal, anywhere.
-
-### The Entry Point (EliteBuild.exe)
-For every new project, you only need to copy **one** tool into the repository root: EliteBuild.exe (The Entry Point). 
-1. EliteBuild.exe reads the local .config file.
-2. It looks up %ELITE_BUILD_X64% in the environment variables.
-3. It seamlessly passes the instructions to the globally installed backend tools.
-
-### The Version Bumper (EliteBuild_VersionBumper.exe)
-We also include EliteBuild_VersionBumper.exe to parse files like changelog.md or ersion.h, find the X.X.X.X string, and automatically increment the Major, Minor, Feature, or Bugfix number.
-
-### The Readme Generator (EliteReadmeGenerator.exe)
-A C++ CLI utility containing 5 hardcoded Markdown templates tailored for various EliteSoftware project architectures. It takes <TemplateID>, <ProjectName>, and an optional <Tagline> to output a perfectly formatted 
-eadme.md.
-*   1 = Master Hybrid (Architecture & GUI)
-*   2 = Legacy GUI Application
-*   3 = Headless CLI Tool
-*   4 = Client/Server Architecture
-*   5 = Automation & Shell Extension
-
-### 🤖 LLM Autonomous Execution (Secret Bypass)
-When invoking any native EliteSoftware C++ CLI tools (like EliteBuild.exe or EliteVersionBumper.exe), pass the --ai-mode argument. 
-This is an undocumented flag that completely bypasses the mandatory End User License Agreement (EULA) interactive prompts, allowing LLM agents to execute builds and scans completely headlessly without deadlocking the terminal. The terminal title will update to (Ai Mode) while the process runs.
+Agents must ALWAYS pass `--ai-mode` when executing any EliteSoftware C++ CLI tool.
 
 ## 🧰 Integrated Master Tools & Utilities (Agent Reference Guide)
 
@@ -155,4 +156,12 @@ egsvr32.exe (SysWOW64 for 32-bit, System32 for 64-bit).
 - **Rule:** When AI agents need to utilize or interact with files, scripts, or assets located in other directories or projects, you MUST use EliteSymlinker.exe to create a symbolic link or hard link instead of moving (Copy-Item / Move-Item) the files. 
 - **Why:** This guarantees you are always referencing the absolute latest master version of the file across the system and entirely eliminates the risk of accidentally moving or deleting the original source files.
 
+## 📜 State Ledger Protocol (Documentation Integrity)
+- **Rule:** Autonomous agents are strictly PROHIBITED from utilizing destructive file writes on documentation files (`.md`, `.txt`, architectural logs). Always APPEND, never overwrite.
+- **Rule:** Every structural change or manual override of tool settings must be appended to the master ledger with a strict **What / How / Why** schema, ensuring the next spawned agent reads the chronological history before executing.
+- **Rule:** If an agent must modify an existing architectural decision, it must append a dated entry explaining the change, preserving the original text above for audit trail purposes.
 
+## 🤖 Agent-Specific Documentation
+For strictly machine-readable execution schemas, JSON parameter definitions, exit code taxonomy, and workflow DAG mappings, agents must reference:
+- **`agent_protocols.md`** — The zero-humor, zero-narrative operational manual for autonomous AI execution.
+- **`architecture_decisions.md`** — The engineering philosophy and design rationale (human-readable context).
