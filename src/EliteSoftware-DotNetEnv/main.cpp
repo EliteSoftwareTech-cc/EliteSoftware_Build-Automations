@@ -1,10 +1,11 @@
+#include "..\EliteLogger.h"
 #include <windows.h>
 #include <iostream>
 #include <string>
 
 using namespace std;
 
-bool IsAiMode() { return strstr(GetCommandLineA(), "--ai-mode") != nullptr; }
+
 
 void CheckDotNetVersion(HKEY hKey, const char* version) {
     HKEY hSubKey;
@@ -26,6 +27,8 @@ void CheckDotNetVersion(HKEY hKey, const char* version) {
 }
 
 int main(int argc, char* argv[]) {
+    EliteInit("EliteSoftware-DotNetEnv", argc, argv);
+
     cout << "EliteSoftware .NET Environment Analyzer\n";
     cout << "Scanning HKLM for installed Frameworks...\n\n";
 

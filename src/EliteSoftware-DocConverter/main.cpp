@@ -1,3 +1,4 @@
+#include "..\EliteLogger.h"
 #include <windows.h>
 #include <iostream>
 #include <fstream>
@@ -5,9 +6,11 @@
 
 using namespace std;
 
-bool IsAiMode() { return strstr(GetCommandLineA(), "--ai-mode") != nullptr; }
+
 
 int main(int argc, char* argv[]) {
+    EliteInit("EliteSoftware-DocConverter", argc, argv);
+
     string inFile = "";
     string outFile = "";
 

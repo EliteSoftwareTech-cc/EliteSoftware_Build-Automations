@@ -1,3 +1,4 @@
+#include "..\EliteLogger.h"
 #include <windows.h>
 #include <gdiplus.h>
 #include <iostream>
@@ -600,6 +601,8 @@ void ProcessFile(const std::string& inputPath8, const std::string& outputPath, c
 }
 
 int main(int argc, char* argv[]) {
+    EliteInit("IconManager_CLI", argc, argv);
+
     if (argc < 2) {
         std::cerr << "Usage: " << argv[0] << " <input_file(s)> [output_file] [options]\n";
         std::cerr << "If multiple inputs are provided or no output is given, generates 1 file in every format.\n";

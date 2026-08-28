@@ -1,3 +1,4 @@
+#include "..\EliteLogger.h"
 #include <windows.h>
 #include <iostream>
 #include <string>
@@ -21,9 +22,11 @@ typedef struct _STATEMGRSTATUS {
 
 typedef BOOL (WINAPI *SRSetRestorePointA_t)(PRESTOREPTINFOA, PSTATEMGRSTATUS);
 
-bool IsAiMode() { return strstr(GetCommandLineA(), "--ai-mode") != nullptr; }
+
 
 int main(int argc, char* argv[]) {
+    EliteInit("EliteSoftware-SystemRestore", argc, argv);
+
     string desc = "EliteSoftware Auto-Snapshot";
 
     for (int i = 1; i < argc; ++i) {

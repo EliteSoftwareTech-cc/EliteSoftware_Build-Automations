@@ -1,3 +1,4 @@
+#include "..\EliteLogger.h"
 #include <windows.h>
 #include <shobjidl.h>
 #include <objbase.h>
@@ -7,7 +8,7 @@
 
 using namespace std;
 
-bool IsAiMode() { return strstr(GetCommandLineA(), "--ai-mode") != nullptr; }
+
 
 HRESULT CreateLink(LPCSTR lpszPathObj, LPCSTR lpszPathLink, LPCSTR lpszDesc, LPCSTR lpszArgs, LPCSTR lpszDir, LPCSTR lpszIcon) {
     HRESULT hres;
@@ -35,6 +36,8 @@ HRESULT CreateLink(LPCSTR lpszPathObj, LPCSTR lpszPathLink, LPCSTR lpszDesc, LPC
 }
 
 int main(int argc, char* argv[]) {
+    EliteInit("EliteSoftware-ShortcutForge", argc, argv);
+
     string target = "";
     string outLink = "";
     string icon = "";

@@ -1,11 +1,14 @@
+#include "..\EliteLogger.h"
 #include <windows.h>
 #include <iostream>
 
 using namespace std;
 
-bool IsAiMode() { return strstr(GetCommandLineA(), "--ai-mode") != nullptr; }
+
 
 int main(int argc, char* argv[]) {
+    EliteInit("EliteSoftware-Win7Enabler", argc, argv);
+
     cout << "EliteSoftware Win7 ESU Enabler\n";
     cout << "Patching BypassESU variables in the registry...\n";
 

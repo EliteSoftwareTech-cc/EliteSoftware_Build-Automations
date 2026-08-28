@@ -1,12 +1,15 @@
+#include "..\EliteLogger.h"
 #include <windows.h>
 #include <iostream>
 #include <string>
 
 using namespace std;
 
-bool IsAiMode() { return strstr(GetCommandLineA(), "--ai-mode") != nullptr; }
+
 
 int main(int argc, char* argv[]) {
+    EliteInit("EliteSoftware-ServiceForge", argc, argv);
+
     string name = "";
     string display = "";
     string binPath = "";

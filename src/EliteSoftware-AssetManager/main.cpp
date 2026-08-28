@@ -1,3 +1,4 @@
+#include "..\EliteLogger.h"
 #include <windows.h>
 #include <urlmon.h>
 #include <iostream>
@@ -7,9 +8,11 @@
 
 using namespace std;
 
-bool IsAiMode() { return strstr(GetCommandLineA(), "--ai-mode") != nullptr; }
+
 
 int main(int argc, char* argv[]) {
+    EliteInit("EliteSoftware-AssetManager", argc, argv);
+
     string url = "";
     string outPath = "";
 

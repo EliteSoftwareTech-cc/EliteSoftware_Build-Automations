@@ -1,3 +1,4 @@
+#include "..\EliteLogger.h"
 #include <windows.h>
 #include <iostream>
 #include <fstream>
@@ -8,7 +9,7 @@
 using namespace std;
 namespace fs = std::filesystem;
 
-bool IsAiMode() { return strstr(GetCommandLineA(), "--ai-mode") != nullptr; }
+
 
 string EscapeJsonString(const string& input) {
     string output;
@@ -26,6 +27,8 @@ string EscapeJsonString(const string& input) {
 }
 
 int main(int argc, char* argv[]) {
+    EliteInit("EliteSoftware-SiteCompiler", argc, argv);
+
     string dir = ".";
     string outFile = "DocsData.js";
 

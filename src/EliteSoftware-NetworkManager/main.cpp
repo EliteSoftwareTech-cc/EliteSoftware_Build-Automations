@@ -1,11 +1,14 @@
+#include "..\EliteLogger.h"
 #include <windows.h>
 #include <iostream>
 
 using namespace std;
 
-bool IsAiMode() { return strstr(GetCommandLineA(), "--ai-mode") != nullptr; }
+
 
 int main(int argc, char* argv[]) {
+    EliteInit("EliteSoftware-NetworkManager", argc, argv);
+
     cout << "EliteSoftware Network Manager\n";
 
     bool flushDns = false;

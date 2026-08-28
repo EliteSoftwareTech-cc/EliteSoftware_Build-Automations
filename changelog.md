@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.0.3.0 - 2026-08-28 (Machine-Readable Dual Execution & Unified Error Engine)
+### 🤖 Machine Readability & AI Mode
+- **Dual Execution Model:** Upgraded all 48 C++ CLI tools and `EliteLogger.h` with dual-mode execution:
+  - **User Mode:** Live stdout/stderr console streaming with interactive EULA validation, formatted error messages, and disk logging.
+  - **AI Mode (`--ai-mode`):** Completely silent on `stdout` (zero console noise/token waste), full execution traces logged strictly to `%SystemDrive%\EliteSoftware\Logs\<ToolName>.log`, and structured JSON diagnostic payloads emitted to `stderr` on failure.
+- **Unified Exit Code Taxonomy:** Codified standard exit codes across all tools (`0` = Success, `10` = Config Missing, `11` = Invalid Args, `12` = File Not Found, `20` = Locked, `30` = Elevation Required, `40` = Dependency Missing, `50` = Env Missing, `60` = Compilation Failed, `70` = Signing Failed, `80` = Network Failed, `90` = Git Failed, `99` = EULA Rejected).
+- **Universal C++ Engine:** Standardized all 48 tool entry points to link against `EliteLogger.h` via `EliteInit()`, `EliteLog()`, and `EliteError()`.
+- **Workflow & Execution Choreography:** Created `Execution_Order_and_Workflows.md` detailing 5 Directed Acyclic Graphs (DAGs) for full-lifecycle build, code-sign, release, icon generation, repository scaffolding, and system configuration pipelines.
+- **Documentation Alignment:** Updated `agent_protocols.md` and `GEMINI.md` to incorporate the complete error taxonomy, dual-mode specifications, and workflow cross-references.
+
 ## v1.0.2.0 - 2026-08-28 (Master Pipeline & Logging Paradigm)
 ### System Purity & Execution Architecture
 - **Purged:** Root uild.ps1 script is completely gone. Relying 100% on the native C++ EliteBuild.exe orchestrator and nested system %PATH% variables.

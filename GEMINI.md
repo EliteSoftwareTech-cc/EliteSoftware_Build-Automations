@@ -36,7 +36,8 @@ All new components and standalone CLI tools built for this framework MUST adhere
 ### 📚 Documentation Bifurcation (Critical Cross-References)
 This project maintains a strict separation between human-facing and machine-facing documentation:
 - **`architecture_decisions.md`**: Engineering philosophy, design history, and rationale. For human developers.
-- **`agent_protocols.md`**: Strictly structured, zero-humor, machine-readable execution schemas. For AI agents.
+- **`agent_protocols.md`**: Strictly structured, zero-humor, machine-readable execution schemas and parameter specs. For AI agents.
+- **`Execution_Order_and_Workflows.md`**: Directed Acyclic Graphs (DAGs), pipeline ordering, and dual execution model documentation.
 - **`EliteSoftware_MCP_Architecture.md`**: The Domain-Multiplexed Architecture vision and roadmap.
 
 ### 🔒 Execution Environment (DEFINITIVE STANDARD)

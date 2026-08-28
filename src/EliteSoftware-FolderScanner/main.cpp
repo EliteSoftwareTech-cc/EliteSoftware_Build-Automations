@@ -1,3 +1,4 @@
+#include "..\EliteLogger.h"
 #include <windows.h>
 #include <iostream>
 #include <string>
@@ -5,7 +6,7 @@
 
 using namespace std;
 
-bool IsAiMode() { return strstr(GetCommandLineA(), "--ai-mode") != nullptr; }
+
 
 void ScanDirectory(const string& dir, ULONGLONG& totalSize, ULONGLONG& fileCount, ULONGLONG& dirCount) {
     WIN32_FIND_DATAA findData;
@@ -33,6 +34,8 @@ void ScanDirectory(const string& dir, ULONGLONG& totalSize, ULONGLONG& fileCount
 }
 
 int main(int argc, char* argv[]) {
+    EliteInit("EliteSoftware-FolderScanner", argc, argv);
+
     string targetDir = ".";
 
     for (int i = 1; i < argc; ++i) {

@@ -1,12 +1,15 @@
+#include "..\EliteLogger.h"
 #include <windows.h>
 #include <iostream>
 #include <string>
 
 using namespace std;
 
-bool IsAiMode() { return strstr(GetCommandLineA(), "--ai-mode") != nullptr; }
+
 
 int main(int argc, char* argv[]) {
+    EliteInit("EliteSoftware-RegSnapshot", argc, argv);
+
     string key = "";
     string exportPath = "";
     string restorePath = "";

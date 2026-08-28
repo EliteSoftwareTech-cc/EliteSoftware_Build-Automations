@@ -1,3 +1,4 @@
+#include "..\EliteLogger.h"
 #include <iostream>
 #include <windows.h>
 #include <string>
@@ -7,9 +8,7 @@
 
 using namespace std;
 
-bool IsAiMode() {
-    return strstr(GetCommandLineA(), "--ai-mode") != nullptr;
-}
+
 
 void ListCLSIDs(const string& filter = "") {
     HKEY hKey;
@@ -43,6 +42,8 @@ void ListCLSIDs(const string& filter = "") {
 }
 
 int main(int argc, char* argv[]) {
+    EliteInit("EliteSoftware-CLSIDGenerator", argc, argv);
+
     string programName = "";
     bool listMode = false;
     string filter = "";

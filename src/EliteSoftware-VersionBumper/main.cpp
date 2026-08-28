@@ -1,3 +1,4 @@
+#include "..\EliteLogger.h"
 /*
  * Company: EliteSoftwareTech Co
  * Tool Name: EliteVersionBumper
@@ -20,13 +21,7 @@
 
 namespace fs = std::filesystem;
 
-void CheckEULA() {
-    if (strstr(GetCommandLineA(), "--ai-mode")) {
-        char currentTitle[512];
-        if (GetConsoleTitleA(currentTitle, 512) > 0) {
-            std::string newTitle = std::string(currentTitle) + " (Ai Mode)";
-            SetConsoleTitleA(newTitle.c_str());
-        } else {
+// CheckEULA handled by EliteLogger.h else {
             SetConsoleTitleA("EliteSoftware Tool (Ai Mode)");
         }
         std::cout << "AI Mode active. Bypassing EULA prompt.\n";
@@ -58,15 +53,7 @@ void CheckEULA() {
 
 
 // Logging Utility matching EliteSoftware standards
-void WriteEliteLog(const std::string& message, const std::string& type = "INFO") {
-    const char* sysDrive = std::getenv("SystemDrive");
-    std::string drive = sysDrive ? sysDrive : "C:";
-    
-    // Ensure logs directory exists
-    std::string logDir = drive + "\\EliteSoftware\\Logs";
-    if (!fs::exists(logDir)) {
-        fs::create_directories(logDir);
-    }
+// WriteEliteLog handled by EliteLogger.h
 
     std::string logPath = logDir + "\\EliteVersionBumper.log";
 
@@ -145,6 +132,8 @@ bool UpdateVersionInFile(const std::string& filePath, const std::string& newVers
 }
 
 int main(int argc, char* argv[]) {
+    EliteInit("EliteSoftware-VersionBumper", argc, argv);
+
     CheckEULA();
     WriteEliteLog("Initializing EliteVersionBumper v1.0.0.0...");
 

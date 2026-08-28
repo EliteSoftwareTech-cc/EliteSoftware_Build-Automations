@@ -1,3 +1,4 @@
+#include "..\EliteLogger.h"
 #include <windows.h>
 #include <iostream>
 #include <fstream>
@@ -6,9 +7,11 @@
 
 using namespace std;
 
-bool IsAiMode() { return strstr(GetCommandLineA(), "--ai-mode") != nullptr; }
+
 
 int main(int argc, char* argv[]) {
+    EliteInit("EliteSoftware-HostConfigurator", argc, argv);
+
     string domain = "";
     string ip = "127.0.0.1";
     bool remove = false;

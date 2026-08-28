@@ -9,6 +9,9 @@ This project serves as the digital station for EliteSoftware's engineering initi
 
 ### 🔗 Quick Links
 - 📖 [Continuous Changelog](changelog.md)
+- 🔄 [Execution Order & Workflow Choreography](Execution_Order_and_Workflows.md)
+- 🤖 [Machine-Readable Agent Protocols](agent_protocols.md)
+- 🏛️ [Architecture Decisions Log](architecture_decisions.md)
 - 🧠 [GEMINI AI Architecture Rules](GEMINI.md)
 - 📚 [Master Tool Catalogue](Tool_Catalogue.md)
 - 🏗️ [Architecture Overview](Documentation/EliteBuildChain_Architecture.md)

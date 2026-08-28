@@ -1,3 +1,4 @@
+#include "..\EliteLogger.h"
 #include <windows.h>
 #include <iostream>
 #include <string>
@@ -5,6 +6,8 @@
 using namespace std;
 
 int main(int argc, char* argv[]) {
+    EliteInit("EliteSoftware-PIDKiller", argc, argv);
+
     string pidStr = "";
     if (argc > 1) {
         pidStr = argv[1];

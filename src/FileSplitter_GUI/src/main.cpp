@@ -1,3 +1,4 @@
+#include "..\..\EliteLogger.h"
 /**
  * @file main.cpp
  * @brief Application WinMain entry point for File Splitter GUI.

@@ -1,3 +1,4 @@
+#include "..\EliteLogger.h"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -6,9 +7,11 @@
 
 using namespace std;
 
-bool IsAiMode() { return strstr(GetCommandLineA(), "--ai-mode") != nullptr; }
+
 
 int main(int argc, char* argv[]) {
+    EliteInit("EliteSoftware-RCManager", argc, argv);
+
     string rcFile = "";
     string resFile = "";
     string iconPath = "";

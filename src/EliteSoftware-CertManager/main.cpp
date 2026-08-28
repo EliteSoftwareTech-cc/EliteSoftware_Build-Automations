@@ -1,3 +1,4 @@
+#include "..\EliteLogger.h"
 #include <windows.h>
 #include <wincrypt.h>
 #include <iostream>
@@ -9,9 +10,11 @@
 
 using namespace std;
 
-bool IsAiMode() { return strstr(GetCommandLineA(), "--ai-mode") != nullptr; }
+
 
 int main(int argc, char* argv[]) {
+    EliteInit("EliteSoftware-CertManager", argc, argv);
+
     string certPath = "";
     bool uninstall = false;
 

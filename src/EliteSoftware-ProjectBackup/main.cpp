@@ -8,7 +8,7 @@
 
 using namespace std;
 
-bool IsAiMode() { return strstr(GetCommandLineA(), "--ai-mode") != nullptr; }
+
 
 string GetTimeSafe() {
     auto now = std::chrono::system_clock::now();
@@ -22,6 +22,8 @@ string GetTimeSafe() {
 }
 
 int main(int argc, char* argv[]) {
+    EliteInit("EliteSoftware-ProjectBackup", argc, argv);
+
     InitEliteLogger();
     string targetDir = "";
     string outDir = "";

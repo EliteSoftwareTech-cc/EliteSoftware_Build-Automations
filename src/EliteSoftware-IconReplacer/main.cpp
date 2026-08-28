@@ -1,3 +1,4 @@
+#include "..\EliteLogger.h"
 #include <windows.h>
 #include <iostream>
 #include <fstream>
@@ -35,7 +36,7 @@ struct GRPICONDIRENTRY {
 
 using namespace std;
 
-bool IsAiMode() { return strstr(GetCommandLineA(), "--ai-mode") != nullptr; }
+
 
 bool RebaseChecksum(const string& exePath) {
     DWORD headerSum, checkSum;
@@ -68,6 +69,8 @@ bool RebaseChecksum(const string& exePath) {
 }
 
 int main(int argc, char* argv[]) {
+    EliteInit("EliteSoftware-IconReplacer", argc, argv);
+
     string exePath = "";
     string iconPath = "";
 

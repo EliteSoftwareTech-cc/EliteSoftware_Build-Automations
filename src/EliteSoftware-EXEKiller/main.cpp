@@ -1,3 +1,4 @@
+#include "..\EliteLogger.h"
 #include <windows.h>
 #include <tlhelp32.h>
 #include <iostream>
@@ -7,6 +8,8 @@
 using namespace std;
 
 int main(int argc, char* argv[]) {
+    EliteInit("EliteSoftware-EXEKiller", argc, argv);
+
     string exeName = "";
     if (argc > 1) {
         exeName = argv[1];

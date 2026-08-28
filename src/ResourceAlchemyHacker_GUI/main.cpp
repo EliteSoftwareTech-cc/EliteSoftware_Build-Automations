@@ -1,3 +1,4 @@
+#include "..\EliteLogger.h"
 #include <windows.h>
 #include <commctrl.h>
 #include <windowsx.h>
@@ -57,7 +58,9 @@ processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #define IDM_HELP_CONTENTS 302
 #define IDM_HELP_ABOUT 303
 #define IDM_HELP_WHATSNEW 304
-#include "../version.h"
+#ifndef APP_VERSION
+#define APP_VERSION "1.0.0.0"
+#endif
 
 #pragma pack(push, 1)
 struct ICONDIR {

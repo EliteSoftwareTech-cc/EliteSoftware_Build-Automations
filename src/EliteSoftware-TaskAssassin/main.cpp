@@ -1,3 +1,4 @@
+#include "..\EliteLogger.h"
 #include <windows.h>
 #include <tlhelp32.h>
 #include <iostream>
@@ -7,7 +8,7 @@
 
 using namespace std;
 
-bool IsAiMode() { return strstr(GetCommandLineA(), "--ai-mode") != nullptr; }
+
 
 void KillProcessByName(const string& processName) {
     HANDLE hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPALL, NULL);
@@ -38,6 +39,8 @@ void KillProcessByName(const string& processName) {
 }
 
 int main(int argc, char* argv[]) {
+    EliteInit("EliteSoftware-TaskAssassin", argc, argv);
+
     string targetsStr = "";
 
     for (int i = 1; i < argc; ++i) {

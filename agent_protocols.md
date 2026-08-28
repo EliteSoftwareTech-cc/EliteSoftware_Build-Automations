@@ -1,25 +1,43 @@
 # agent_protocols.md
 
-## 1. EXECUTION ENVIRONMENT
-- All tools are globally accessible via %PATH% injection through EliteSoftware-EnvManager_GUI.exe
-- The canonical binary vault is: Z:\EliteSoftware-Projects\EliteSoftware_Build-Automations\BuildOutputx64\
-- Agents do NOT need to source any initialization script. Tools are globally available.
-- The --ai-mode flag is MANDATORY for all headless agent execution
+## 1. EXECUTION ENVIRONMENT & DUAL-MODE PROTOCOL
+- **Global Path Vault:** All tools reside in `Z:\EliteSoftware-Projects\EliteSoftware_Build-Automations\BuildOutputx64\` (and `BuildOutputx86\`) and are globally accessible via system `%PATH%`.
+- **Dual Execution Behavior:**
+  - **User Mode (Default):** Streams live stdout/stderr to console AND writes timestamped execution logs to `%SystemDrive%\EliteSoftware\Logs\<ToolName>.log`. Allows interactive prompts and EULA checks.
+  - **AI Mode (`--ai-mode`):** **MANDATORY for all autonomous agent invocations.** 
+    - Completely silent on `stdout` (no terminal noise, no token waste).
+    - Logs ALL execution traces, child process pipes, and commands strictly to disk (`%SystemDrive%\EliteSoftware\Logs\<ToolName>.log`).
+    - Suppresses interactive prompts, EULA checks, and pauses.
+    - Emits structured JSON diagnostic payloads to `stderr` on failure:
+      `{"exit_code": <int>, "error_type": "<TYPE>", "message": "<DESC>", "parameter_fault": "<ARG>", "remediation": "<FIX>"}`
+    - Returns standardized exit codes.
+- **Master Workflow Guide:** For end-to-end Directed Acyclic Graphs (DAGs), execution order, and pipeline choreography, reference:
+  - [`Execution_Order_and_Workflows.md`](file:///Z:/EliteSoftware-Projects/EliteSoftware_Build-Automations/Execution_Order_and_Workflows.md)
 
 ## 2. FILESYSTEM PROTOCOLS
-- Safe File Deletion Protocol (Recycle Bin mandatory)
-- Symlink Rule (EliteSymlinker.exe mandatory, no Copy-Item/Move-Item)
-- State Ledger Protocol (agents must NEVER destructively overwrite documentation; append only with What/How/Why)
+- **Safe File Deletion Protocol:** ALL file deletions performed by agents MUST utilize the Windows Recycle Bin instead of permanent deletion.
+- **The Symlink Directive:** Agents and scripts are strictly forbidden from copying/moving binaries between project trees. Invoke `EliteSymlinker.exe` to create NTFS symbolic links.
+- **State Ledger Protocol:** Agents must NEVER destructively overwrite documentation (`.md`, `.txt`, architectural logs). Always APPEND with a strict What / How / Why schema.
 
 ## 3. UNIFIED EXIT CODE TAXONOMY
-- 0: SUCCESS
-- 1: GENERAL_FAILURE (unspecified)
-- 10: MISSING_CONFIGURATION (config file not found)
-- 11: SCHEMA_VIOLATION (invalid argument)
-- 20: HANDLE_LOCKED (target file/directory in use)
-- 30: ACCESS_DENIED (requires elevation)
-- 40: DEPENDENCY_MISSING (prerequisite tool not executed)
-- 50: ENVIRONMENT_VARIABLE_EMPTY (required env var not set)
+| Code | Constant | Error Type | Remediation Protocol |
+|:---:|:---|:---|:---|
+| **0** | `ELITE_SUCCESS` | None | Proceed to next DAG node. |
+| **1** | `ELITE_ERROR_GENERAL` | `GENERAL_FAILURE` | Inspect `%SystemDrive%\EliteSoftware\Logs\<ToolName>.log`. |
+| **10** | `ELITE_ERROR_CONFIG_MISSING` | `CONFIG_NOT_FOUND` | Generate `.config` or JSON configuration file stub. |
+| **11** | `ELITE_ERROR_INVALID_ARGS` | `SCHEMA_VIOLATION` | Re-read argument schema and pass valid parameters. |
+| **12** | `ELITE_ERROR_FILE_NOT_FOUND` | `FILE_NOT_FOUND` | Verify target file or binary exists on disk. |
+| **13** | `ELITE_ERROR_TARGET_EXISTS` | `TARGET_EXISTS` | Provide overwrite flag or rename target file. |
+| **20** | `ELITE_ERROR_HANDLE_LOCKED` | `RESOURCE_LOCKED` | Execute `EliteTaskAssassin.exe` to release file handles. |
+| **30** | `ELITE_ERROR_ACCESS_DENIED` | `ELEVATION_REQUIRED` | Rerun via `PsExec64Launcher.exe` under elevated token. |
+| **40** | `ELITE_ERROR_DEPENDENCY_MISSING` | `DEPENDENCY_MISSING` | Execute `EliteBuildLocator.exe` to locate MinGW / MSVC / ISCC. |
+| **50** | `ELITE_ERROR_ENV_MISSING` | `ENV_VAR_EMPTY` | Run `EliteEnvManager.exe` to re-initialize system variables. |
+| **60** | `ELITE_ERROR_COMPILATION_FAILED` | `COMPILATION_FAILED` | Check compiler diagnostics in log file and fix syntax. |
+| **70** | `ELITE_ERROR_SIGNING_FAILED` | `SIGNING_FAILED` | Verify certificate validity and PE checksum rebase. |
+| **80** | `ELITE_ERROR_NETWORK_FAILED` | `NETWORK_ERROR` | Check endpoint connectivity and API credentials. |
+| **90** | `ELITE_ERROR_GIT_FAILED` | `GIT_ERROR` | Verify git remote permissions and branch status. |
+| **99** | `ELITE_ERROR_EULA_REJECTED` | `EULA_REJECTED` | Always append `--ai-mode` to bypass interactive EULA. |
+
 
 ## 4. TOOL PARAMETER SCHEMAS
 `json

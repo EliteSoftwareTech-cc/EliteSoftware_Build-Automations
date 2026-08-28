@@ -1,12 +1,11 @@
+#include "..\EliteLogger.h"
 #include <iostream>
 #include <windows.h>
 #include <string>
 
 using namespace std;
 
-bool IsAiMode() {
-    return strstr(GetCommandLineA(), "--ai-mode") != nullptr;
-}
+
 
 int GetPEArchitecture(const string& path) {
     HANDLE hFile = CreateFileA(path.c_str(), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
@@ -30,6 +29,8 @@ int GetPEArchitecture(const string& path) {
 }
 
 int main(int argc, char* argv[]) {
+    EliteInit("EliteSoftware-SmartRegsvr", argc, argv);
+
     string filePath = "";
     if (argc > 1) {
         for (int i = 1; i < argc; ++i) {

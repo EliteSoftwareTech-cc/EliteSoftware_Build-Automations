@@ -9,7 +9,7 @@
 
 using namespace std;
 
-bool IsAiMode() { return strstr(GetCommandLineA(), "--ai-mode") != nullptr; }
+
 
 vector<string> Split(const string& s, char delimiter) {
     vector<string> tokens;
@@ -38,6 +38,8 @@ string FindToolInVar(const string& toolName) {
 
 
 int main(int argc, char* argv[]) {
+    EliteInit("EliteSoftware-EntryPoint", argc, argv);
+
     InitEliteLogger();
     vector<string> configs;
     vector<string> toolsToRun;

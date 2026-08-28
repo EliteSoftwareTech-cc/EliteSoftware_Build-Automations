@@ -1,3 +1,4 @@
+#include "..\EliteLogger.h"
 #include <iostream>
 #include <windows.h>
 #include <string>
@@ -6,7 +7,7 @@
 
 using namespace std;
 
-bool IsAiMode() { return strstr(GetCommandLineA(), "--ai-mode") != nullptr; }
+
 
 void GenerateTemplate(int type, const string& path) {
     ofstream out(path);
@@ -23,6 +24,8 @@ void GenerateTemplate(int type, const string& path) {
 }
 
 int main(int argc, char* argv[]) {
+    EliteInit("EliteSoftware-InnoCreator", argc, argv);
+
     string mode = "";
     int templateType = 1;
     string outFile = "setup.iss";
