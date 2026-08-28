@@ -1,3 +1,4 @@
+#include "..\..\EliteLogger.h"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -146,7 +147,7 @@ void printReleaseHelp() {
 
 int executeCommand(const string& cmd) {
     cout << "Executing: " << cmd << "\n";
-    return system(cmd.c_str());
+    return ExecuteCommand(cmd);
 }
 
 int handleInit(const vector<string>& args) {
@@ -291,6 +292,7 @@ int handleRelease(const vector<string>& args) {
 }
 
 int main(int argc, char* argv[]) {
+    InitEliteLogger();
     CheckEULA();
     if (argc < 2) {
         printGlobalHelp();
@@ -324,6 +326,10 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 }
+
+
+
+
 
 
 
