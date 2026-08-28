@@ -1,9 +1,11 @@
 #include <windows.h>
+#include <iostream>
 #include <commctrl.h>
 #include <windowsx.h>
 #include <string>
 #include <vector>
 #include <fstream>
+#include <filesystem>
 #include <sstream>
 #include <iomanip>
 #include <shellapi.h>
@@ -459,7 +461,7 @@ void EliteLog(const std::wstring& msg) {
     SYSTEMTIME st;
     GetLocalTime(&st);
     
-    std::wofstream out(logFile, std::ios::app);
+    std::wofstream out(std::filesystem::path(logFile), std::ios::app);
     if (out.is_open()) {
         out << L"[" << std::setfill(L'0') << std::setw(4) << st.wYear << L"-" << std::setw(2) << st.wMonth << L"-" << std::setw(2) << st.wDay
             << L" " << std::setw(2) << st.wHour << L":" << std::setw(2) << st.wMinute << L":" << std::setw(2) << st.wSecond << L"] "

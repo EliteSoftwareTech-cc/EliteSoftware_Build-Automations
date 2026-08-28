@@ -106,7 +106,7 @@ void DoList(const wstring& target) {
 }
 
 bool ExtractIconGroup(HMODULE hMod, LPCWSTR resName, WORD lang, const wstring& outPath) {
-    HRSRC hResGroup = FindResourceExW(hMod, RT_GROUP_ICON, resName, lang);
+    HRSRC hResGroup = FindResourceExW(hMod, (LPCWSTR)RT_GROUP_ICON, resName, lang);
     if (!hResGroup) return false;
     HGLOBAL hMemGroup = LoadResource(hMod, hResGroup);
     void* pGroup = LockResource(hMemGroup);
@@ -115,7 +115,7 @@ bool ExtractIconGroup(HMODULE hMod, LPCWSTR resName, WORD lang, const wstring& o
     ICONDIR* pGrpDir = (ICONDIR*)pGroup;
     GRPICONDIRENTRY* pGrpEntries = (GRPICONDIRENTRY*)((BYTE*)pGroup + sizeof(ICONDIR));
 
-    ofstream out(outPath, ios::binary);
+    ofstream out(std::filesystem::path(outPath), ios::binary);
     if (!out) return false;
 
     // Write file header
@@ -139,7 +139,7 @@ bool ExtractIconGroup(HMODULE hMod, LPCWSTR resName, WORD lang, const wstring& o
 
         out.write((char*)&entry, sizeof(ICONDIRENTRY));
 
-        HRSRC hIconRes = FindResourceExW(hMod, RT_ICON, MAKEINTRESOURCEW(pGrpEntries[i].nId), lang);
+        HRSRC hIconRes = FindResourceExW(hMod, (LPCWSTR)RT_ICON, MAKEINTRESOURCEW(pGrpEntries[i].nId), lang);
         HGLOBAL hIconMem = LoadResource(hMod, hIconRes);
         iconData[i] = LockResource(hIconMem);
         iconSizes[i] = SizeofResource(hMod, hIconRes);
@@ -193,7 +193,7 @@ void DoExtract(const wstring& target, const wstring& typeStr, const wstring& nam
     DWORD dwSize = SizeofResource(hMod, hRes);
 
     if (pData && dwSize > 0) {
-        ofstream out(outPath, ios::binary);
+        ofstream out(std::filesystem::path(outPath), ios::binary);
         if (out) {
             out.write((char*)pData, dwSize);
             EliteLog(L"Successfully dumped raw resource to " + outPath);
@@ -236,9 +236,9 @@ struct EnumGroupCtx {
 
 BOOL CALLBACK EnumGroupIconsProc(HMODULE hModule, LPCWSTR lpszType, LPWSTR lpszName, LONG_PTR lParam) {
     EnumGroupCtx* ctx = (EnumGroupCtx*)lParam;
-    HRSRC hResGroup = FindResourceExW(hModule, RT_GROUP_ICON, lpszName, ctx->lang);
+    HRSRC hResGroup = FindResourceExW(hModule, (LPCWSTR)RT_GROUP_ICON, lpszName, ctx->lang);
     if (!hResGroup) {
-        hResGroup = FindResourceW(hModule, lpszName, RT_GROUP_ICON);
+        hResGroup = FindResourceW(hModule, lpszName, (LPCWSTR)RT_GROUP_ICON);
     }
     if (hResGroup) {
         HGLOBAL hMem = LoadResource(hModule, hResGroup);
@@ -273,11 +273,11 @@ bool ReplaceIconGroup(const wstring& target, LPCWSTR name, WORD lang, const wstr
     
     HMODULE hMod = LoadLibraryExW(target.c_str(), NULL, LOAD_LIBRARY_AS_DATAFILE | LOAD_LIBRARY_AS_IMAGE_RESOURCE);
     if (hMod) {
-        EnumResourceNamesW(hMod, RT_GROUP_ICON, EnumGroupIconsProc, (LONG_PTR)&ctx);
+        EnumResourceNamesW(hMod, (LPCWSTR)RT_GROUP_ICON, EnumGroupIconsProc, (LONG_PTR)&ctx);
         FreeLibrary(hMod);
     }
     
-    ifstream icoFile(icoPath, ios::binary);
+    ifstream icoFile(std::filesystem::path(icoPath), ios::binary);
     if (!icoFile) {
         EliteLog(L"ReplaceIconGroup: Failed to open ICO file " + icoPath);
         return false;
@@ -339,12 +339,12 @@ bool ReplaceIconGroup(const wstring& target, LPCWSTR name, WORD lang, const wstr
     }
     
     for (WORD oldId : ctx.oldSubIconIds) {
-        UpdateResourceW(hUpdate, RT_ICON, MAKEINTRESOURCEW(oldId), lang, NULL, 0);
+        UpdateResourceW(hUpdate, (LPCWSTR)RT_ICON, MAKEINTRESOURCEW(oldId), lang, NULL, 0);
     }
     
     for (int i = 0; i < header.idCount; ++i) {
         WORD newId = newSubIconIds[i];
-        if (!UpdateResourceW(hUpdate, RT_ICON, MAKEINTRESOURCEW(newId), lang, iconImages[i].data(), (DWORD)iconImages[i].size())) {
+        if (!UpdateResourceW(hUpdate, (LPCWSTR)RT_ICON, MAKEINTRESOURCEW(newId), lang, iconImages[i].data(), (DWORD)iconImages[i].size())) {
             LogWin32Error(L"ReplaceIconGroup: Failed to write new sub-icon ID " + to_wstring(newId));
             EndUpdateResourceW(hUpdate, TRUE);
             return false;
@@ -369,7 +369,7 @@ bool ReplaceIconGroup(const wstring& target, LPCWSTR name, WORD lang, const wstr
         pOutEntries[i].nId = newSubIconIds[i];
     }
     
-    if (!UpdateResourceW(hUpdate, RT_GROUP_ICON, name, lang, groupDirectoryBuffer.data(), (DWORD)groupDirectoryBuffer.size())) {
+    if (!UpdateResourceW(hUpdate, (LPCWSTR)RT_GROUP_ICON, name, lang, groupDirectoryBuffer.data(), (DWORD)groupDirectoryBuffer.size())) {
         LogWin32Error(L"ReplaceIconGroup: Failed to write new RT_GROUP_ICON directory");
         EndUpdateResourceW(hUpdate, TRUE);
         return false;
@@ -406,7 +406,7 @@ void DoReplace(const wstring& target, const wstring& typeStr, const wstring& nam
         return;
     }
 
-    ifstream in(inPath, ios::binary | ios::ate);
+    ifstream in(std::filesystem::path(inPath), ios::binary | ios::ate);
     if (!in) {
         EliteLog(L"Failed to read input file: " + inPath);
         EndUpdateResourceW(hUpdate, TRUE);
