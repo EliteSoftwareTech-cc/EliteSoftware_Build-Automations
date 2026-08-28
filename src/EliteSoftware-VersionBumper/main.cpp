@@ -5,7 +5,7 @@
  * Version: 1.0.0.0
  * Description: Command line utility to synchronize and bump 4-decimal version numbers across C++, Header, and RC files.
  */
-
+#include "..\EliteLogger.h"
 #include <iostream>
 #include <fstream>
 #include <string>

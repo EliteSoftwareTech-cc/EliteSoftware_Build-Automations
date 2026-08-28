@@ -149,7 +149,7 @@ std::wstring ParseResourceToText(LPCWSTR typeId, void* data, DWORD size) {
     // Check if typeId is an integer resource type
     bool isIntResource = IS_INTRESOURCE(typeId);
     
-    if (isIntResource && (typeId == RT_VERSION || typeId == RT_STRING || typeId == RT_DIALOG || typeId == RT_MENU || typeId == RT_MESSAGETABLE)) {
+    if (isIntResource && ((ULONG_PTR)typeId == (ULONG_PTR)RT_VERSION || (ULONG_PTR)typeId == (ULONG_PTR)RT_STRING || (ULONG_PTR)typeId == (ULONG_PTR)RT_DIALOG || (ULONG_PTR)typeId == (ULONG_PTR)RT_MENU || (ULONG_PTR)typeId == (ULONG_PTR)RT_MESSAGETABLE)) {
         std::wstring out;
         wchar_t* ptr = (wchar_t*)data;
         DWORD wchars = size / 2;
@@ -168,7 +168,7 @@ std::wstring ParseResourceToText(LPCWSTR typeId, void* data, DWORD size) {
         if (currentStr.length() >= 3) out += currentStr + L"\r\n";
         if (out.empty()) out = L"(Binary data, no strings found)";
         return out;
-    } else if (isIntResource && (typeId == RT_MANIFEST || typeId == RT_HTML)) {
+    } else if (isIntResource && ((ULONG_PTR)typeId == (ULONG_PTR)RT_MANIFEST || (ULONG_PTR)typeId == (ULONG_PTR)RT_HTML)) {
         int wLen = MultiByteToWideChar(CP_UTF8, 0, (char*)data, size, NULL, 0);
         std::wstring out(wLen, 0);
         MultiByteToWideChar(CP_UTF8, 0, (char*)data, size, &out[0], wLen);
