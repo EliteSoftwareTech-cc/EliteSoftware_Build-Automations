@@ -123,10 +123,10 @@ The master tools have been aggregated and compiled directly into the root BuildO
 - **Location / File Structure**: Source is in src\EliteSoftware-InnoCreator. Executable is EliteInnoCreator.exe.
 - **Usage for Agents**: Use --generate --template <1|2|3> --out <path.iss> to generate, or --compile <path.iss> [args] to compile.
 
-### 9. EliteBuild (The Entry Point)
-- **Intent**: Orchestrator that natively reads the %ELITE_BUILD_X64% variable array, locates the backend tools, and executes them based on the local EliteBuild.config file. Eliminates the need for any uild.ps1 scripts in project repositories.
+### 9. EliteBuild (The Orchestrator)
+- **Intent**: Orchestrator that natively reads the %ELITE_BUILD_X64% variable array, iterates through .config files within the Build_Configurations directory, locates the backend tools, and executes them based on the configuration logic. Entirely eliminates the need for any nested uild.ps1 scripts in project repositories.
 - **Location / File Structure**: Source is in src\EliteSoftware-EntryPoint. Executable is EliteBuild.exe.
-- **Usage for Agents**: Drop a copy of EliteBuild.exe in the repo root. Run EliteBuild.exe --config <path> --tool <ToolName.exe> to selectively invoke tools.
+- **Usage for Agents**: Drop a copy of EliteBuild.exe (or use a symlink) in the repo root. Ensure your .config files are inside the Build_Configurations folder. Run EliteBuild.exe --ai-mode to selectively invoke the native C++ build chain based on those configs.
 
 **Note on Interactive Mode**: All C++ CLI tools in this suite now feature an interactive console fallback mode. If executed directly (e.g., via double-click) without arguments, they will pause and prompt the user for the missing inputs. To suppress this behavior and run headlessly, agents MUST pass the --ai-mode argument.
 
@@ -146,3 +146,4 @@ The master tools have been aggregated and compiled directly into the root BuildO
 ## 🛡️ File Access Protocol (The Symlink Rule)
 - **Rule:** When AI agents need to utilize or interact with files, scripts, or assets located in other directories or projects, you MUST use EliteSymlinker.exe to create a symbolic link or hard link instead of moving (Copy-Item / Move-Item) the files. 
 - **Why:** This guarantees you are always referencing the absolute latest master version of the file across the system and entirely eliminates the risk of accidentally moving or deleting the original source files.
+
