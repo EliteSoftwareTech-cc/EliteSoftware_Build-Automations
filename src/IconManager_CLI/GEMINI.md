@@ -1,30 +1,14 @@
 # ⚠️ MASTER COPY - DO NOT USE FROM HERE ⚠️
-
-**Agents & Users:** This directory (`src/IconManager_CLI`) contains the master source code for the `IconManager_CLI` module. 
-**DO NOT** execute the binary from this folder. The compiled, globally accessible binary resides in `Local_Build_Tools\` (and `BuildOutputx64\`) and is mapped system-wide via the `%ELITE_COMPILER_PATHS%` variable.
-
+**Agents & Users:** This directory contains master source code. DO NOT execute from here. Use `%ELITE_COMPILER_PATHS%` to execute the compiled binary.
 ---
-
 ## 🛠️ Tool Overview: IconManager_CLI
-
-Pragmatically converts images into multi-resolution `.ico` containers, or batch extracts embedded icons from PE binaries.
-
+A comprehensive native C++ utility for image and icon manipulation. It can convert images into multi-resolution `.ico` files, extract RT_BITMAP, RT_RCDATA, and RT_ICON resources from compiled PE binaries, and generate scaled image formats. Features advanced flood-fill background removal algorithms.
 ## 🚀 Execution & Agent Guide
-- **Execution Path:** The live tool is invoked as `IconManager_CLI.exe`.
-- **Global Pathing:** Do not use absolute paths to invoke this tool. Because `%ELITE_COMPILER_PATHS%` is registered, you can invoke it headlessly from anywhere.
-- **AI Mode:** Always pass the `--ai-mode` flag when invoking via an LLM agent to bypass EULA prompts and avoid terminal deadlocks.
-- **Config Driven:** For tools that support configurations, pass `--config <path_to_config.json>` to securely orchestrate tasks.
-
-*Note: If you need to modify the logic of this tool, modify the `.cpp` or `.ps1` files inside this directory, then run `EliteBuild.exe` from the project root to compile the updates back into `Local_Build_Tools`.*
-
-
-### 🔍 Autodetected Source Parameters (Reference)
-Based on deep-scanning the source code in this directory, the following arguments/flags are actively parsed by this tool:
-- `--remove-bg`
-- `--remove-bg-bl`
-- `--remove-bg-black`
-- `--remove-bg-br`
-- `--remove-bg-tl`
-- `--remove-bg-tr`
-- `--remove-bg-white`
-- `--remove-halo`
+- **Execution Path:** `icon_maker.exe`
+- **AI Mode:** Always pass `--ai-mode` when invoking via LLM.
+### 🔍 Accepted Source Parameters
+- `<input_file(s)>`: Path to the image or PE binary to process.
+- `[output_file]`: Target output file path (optional).
+- `--remove-halo`: Removes classic magenta/pink transparency backgrounds.
+- `--remove-bg`: Smart auto-edge background flood-fill removal.
+- `--remove-bg-white`, `--remove-bg-black`, `--remove-bg-tl`, `--remove-bg-tr`, `--remove-bg-bl`, `--remove-bg-br`: Specific corner or color-based background removal methods.
