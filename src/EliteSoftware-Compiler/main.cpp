@@ -135,17 +135,31 @@ void KillProcessByName(const string& processName) {
 // Simple JSON array regex extractor
 vector<string> ExtractJsonArray(const string& jsonContent, const string& key) {
     vector<string> results;
-    // Look for "key" : [ "val1", "val2" ]
-    regex r("\"" + key + "\"\\s*:\\s*\\[([\\s\\S]*?)\\]");
-    smatch match;
-    if (regex_search(jsonContent, match, r)) {
-        string arrayContent = match[1].str();
-        regex stringMatcher("\"([^\"]+)\"");
-        sregex_iterator currentMatch(arrayContent.begin(), arrayContent.end(), stringMatcher);
-        sregex_iterator lastMatch;
-        while (currentMatch != lastMatch) {
-            results.push_back(currentMatch->str(1));
-            currentMatch++;
+    size_t keyPos = jsonContent.find("\"" + key + "\"");
+    if (keyPos == string::npos) return results;
+    size_t bracketStart = jsonContent.find("[", keyPos);
+    size_t bracketEnd = jsonContent.find("]", bracketStart);
+    if (bracketStart == string::npos || bracketEnd == string::npos) return results;
+    string arrayStr = jsonContent.substr(bracketStart, bracketEnd - bracketStart);
+    
+    bool inString = false;
+    string currentStr = "";
+    for (size_t i = 0; i < arrayStr.length(); i++) {
+        if (arrayStr[i] == '\"' && (i == 0 || arrayStr[i-1] != '\\')) {
+            if (inString) {
+                results.push_back(currentStr);
+                currentStr = "";
+                inString = false;
+            } else {
+                inString = true;
+            }
+        } else if (inString) {
+            if (arrayStr[i] == '\\' && i + 1 < arrayStr.length() && arrayStr[i+1] == '\"') {
+                currentStr += '\"';
+                i++; // skip escaped quote
+            } else {
+                currentStr += arrayStr[i];
+            }
         }
     }
     return results;
@@ -228,7 +242,13 @@ int main(int argc, char* argv[]) {
 
     // 4. GccTargets (MinGW)
     vector<string> gccTargets = ExtractJsonArray(configContent, "GccTargets");
-    for (const string& target : gccTargets) {
+    for (string target : gccTargets) {
+        if (target.find("g++ -m64") != string::npos) { target = std::regex_replace(target, std::regex("^g\\+\\+"), "Z:\\\\\\\\BuildTools\\\\\\\\mingw64\\\\\\\\bin\\\\\\\\g++.exe"); }
+        else if (target.find("g++ -m32") != string::npos) { target = std::regex_replace(target, std::regex("^g\\+\\+"), "Z:\\\\\\\\BuildTools\\\\\\\\mingw32\\\\\\\\bin\\\\\\\\g++.exe"); }
+        if (target.find("windres") != string::npos) {
+            if (target.find("pe-x86-64") != string::npos || target.find("res64") != string::npos) { target = std::regex_replace(target, std::regex("^windres"), "Z:\\\\\\\\BuildTools\\\\\\\\mingw64\\\\\\\\bin\\\\\\\\windres.exe"); }
+            else { target = std::regex_replace(target, std::regex("^windres"), "Z:\\\\\\\\BuildTools\\\\\\\\mingw32\\\\\\\\bin\\\\\\\\windres.exe"); }
+        }
         // If the target is a script, execute it directly, or parse a custom GCC invocation.
         // For simplicity, we assume GccTargets contains direct g++ compilation commands.
         if (ExecuteCommand(target) != 0) {
@@ -242,6 +262,10 @@ int main(int argc, char* argv[]) {
     if (!strstr(GetCommandLineA(), " --ai-mode")) { std::cout << "\nPress any key to exit...\n"; system("pause"); }
     return 0;
 }
+
+
+
+
 
 
 
