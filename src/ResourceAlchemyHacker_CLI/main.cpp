@@ -522,38 +522,37 @@ void DoFlatten(const wstring& target_base, const wstring& target_mun, const wstr
     }
 }
 
-int wmain(int argc, wchar_t* argv[]) {
-    if (argc < 3) {
-        wcout << L"Syntax: ResourceAlchemistCLI.exe [ACTION] [TARGET_EXE] [OPTIONS]" << endl;
-        wcout << L"Actions: /list, /extract, /replace" << endl;
-        if (!strstr(GetCommandLineA(), " --ai-mode")) { system("pause"); }
+int main(int argc, char* argv[]) {
+    EliteInit("ResourceAlchemyHacker_CLI", argc, argv);
+    int wargc = 0;
+    LPWSTR* wargv = CommandLineToArgvW(GetCommandLineW(), &wargc);
+    if (!wargv || wargc < 3) {
+        std::cout << "Syntax: ResourceAlchemistCLI.exe [ACTION] [TARGET_EXE] [OPTIONS]\n";
+        std::cout << "Actions: /list, /extract, /replace, /delete, /flatten\n";
+        if (wargv) LocalFree(wargv);
         return 1;
     }
 
-    wstring action = argv[1];
-    wstring target = argv[2];
+    wstring action = wargv[1];
+    wstring target = wargv[2];
 
     if (action == L"/list") {
         DoList(target);
-    } else if (action == L"/extract" && argc >= 7) {
-        // /extract target type name lang outpath
-        DoExtract(target, argv[3], argv[4], (WORD)_wtoi(argv[5]), argv[6]);
-    } else if ((action == L"/replace" || action == L"/add") && argc >= 7) {
-        // /replace target type name lang inpath
-        DoReplace(target, argv[3], argv[4], (WORD)_wtoi(argv[5]), argv[6]);
-    } else if (action == L"/delete" && argc >= 6) {
-        // /delete target type name lang
-        DoDelete(target, argv[3], argv[4], (WORD)_wtoi(argv[5]));
-    } else if (action == L"/flatten" && argc >= 5) {
-        // /flatten target_base target_mun target_mui
-        DoFlatten(target, argv[3], argv[4]);
+    } else if (action == L"/extract" && wargc >= 7) {
+        DoExtract(target, wargv[3], wargv[4], (WORD)_wtoi(wargv[5]), wargv[6]);
+    } else if ((action == L"/replace" || action == L"/add") && wargc >= 7) {
+        DoReplace(target, wargv[3], wargv[4], (WORD)_wtoi(wargv[5]), wargv[6]);
+    } else if (action == L"/delete" && wargc >= 6) {
+        DoDelete(target, wargv[3], wargv[4], (WORD)_wtoi(wargv[5]));
+    } else if (action == L"/flatten" && wargc >= 5) {
+        DoFlatten(target, wargv[3], wargv[4]);
     } else {
         EliteLog(L"Invalid arguments provided.");
+        LocalFree(wargv);
         return 2;
     }
 
-    if (!strstr(GetCommandLineA(), " --ai-mode")) { std::cout << "\nPress any key to exit...\n"; system("pause"); }
-
+    LocalFree(wargv);
     return 0;
 }
 

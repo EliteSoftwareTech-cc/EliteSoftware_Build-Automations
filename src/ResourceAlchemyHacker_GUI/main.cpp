@@ -1,3 +1,9 @@
+#ifndef UNICODE
+#define UNICODE
+#endif
+#ifndef _UNICODE
+#define _UNICODE
+#endif
 #include <windows.h>
 #include <iostream>
 #include <commctrl.h>
@@ -61,6 +67,9 @@ processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #define IDM_HELP_WHATSNEW 304
 #ifndef APP_VERSION
 #define APP_VERSION "1.0.0.0"
+#endif
+#ifndef RAH_VERSION
+#define RAH_VERSION L"1.0.0.0"
 #endif
 
 #pragma pack(push, 1)
@@ -800,7 +809,7 @@ LRESULT CALLBACK InsetWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam
                                 wchar_t tempPath[MAX_PATH];
                                 GetTempPathW(MAX_PATH, tempPath);
                                 std::wstring aviFile = std::wstring(tempPath) + L"ResourceAlchemyTemp.avi";
-                                std::ofstream out(aviFile, std::ios::binary);
+                                std::ofstream out(std::filesystem::path(aviFile), std::ios::binary);
                                 out.write((char*)data, size);
                                 out.close();
                                 ShellExecuteW(NULL, L"open", aviFile.c_str(), NULL, NULL, SW_SHOWNORMAL);
@@ -1926,14 +1935,14 @@ BOOL CALLBACK GuiEnumResNameProc(HMODULE hModule, LPCWSTR lpszType, LPWSTR lpszN
     else if (typeStr == L"MUI" || (ULONG_PTR)lpszType == 211) imgIndex = 13; 
 
     if (*(ctx->pThumbnailCount) < 200) {
-        if (lpszType == RT_GROUP_ICON || lpszType == RT_ICON) {
+        if ((ULONG_PTR)lpszType == (ULONG_PTR)RT_GROUP_ICON || (ULONG_PTR)lpszType == (ULONG_PTR)RT_ICON) {
             HRSRC hRes = FindResourceW(ctx->hMod, lpszName, lpszType);
             if (hRes) {
                 HGLOBAL hData = LoadResource(ctx->hMod, hRes);
                 if (hData) {
                     PBYTE pData = (PBYTE)LockResource(hData);
-                    int nID = (lpszType == RT_GROUP_ICON) ? LookupIconIdFromDirectoryEx(pData, TRUE, g_treeIconSize, g_treeIconSize, LR_DEFAULTCOLOR) : 0;
-                    HRSRC hResIcon = (lpszType == RT_GROUP_ICON) ? FindResourceW(ctx->hMod, MAKEINTRESOURCEW(nID), RT_ICON) : hRes;
+                    int nID = ((ULONG_PTR)lpszType == (ULONG_PTR)RT_GROUP_ICON) ? LookupIconIdFromDirectoryEx(pData, TRUE, g_treeIconSize, g_treeIconSize, LR_DEFAULTCOLOR) : 0;
+                    HRSRC hResIcon = ((ULONG_PTR)lpszType == (ULONG_PTR)RT_GROUP_ICON) ? FindResourceW(ctx->hMod, MAKEINTRESOURCEW(nID), (LPCWSTR)RT_ICON) : hRes;
                     if (hResIcon) {
                         HGLOBAL hIconData = LoadResource(ctx->hMod, hResIcon);
                         if (hIconData) {
@@ -1949,7 +1958,7 @@ BOOL CALLBACK GuiEnumResNameProc(HMODULE hModule, LPCWSTR lpszType, LPWSTR lpszN
                     }
                 }
             }
-        } else if (lpszType == RT_BITMAP) {
+        } else if ((ULONG_PTR)lpszType == (ULONG_PTR)RT_BITMAP) {
             HBITMAP hBmp = (HBITMAP)LoadImageW(ctx->hMod, lpszName, IMAGE_BITMAP, g_treeIconSize, g_treeIconSize, LR_CREATEDIBSECTION);
             if (hBmp) {
                 imgIndex = ImageList_Add(g_hImageListTV, hBmp, NULL);
@@ -2014,25 +2023,25 @@ BOOL CALLBACK GuiEnumResNameProc(HMODULE hModule, LPCWSTR lpszType, LPWSTR lpszN
 BOOL CALLBACK GuiEnumResTypeProc(HMODULE hModule, LPWSTR lpszType, LONG_PTR lParam) {
     GuiEnumCtx* ctx = (GuiEnumCtx*)lParam;
     std::wstring typeStr = GetResIdOrName(lpszType);
-    if (lpszType == RT_GROUP_ICON) typeStr = L"Icon Group";
-    else if (lpszType == RT_ICON) typeStr = L"Icon";
-    else if (lpszType == RT_BITMAP) typeStr = L"Bitmap";
-    else if (lpszType == RT_STRING) typeStr = L"String Table";
-    else if (lpszType == RT_DIALOG) typeStr = L"Dialog";
-    else if (lpszType == RT_VERSION) typeStr = L"Version Info";
-    else if (lpszType == RT_MANIFEST) typeStr = L"Manifest";
+    if ((ULONG_PTR)lpszType == (ULONG_PTR)RT_GROUP_ICON) typeStr = L"Icon Group";
+    else if ((ULONG_PTR)lpszType == (ULONG_PTR)RT_ICON) typeStr = L"Icon";
+    else if ((ULONG_PTR)lpszType == (ULONG_PTR)RT_BITMAP) typeStr = L"Bitmap";
+    else if ((ULONG_PTR)lpszType == (ULONG_PTR)RT_STRING) typeStr = L"String Table";
+    else if ((ULONG_PTR)lpszType == (ULONG_PTR)RT_DIALOG) typeStr = L"Dialog";
+    else if ((ULONG_PTR)lpszType == (ULONG_PTR)RT_VERSION) typeStr = L"Version Info";
+    else if ((ULONG_PTR)lpszType == (ULONG_PTR)RT_MANIFEST) typeStr = L"Manifest";
     
     int typeIcon = 0; // Default folder
-    if (lpszType == RT_GROUP_ICON) typeIcon = 9;
-    else if (lpszType == RT_ICON) typeIcon = 10;
-    else if (lpszType == RT_BITMAP) typeIcon = 11;
-    else if (lpszType == RT_CURSOR || lpszType == RT_GROUP_CURSOR) typeIcon = 6;
+    if ((ULONG_PTR)lpszType == (ULONG_PTR)RT_GROUP_ICON) typeIcon = 9;
+    else if ((ULONG_PTR)lpszType == (ULONG_PTR)RT_ICON) typeIcon = 10;
+    else if ((ULONG_PTR)lpszType == (ULONG_PTR)RT_BITMAP) typeIcon = 11;
+    else if ((ULONG_PTR)lpszType == (ULONG_PTR)RT_CURSOR || (ULONG_PTR)lpszType == (ULONG_PTR)RT_GROUP_CURSOR) typeIcon = 6;
     else if (typeStr == L"WAVE") typeIcon = 5;
-    else if (lpszType == RT_STRING || lpszType == RT_MESSAGETABLE) typeIcon = 3;
-    else if (lpszType == RT_DIALOG) typeIcon = 4;
-    else if (lpszType == RT_MENU || lpszType == RT_ACCELERATOR) typeIcon = 7;
-    else if (lpszType == RT_MANIFEST || typeStr == L"XML") typeIcon = 8;
-    else if (lpszType == RT_VERSION) typeIcon = 14;
+    else if ((ULONG_PTR)lpszType == (ULONG_PTR)RT_STRING || (ULONG_PTR)lpszType == (ULONG_PTR)RT_MESSAGETABLE) typeIcon = 3;
+    else if ((ULONG_PTR)lpszType == (ULONG_PTR)RT_DIALOG) typeIcon = 4;
+    else if ((ULONG_PTR)lpszType == (ULONG_PTR)RT_MENU || (ULONG_PTR)lpszType == (ULONG_PTR)RT_ACCELERATOR) typeIcon = 7;
+    else if ((ULONG_PTR)lpszType == (ULONG_PTR)RT_MANIFEST || typeStr == L"XML") typeIcon = 8;
+    else if ((ULONG_PTR)lpszType == (ULONG_PTR)RT_VERSION) typeIcon = 14;
     else if (typeStr == L"PNG") typeIcon = 12;
     else if (typeStr == L"MUI") typeIcon = 13;
     
@@ -2154,7 +2163,7 @@ std::wstring GetFirstGroupIconName(const std::wstring& targetPath) {
     HMODULE hMod = LoadLibraryExW(targetPath.c_str(), NULL, LOAD_LIBRARY_AS_DATAFILE | LOAD_LIBRARY_AS_IMAGE_RESOURCE);
     if (!hMod) return L"1";
     FirstIconCtx ctx;
-    EnumResourceNamesW(hMod, RT_GROUP_ICON, EnumFirstIconProc, (LONG_PTR)&ctx);
+    EnumResourceNamesW(hMod, (LPCWSTR)RT_GROUP_ICON, EnumFirstIconProc, (LONG_PTR)&ctx);
     FreeLibrary(hMod);
     return ctx.iconName.empty() ? L"1" : ctx.iconName;
 }
@@ -2169,9 +2178,9 @@ struct EnumGroupCtx {
 
 BOOL CALLBACK EnumGroupIconsProc(HMODULE hModule, LPCWSTR lpszType, LPWSTR lpszName, LONG_PTR lParam) {
     EnumGroupCtx* ctx = (EnumGroupCtx*)lParam;
-    HRSRC hResGroup = FindResourceExW(hModule, RT_GROUP_ICON, lpszName, ctx->lang);
+    HRSRC hResGroup = FindResourceExW(hModule, (LPCWSTR)RT_GROUP_ICON, lpszName, ctx->lang);
     if (!hResGroup) {
-        hResGroup = FindResourceW(hModule, lpszName, RT_GROUP_ICON);
+        hResGroup = FindResourceW(hModule, lpszName, (LPCWSTR)RT_GROUP_ICON);
     }
     if (hResGroup) {
         HGLOBAL hMem = LoadResource(hModule, hResGroup);
@@ -2206,11 +2215,11 @@ bool ReplaceIconGroup(const std::wstring& target, LPCWSTR name, WORD lang, const
     
     HMODULE hMod = LoadLibraryExW(target.c_str(), NULL, LOAD_LIBRARY_AS_DATAFILE | LOAD_LIBRARY_AS_IMAGE_RESOURCE);
     if (hMod) {
-        EnumResourceNamesW(hMod, RT_GROUP_ICON, EnumGroupIconsProc, (LONG_PTR)&ctx);
+        EnumResourceNamesW(hMod, (LPCWSTR)RT_GROUP_ICON, EnumGroupIconsProc, (LONG_PTR)&ctx);
         FreeLibrary(hMod);
     }
     
-    std::ifstream icoFile(icoPath, std::ios::binary);
+    std::ifstream icoFile(std::filesystem::path(icoPath), std::ios::binary);
     if (!icoFile) {
         EliteLog(L"ReplaceIconGroup: Failed to open ICO file " + icoPath);
         return false;
@@ -2272,12 +2281,12 @@ bool ReplaceIconGroup(const std::wstring& target, LPCWSTR name, WORD lang, const
     }
     
     for (WORD oldId : ctx.oldSubIconIds) {
-        UpdateResourceW(hUpdate, RT_ICON, MAKEINTRESOURCEW(oldId), lang, NULL, 0);
+        UpdateResourceW(hUpdate, (LPCWSTR)RT_ICON, MAKEINTRESOURCEW(oldId), lang, NULL, 0);
     }
     
     for (int i = 0; i < header.idCount; ++i) {
         WORD newId = newSubIconIds[i];
-        if (!UpdateResourceW(hUpdate, RT_ICON, MAKEINTRESOURCEW(newId), lang, iconImages[i].data(), (DWORD)iconImages[i].size())) {
+        if (!UpdateResourceW(hUpdate, (LPCWSTR)RT_ICON, MAKEINTRESOURCEW(newId), lang, iconImages[i].data(), (DWORD)iconImages[i].size())) {
             LogWin32Error(L"ReplaceIconGroup: Failed to write new sub-icon ID " + std::to_wstring(newId));
             EndUpdateResourceW(hUpdate, TRUE);
             return false;
@@ -2302,7 +2311,7 @@ bool ReplaceIconGroup(const std::wstring& target, LPCWSTR name, WORD lang, const
         pOutEntries[i].nId = newSubIconIds[i];
     }
     
-    if (!UpdateResourceW(hUpdate, RT_GROUP_ICON, name, lang, groupDirectoryBuffer.data(), (DWORD)groupDirectoryBuffer.size())) {
+    if (!UpdateResourceW(hUpdate, (LPCWSTR)RT_GROUP_ICON, name, lang, groupDirectoryBuffer.data(), (DWORD)groupDirectoryBuffer.size())) {
         LogWin32Error(L"ReplaceIconGroup: Failed to write new RT_GROUP_ICON directory");
         EndUpdateResourceW(hUpdate, TRUE);
         return false;
@@ -2993,7 +3002,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
         {
             HWND hwndTarget = (HWND)wParam;
             if (GetDlgCtrlID(hwndTarget) == IDC_LOGS_LINK) {
-                SetCursor(LoadCursorW(NULL, IDC_HAND));
+                SetCursor(LoadCursorW(NULL, (LPCWSTR)IDC_HAND));
                 return TRUE;
             }
         }
@@ -3099,6 +3108,16 @@ void LoadTargetPE(HWND hwnd, const std::wstring& path) {
     EliteLog(L"GUI: Loaded target file: " + g_originalFile + L" into temp file " + g_loadedFile);
 }
 
+int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow);
+
+int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
+    return wWinMain(hInstance, hPrevInstance, GetCommandLineW(), nCmdShow);
+}
+
+int main(int argc, char* argv[]) {
+    return WinMain(GetModuleHandle(NULL), NULL, GetCommandLineA(), SW_SHOW);
+}
+
 // Entry Point
 int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow) {
     INITCOMMONCONTROLSEX icex;
@@ -3117,7 +3136,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmd
     wc.hInstance     = hInstance;
     wc.lpszClassName = CLASS_NAME;
     wc.hbrBackground = (HBRUSH)(COLOR_BTNFACE + 1);
-    wc.hCursor       = LoadCursorW(NULL, IDC_ARROW);
+    wc.hCursor       = LoadCursorW(NULL, (LPCWSTR)IDC_ARROW);
     RegisterClassW(&wc);
 
     WNDCLASSW wcInset = { 0 };
@@ -3126,7 +3145,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmd
     wcInset.hInstance = hInstance;
     wcInset.lpszClassName = L"ResourceAlchemyHackerInset";
     wcInset.hbrBackground = (HBRUSH)(COLOR_BTNFACE + 1);
-    wcInset.hCursor       = LoadCursorW(NULL, IDC_ARROW);
+    wcInset.hCursor       = LoadCursorW(NULL, (LPCWSTR)IDC_ARROW);
     RegisterClassW(&wcInset);
 
     HKEY hKeyTmp;
