@@ -21,7 +21,7 @@ This repository (`EliteSoftware_Build-Automations`) holds the **master build too
 ### 4. Logging and Aesthetics
 - Ensure the master GUI / CLI logs out in the classic EliteSoftware witty tone.
 - If we build a WinForms UI for the build chain later, it MUST adhere strictly to the `user_global` UI guidelines (Classic 3D inset, Title Banner, Frutiger Aero).
-- All prompt outputs generated during development in this folder MUST be logged into `Prompt_Outputs/` as per the global rule.
+- All prompt outputs generated during development in this folder MUST be logged into `Documentation/Prompt_Outputs/` as per the updated local rule.
 
 ### 5. The C++ CLI Design Premise (Core Framework Rule)
 All new components and standalone CLI tools built for this framework MUST adhere to the following strict guidelines:
@@ -31,9 +31,15 @@ All new components and standalone CLI tools built for this framework MUST adhere
 - **Dedicated Component Documentation:** Every individual component must have its own `.md` file located at its root outlining its specific CLI features and parameters.
 - **Universal Help System:** Every tool and subcommand must implement robust help flag parsing responding to `/help`, `//help`, `-help`, `--help`, `-?`, and `--?`.
 
-## ⚙️ Environment Variables & Global Access
+## ⚙️ Environment Variables, Logging & Global Access
 
-We have instituted a new standard for reusing the **EliteBuild CLI Tools**. Instead of dropping these 8 components into every single project folder, they only need to exist **once** globally on the system (usually residing in Z:\EliteSoftware-Projects\EliteSoftware_Build-Automations\BuildOutputx64).
+### EliteLogger.h (Native Win32 Pipe IPC)
+All C++ CLI tools in this suite now natively include `src\EliteLogger.h`. This intercepts all `stdout` and `stderr` from external processes (like `g++` or `windres`) using Win32 Anonymous Pipes and streams it directly to a centralized `EliteBuild.log` file in the project root. It utilizes an `ELITE_IS_CHILD` environment variable to prevent double-logging cascades between parent orchestrators and child compilers.
+
+### ELITE_COMPILER_PATHS (Nested Tool Localization)
+We use a dedicated system environment variable named `ELITE_COMPILER_PATHS` which contains a semicolon-delimited map of all third-party build tools (`gcc.exe`, `MSBuild.exe`, `ISCC.exe`, `signtool.exe`, etc.). This variable is dynamically appended to both the System `%PATH%` and Current User `%PATH%` to ensure edge-case projects never lose track of compilers.
+
+We have instituted a new standard for reusing the **EliteBuild CLI Tools**. Instead of dropping these 8 components into every single project folder, they only need to exist **once** globally on the system (usually residing in Z:\EliteSoftware-Projects\EliteSoftware_Build-Automations\Local_Build_Tools).
 
 To achieve this, we use the custom EliteSoftware Environment Manager UI to set up system environment variables:
 *   ELITE_BUILD_X64: Contains a semicolon-delimited list of the absolute file paths to each individual 64-bit compiled EXE.
@@ -51,7 +57,8 @@ For every new project, you only need to copy **one** tool into the repository ro
 We also include EliteBuild_VersionBumper.exe to parse files like changelog.md or ersion.h, find the X.X.X.X string, and automatically increment the Major, Minor, Feature, or Bugfix number.
 
 ### The Readme Generator (EliteReadmeGenerator.exe)
-A C++ CLI utility containing 5 hardcoded Markdown templates tailored for various EliteSoftware project architectures. It takes <TemplateID>, <ProjectName>, and an optional <Tagline> to output a perfectly formatted eadme.md.
+A C++ CLI utility containing 5 hardcoded Markdown templates tailored for various EliteSoftware project architectures. It takes <TemplateID>, <ProjectName>, and an optional <Tagline> to output a perfectly formatted 
+eadme.md.
 *   1 = Master Hybrid (Architecture & GUI)
 *   2 = Legacy GUI Application
 *   3 = Headless CLI Tool
@@ -114,7 +121,8 @@ The master tools have been aggregated and compiled directly into the root BuildO
 - **Usage for Agents**: Provide --name <program> to generate and log a GUID.
 
 ### 7. Smart Drop Handler (DLL/PE Register)
-- **Intent**: Automatically detects whether a dropped PE/DLL file is 32-bit or 64-bit and routes it to the correct egsvr32.exe (SysWOW64 for 32-bit, System32 for 64-bit).
+- **Intent**: Automatically detects whether a dropped PE/DLL file is 32-bit or 64-bit and routes it to the correct 
+egsvr32.exe (SysWOW64 for 32-bit, System32 for 64-bit).
 - **Location / File Structure**: Source is in src\EliteSoftware-SmartRegsvr. Executable is EliteSmartRegsvr.exe.
 - **Usage for Agents**: Pass --file <path> to automatically register the DLL.
 
@@ -146,4 +154,5 @@ The master tools have been aggregated and compiled directly into the root BuildO
 ## 🛡️ File Access Protocol (The Symlink Rule)
 - **Rule:** When AI agents need to utilize or interact with files, scripts, or assets located in other directories or projects, you MUST use EliteSymlinker.exe to create a symbolic link or hard link instead of moving (Copy-Item / Move-Item) the files. 
 - **Why:** This guarantees you are always referencing the absolute latest master version of the file across the system and entirely eliminates the risk of accidentally moving or deleting the original source files.
+
 

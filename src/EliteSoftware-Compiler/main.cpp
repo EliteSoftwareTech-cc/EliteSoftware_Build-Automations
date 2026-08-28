@@ -1,3 +1,4 @@
+#include "..\EliteLogger.h"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -129,38 +130,13 @@ void KillProcessByName(const string& processName) {
     }
 }
 
-// Simple function to execute a command and wait
-int ExecuteCommand(const string& cmd) {
-    cout << "[Compiler] Executing: " << cmd << endl;
-    
-    STARTUPINFO si;
-    PROCESS_INFORMATION pi;
-    ZeroMemory(&si, sizeof(si));
-    si.cb = sizeof(si);
-    ZeroMemory(&pi, sizeof(pi));
 
-    if (!CreateProcess(NULL, (LPSTR)cmd.c_str(), NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi)) {
-        cerr << "[Compiler] ERROR: Failed to execute command. Error code: " << GetLastError() << endl;
-        if (!strstr(GetCommandLineA(), " --ai-mode")) { system("pause"); }
-        return 1;
-    }
-
-    WaitForSingleObject(pi.hProcess, INFINITE);
-    
-    DWORD exitCode;
-    GetExitCodeProcess(pi.hProcess, &exitCode);
-    
-    CloseHandle(pi.hProcess);
-    CloseHandle(pi.hThread);
-    
-    return exitCode;
-}
 
 // Simple JSON array regex extractor
 vector<string> ExtractJsonArray(const string& jsonContent, const string& key) {
     vector<string> results;
     // Look for "key" : [ "val1", "val2" ]
-    regex r("\"" + key + "\"\\s*:\\s*\\[(.*?)\\]");
+    regex r("\"" + key + "\"\\s*:\\s*\\[([\\s\\S]*?)\\]");
     smatch match;
     if (regex_search(jsonContent, match, r)) {
         string arrayContent = match[1].str();
@@ -176,6 +152,7 @@ vector<string> ExtractJsonArray(const string& jsonContent, const string& key) {
 }
 
 int main(int argc, char* argv[]) {
+    InitEliteLogger();
     CheckEULA();
     if (argc == 1) {
         WriteEliteLog("No arguments provided. Falling back to interactive mode.");
@@ -265,6 +242,7 @@ int main(int argc, char* argv[]) {
     if (!strstr(GetCommandLineA(), " --ai-mode")) { std::cout << "\nPress any key to exit...\n"; system("pause"); }
     return 0;
 }
+
 
 
 

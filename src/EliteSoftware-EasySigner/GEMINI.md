@@ -1,22 +1,27 @@
-# 🧠 GEMINI.md - EliteSoftware-EasySigner
+# ⚠️ MASTER COPY - DO NOT USE FROM HERE ⚠️
 
-## 🚨 Local Project Architectural Rules
+**Agents & Users:** This directory (`src/EliteSoftware-EasySigner`) contains the master source code for the `EliteSoftware-EasySigner` module. 
+**DO NOT** execute the binary from this folder. The compiled, globally accessible binary resides in `Local_Build_Tools\` (and `BuildOutputx64\`) and is mapped system-wide via the `%ELITE_COMPILER_PATHS%` variable.
 
-This repository component handles **Authenticode File Signing**.
+---
 
-### 1. Toolchain Purpose
-- Provide a unified `.exe` capable of securely extracting and executing `signtool.exe` using an embedded `EliteSoftware_Special.pfx` payload.
-- Act as a seamless module inside the overarching `EliteBuildChain` ecosystem.
+## 🛠️ Tool Overview: EliteSoftware-EasySigner
 
-### 2. Compilation Rules
-- All source scripts in `EliteSoftware-EasySigner` are written in **C++ native code**.
-- They must be compiled using `g++` and `windres` via the local `build.ps1`.
-- Outputs must route cleanly into `x86/` and `x64/` directories.
+Digital Authenticode signature tool (`EliteEasySigner.exe`). Signs executables and DLLs using the EliteSoftware PFX certificates.
 
-### 3. Agent Navigation
-- See `main.cpp` for the core C++ signing logic and fallback procedures (Method A / Legacy Method).
-- See `resources.rc` for how the binary payloads are integrated at compile-time.
+## 🚀 Execution & Agent Guide
+- **Execution Path:** The live tool is invoked as `EliteEasySigner.exe`.
+- **Global Pathing:** Do not use absolute paths to invoke this tool. Because `%ELITE_COMPILER_PATHS%` is registered, you can invoke it headlessly from anywhere.
+- **AI Mode:** Always pass the `--ai-mode` flag when invoking via an LLM agent to bypass EULA prompts and avoid terminal deadlocks.
+- **Config Driven:** For tools that support configurations, pass `--config <path_to_config.json>` to securely orchestrate tasks.
 
-### 4. Logging and Aesthetics
-- Ensure the master GUI / CLI logs out in the classic EliteSoftware witty tone.
-- All prompt outputs generated during development in this folder MUST be logged into `Prompt_Outputs/` as per the global rule.
+*Note: If you need to modify the logic of this tool, modify the `.cpp` or `.ps1` files inside this directory, then run `EliteBuild.exe` from the project root to compile the updates back into `Local_Build_Tools`.*
+
+
+### 🔍 Autodetected Source Parameters (Reference)
+Based on deep-scanning the source code in this directory, the following arguments/flags are actively parsed by this tool:
+- `--ai-mode`
+- `--file`
+- `--help`
+- `--password`
+- `-help`

@@ -11,6 +11,6 @@ foreach ($file in $mdFiles) {
 }
 
 $jsonString = $jsonHash | ConvertTo-Json -Depth 10 -Compress
-$jsContent = "const EliteDocsData = $jsonString;"
-Set-Content -Path (Join-Path $ScriptDir "DocsData.js") -Value $jsContent -Encoding UTF8
-Write-Host "DocsData.js generated successfully from $($mdFiles.Count) files."
+$outputPath = Join-Path $ScriptDir "media\Web-HTML\DocsData.js"
+Set-Content -Path $outputPath -Value $jsContent -Encoding UTF8
+Write-Host "DocsData.js generated successfully at $outputPath from $($mdFiles.Count) files."

@@ -10,32 +10,31 @@ This project serves as the digital station for EliteSoftware's engineering initi
 ### 🔗 Quick Links
 - 📖 [Continuous Changelog](changelog.md)
 - 🧠 [GEMINI AI Architecture Rules](GEMINI.md)
-- 🏗️ [Architecture Overview](EliteBuildChain_Architecture.md)
-- ⚙️ [Config Schema Documentation](EliteBuildChain_ConfigSchema.md)
+- 📚 [Master Tool Catalogue](Tool_Catalogue.md)
+- 🏗️ [Architecture Overview](Documentation/EliteBuildChain_Architecture.md)
+- ⚙️ [Config Schema Documentation](Documentation/EliteBuildChain_ConfigSchema.md)
 - 🔮 [Upcoming Features & Implementation Plan](ImplementationPlan.md)
-- 🗺️ [C++ Refactoring Roadmap](CPlusPlus_Refactoring_Roadmap.md)
-- ✅ [Live Refactoring Checklist](Refactoring_Checklist.md)
-- 🚀 [Phase 2 Roadmap](CPlusPlus_Refactoring_Roadmap_Phase2.md)
-- 🚀 [Phase 3 Roadmap](CPlusPlus_Refactoring_Roadmap_Phase3.md)
-- 🚀 [Phase 5 Roadmap (System Repair)](CPlusPlus_Refactoring_Roadmap_Phase5.md)
-- 🌐 [Official Web Landing Page](index.html)
+- 🌐 [Official Web Landing Page](media/Web-HTML/index.html)
 
 ## 🚀 Quick Start: Building a New C++ Application from Scratch
 
-The primary design goal of the EliteSoftware Master Suite is to completely eliminate localized uild.ps1 scripts and hardcoded compiling chains. Here is exactly how to start a new C++ project using our C++ configuration-driven architecture:
+The primary design goal of the EliteSoftware Master Suite is to completely eliminate localized `build.ps1` scripts and hardcoded compiling chains. Here is exactly how to start a new C++ project using our C++ configuration-driven architecture:
 
 ### 1. Initialize Your Project Structure
-1. Create a new empty folder for your project (e.g., Z:\MyAwesomeTool).
-2. Inside that folder, create a src\ directory for your .cpp source files.
-3. Inside the root, create a Build_Configurations\ folder.
+1. Create a new empty folder for your project (e.g., `Z:\MyAwesomeTool`).
+2. Inside that folder, create a `src\` directory for your `.cpp` source files.
+3. Inside the root, create a `Build_Configurations\` folder.
 
 ### 2. Connect the EliteBuild Pipeline
-Rather than copying compilation tools into your project, just use EliteSymlinker.exe (or standard mklink) to drop a shortcut/symlink of EliteBuild.exe straight into your project's root folder.
+Rather than copying compilation tools into your project, just use `EliteSymlinker.exe` (or standard `mklink`) to drop a shortcut/symlink of `EliteBuild.exe` (from `Local_Build_Tools`) straight into your project's root folder. 
 
-### 3. Create Your .config File
-Inside the Build_Configurations\ directory, create a new file named MyAwesomeTool.config with the following JSON structure:
+### 3. Environment Variables
+Ensure you have the `%ELITE_COMPILER_PATHS%` variable set in your System PATH so the compilers (`gcc.exe`, `windres.exe`, `signtool.exe`, etc.) are universally accessible.
 
-`json
+### 4. Create Your .config File
+Inside the `Build_Configurations\` directory, create a new file named `MyAwesomeTool.config` with the following JSON structure:
+
+```json
 {
     "GccTargets": [
         "g++ -m64 -O3 -o \"BuildOutputx64\\MyAwesomeTool.exe\" \"src\\main.cpp\" -lole32 -luuid -lshell32"
@@ -44,13 +43,12 @@ Inside the Build_Configurations\ directory, create a new file named MyAwesomeToo
         "MyAwesomeTool.exe"
     ]
 }
-`
+```
 
-### 4. Execute the Build
-Run EliteBuild.exe from your project's root. 
-- **What happens?** EliteBuild.exe will automatically detect the Build_Configurations folder, ingest all .config files inside it, and pass them to the global EliteBuild_Compiler.exe. The compiler will forcefully kill MyAwesomeTool.exe if it's already running to prevent file-lock errors, compile your g++ targets flawlessly, and then hand the output over to EliteEasySigner.exe to digitally sign your new binary.
-
-**No Build Scripts. No Spaghetti Code. Pure Execution.**
+### 5. Execute the Build
+Run `EliteBuild.exe` from your project's root. 
+- **What happens?** `EliteBuild.exe` will automatically detect the `Build_Configurations` folder, ingest all `.config` files inside it, and pass them to the global `EliteBuild_Compiler.exe`. The compiler will forcefully kill `MyAwesomeTool.exe` if it's already running to prevent file-lock errors, compile your `g++` targets flawlessly, and then hand the output over to `EliteEasySigner.exe` to digitally sign your new binary.
+- **Logging:** A verbose `EliteBuild.log` will be generated in your project root capturing standard output and error from all backend tools via Win32 Pipes.**
 
 ### (Optional) Auto-Detection (Zero-Config Mode)
 Some master tools like EliteEasySigner.exe don't always need a strict .config file. If they are invoked without explicit JSON instructions, they can aggressively auto-detect .exe files located in standard output directories (BuildOutputx64, BuildOutputx86) and sign them automatically using system defaults!
@@ -116,7 +114,8 @@ Here’s the showroom lineup of tools included in this absolute unit of a framew
     *   **The Features:** Automatically stamps and signs your compiled binaries with an embedded self-signed PFX certificate. Bypasses the EULA instantly if you feed it --ai-mode.
     *   **Why we built it:** Because raw, unsigned EXEs are a security sin, and manually invoking signtool.exe with a 400-character argument string is cruel and unusual punishment.
 *   **EliteSmartRegsvr.exe (The Architecture Whisperer)**
-    *   **The Features:** A smart drop-handler that reads the raw Portable Executable (PE) headers of any DLL, determines if it's 32-bit or 64-bit, and automatically routes it to the correct Windows egsvr32.exe. 
+    *   **The Features:** A smart drop-handler that reads the raw Portable Executable (PE) headers of any DLL, determines if it's 32-bit or 64-bit, and automatically routes it to the correct Windows 
+egsvr32.exe. 
     *   **Why we built it:** Because dropping a 32-bit DLL into System32 by accident has ruined more Friday nights than we care to admit. Let the computer do the math.
 *   **EliteCLSIDGenerator.exe (The Identity Forger)**
     *   **The Features:** Generates perfectly unique CLSIDs, logs them to a local database, and literally checks the live Windows Registry to guarantee no collisions. Need to impersonate an existing shell extension? Use --list to dump the entire system's registry keys.
@@ -172,6 +171,7 @@ Expect the unexpected. Embrace the chaos. And have fun!
 <div align="center"> <a href='https://i.postimg.cc/DZTjtNg1/Elite-Software-Company-Simulator-LOGO.png' target='_blank'><img src='https://i.postimg.cc/DZTjtNg1/Elite-Software-Company-Simulator-LOGO.png' border='0' alt='Elite-Software-Client' width="250"></a> &nbsp;&nbsp;&nbsp;&nbsp; <a href='https://i.postimg.cc/85mKDbX8/Elite-Software-Company-Logo.png' target='_blank'><img src='https://i.postimg.cc/85mKDbX8/Elite-Software-Company-Logo.png' border='0' alt='Elite-Software-LOGO' width="250"></a> </div>
 
 ---
+
 
 
 

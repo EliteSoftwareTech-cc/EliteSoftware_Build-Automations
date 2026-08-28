@@ -1,21 +1,36 @@
-# 🧠 GEMINI.md - EliteSoftware-GitHub_Repo-Automation
+# ⚠️ MASTER COPY - DO NOT USE FROM HERE ⚠️
 
-## 🚨 Local Project Architectural Rules
+**Agents & Users:** This directory (`src/EliteSoftware-GitHub_Repo-Automation`) contains the master source code for the `EliteSoftware-GitHub_Repo-Automation` module. 
+**DO NOT** execute the binary from this folder. The compiled, globally accessible binary resides in `Local_Build_Tools\` (and `BuildOutputx64\`) and is mapped system-wide via the `%ELITE_COMPILER_PATHS%` variable.
 
-This repository component handles **Git and GitHub orchestration**.
+---
 
-### 1. Toolchain Purpose
-- Provide a unified `.exe` capable of generating repositories, auto-committing, and drafting rich multi-architecture GitHub releases.
-- Act as a standalone bridge until the master `EliteBuild_Publisher_CLI` is fully adopted across the ecosystem.
+## 🛠️ Tool Overview: EliteSoftware-GitHub_Repo-Automation
 
-### 2. Compilation Rules
-- All source scripts in `EliteSoftware-GitHub_Repo-Automation_CLI` are written in **C++ native code**.
-- They must be compiled using `g++` via the local `build.ps1`.
-- Outputs must route cleanly into `x86/` and `x64/` directories.
+Headless CLI tool to interact with the GitHub API, auto-commit, and publish releases.
 
-### 3. Agent Navigation
-- See `EliteSoftware-GitHub_Repo-Automation_CLI/main.cpp` for the core C++ logic handling `git` and `gh` execution.
+## 🚀 Execution & Agent Guide
+- **Execution Path:** The live tool is invoked as `EliteBuild_GitHub_Repo-Automation.exe`.
+- **Global Pathing:** Do not use absolute paths to invoke this tool. Because `%ELITE_COMPILER_PATHS%` is registered, you can invoke it headlessly from anywhere.
+- **AI Mode:** Always pass the `--ai-mode` flag when invoking via an LLM agent to bypass EULA prompts and avoid terminal deadlocks.
+- **Config Driven:** For tools that support configurations, pass `--config <path_to_config.json>` to securely orchestrate tasks.
 
-### 4. Logging and Aesthetics
-- Ensure the master GUI / CLI logs out in the classic EliteSoftware witty tone.
-- All prompt outputs generated during development in this folder MUST be logged into `Prompt_Outputs/` as per the global rule.
+*Note: If you need to modify the logic of this tool, modify the `.cpp` or `.ps1` files inside this directory, then run `EliteBuild.exe` from the project root to compile the updates back into `Local_Build_Tools`.*
+
+
+### 🔍 Autodetected Source Parameters (Reference)
+Based on deep-scanning the source code in this directory, the following arguments/flags are actively parsed by this tool:
+- `--ai-mode`
+- `--force`
+- `--help`
+- `--msg`
+- `--name`
+- `--notes`
+- `--org`
+- `--private`
+- `--public`
+- `--title`
+- `--version`
+- `--x64`
+- `--x86`
+- `-help`

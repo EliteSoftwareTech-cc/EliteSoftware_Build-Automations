@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EliteSoftwareTech.cc :: Information-First Software Engineering</title>
+    <link rel="icon" type="image/png" href="https://i.postimg.cc/85mKDbX8/EliteSoftware-Company-Logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;700&family=Arial:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- Aero & Information-First Design Tokens --- */
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.45);
+            --glass-border: rgba(255, 255, 255, 0.7);
+            --vista-blue-top: #72b0e8;
+            --vista-blue-mid: #4e92d2;
+            --vista-blue-bottom: #2578c1;
+            --vista-blue-dark: #1a5ea3;
+            --elite-cyan: #00ffff;
+            --elite-turquoise: #40e0d0;
+            --elite-teal: #008080;
+            --radius-ui: 10px;
+        }
+
+        * { 
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* --- Desktop Hard-Lock & Fluid Scaling --- */
+        html, body {
+            min-width: 1024px; 
+            background-color: #002d5a;
+            height: 100%;
+            overflow-x: hidden; /* Prevent horizontal scrollbars */
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 180, 255, 0.6) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(0, 255, 150, 0.3) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(100, 150, 255, 0.4) 0%, transparent 100%),
+                url('https://www.transparenttextures.com/patterns/pinstriped-suit.png');
+            background-attachment: fixed;
+            color: #111;
+            font-size: 13px;
+            overflow-y: scroll;
+            line-height: 1.4;
+        }
+
+        /* --- Full-Screen Sharp Container --- */
+        .app-wrapper {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .main-container {
+            width: 100%;
+            min-height: 100vh;
+            background: var(--glass-bg);
+            backdrop-filter: blur(45px) saturate(220%);
+            -webkit-backdrop-filter: blur(45px) saturate(220%);
+            display: flex;
+            flex-direction: column;
+            border-radius: 0;
+            border: none;
+            box-shadow: 0 0 100px rgba(0,0,0,0.5);
+        }
+
+        /* --- Header: Compact Vista Gloss --- */
+        header {
+            background: linear-gradient(to bottom, rgba(255,255,255,0.98) 0%, rgba(215,230,250,0.95) 100%);
+            padding: 10px 25px;
+            border-bottom: 1px solid rgba(0,0,0,0.3);
+            flex-shrink: 0;
+            z-index: 100;
+        }
+
+        .header-flex {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1500px;
+            width: 98%;
+            margin: 0 auto;
+        }
+
+        .logo-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .corporate-logo {
+            height: 65px;
+            width: auto;
+            filter: drop-shadow(0 3px 6px rgba(0,0,0,0.4));
+        }
+
+        .brand-text h1 {
+            font-size: 30px;
+            font-weight: 700;
+            color: #003b75;
+            letter-spacing: -1.5px;
+            text-shadow: 0 1px 0 #fff;
+            line-height: 1;
+        }
+
+        .brand-text p {
+            font-size: 11px;
+            color: #4a5a6a;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 2px;
+        }
+
+        /* --- Navigation Strips --- */
+        .nav-strip {
+            background: linear-gradient(to bottom, #d8e6f5 0%, #adbcca 100%);
+            border-bottom: 1px solid #6a7a8a;
+            padding: 0 25px;
+            display: flex;
+            justify-content: center;
+            gap: 4px;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.8);
+            z-index: 90;
+        }
+
+        .nav-btn {
+            background: linear-gradient(to bottom, #f0f5fa, #d0dbe9);
+            border: 1px solid #8da1b5;
+            border-bottom: none;
+            padding: 6px 25px;
+            font-weight: 700;
+            color: #334455;
+            cursor: pointer;
+            font-size: 12px;
+            border-radius: 6px 6px 0 0;
+            margin-top: 5px;
+            text-shadow: 0 1px 0 rgba(255,255,255,0.8);
+            transition: all 0.1s;
+        }
+
+        .nav-btn:hover {
+            filter: brightness(1.05);
+            margin-top: 3px;
+            padding-top: 10px;
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(to bottom, #ffffff 0%, #f0f5fa 100%);
+            border-bottom: 2px solid #ffffff;
+            color: #000;
+            margin-bottom: -1px;
+            padding-bottom: 12px;
+            box-shadow: 0 -3px 8px rgba(0,0,0,0.15);
+        }
+
+        /* --- Unified Multi-Column Workspace --- */
+        main.workspace-grid {
+            max-width: 1500px;
+            width: 98%;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 20px;
+            padding: 20px;
+            flex-grow: 1;
+        }
+
+        /* --- Internal Boxes: Rounded & 3D --- */
+        .glass-box {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid #99aac0;
+            border-radius: var(--radius-ui);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            margin-bottom: 20px;
+            overflow: hidden;
+            border-top: 1px solid #fff;
+            border-left: 1px solid #fff;
+        }
+
+        .box-header {
+            background: linear-gradient(to bottom, #72b0e8 0%, #4e92d2 50%, #2578c1 50%, #1a5ea3 100%);
+            color: white;
+            padding: 8px 20px;
+            font-weight: 700;
+            font-size: 15px;
+            text-shadow: 0 -1px 1px rgba(0,0,0,0.6);
+            border-bottom: 1px solid #0b2e4d;
+            position: relative;
+        }
+
+        .box-header::before {
+            content: '';
+            position: absolute;
+            top: 1px; left: 1px; right: 1px; height: 40%;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.5), transparent);
+            border-radius: 8px 8px 2px 2px;
+        }
+
+        .box-body {
+            padding: 20px;
+        }
+
+        .info-section h3 {
+            color: #003b75;
+            font-size: 18px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+        }
+
+        /* --- Sidebar Modules --- */
+        .sidebar-module {
+            background: linear-gradient(135deg, #f0f7ff, #dae6f5);
+            border: 1px solid #a0b5cc;
+            border-radius: var(--radius-ui);
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+        }
+
+        .sidebar-module h4 {
+            color: #003b75;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            font-size: 13px;
+            letter-spacing: 1px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            padding-bottom: 3px;
+        }
+
+        /* --- The 3D GEL Button (Wet Reflective Aero Style) --- */
+        .elite-button {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 30px;
+            background: linear-gradient(to bottom, 
+                #00d1d1 0%, 
+                #00a3a3 50%,
+                #008080 50%,
+                #004d4d 100%
+            );
+            border: 1px solid #002d2d;
+            border-radius: 50px;
+            color: white;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.4);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+            overflow: hidden;
+            font-size: 13px;
+            transition: transform 0.1s, filter 0.2s;
+        }
+
+        .elite-button:hover {
+            filter: brightness(1.15) saturate(1.2);
+        }
+
+        .elite-button:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+
+        .elite-button::before {
+            content: '';
+            position: absolute;
+            top: 1px; left: 5%; width: 90%; height: 42%;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%);
+            border-radius: 40px 40px 10px 10px;
+        }
+
+        /* --- Graphics & Visuals --- */
+        .tech-visual {
+            width: 100%;
+            height: 220px;
+            background-image: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80');
+            background-size: cover;
+            background-position: center;
+            border-radius: 8px;
+            margin-top: 15px;
+            border: 1px solid #fff;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3), inset 0 0 20px rgba(255,255,255,0.5);
+            position: relative;
+        }
+
+        .tech-tag {
+            display: inline-block;
+            background: #fff;
+            border: 1px solid #ccc;
+            padding: 3px 10px;
+            border-radius: 50px;
+            font-size: 11px;
+            font-weight: 700;
+            margin: 2px;
+            color: #003b75;
+        }
+
+        .conduit-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px;
+            background: rgba(255,255,255,0.6);
+            border: 1px solid #c0d1e3;
+            border-radius: 6px;
+            color: #2a7abc;
+            text-decoration: none;
+            font-weight: 700;
+            margin-bottom: 8px;
+            font-size: 12px;
+        }
+
+        /* --- Footer --- */
+        footer {
+            background: linear-gradient(to bottom, #2c3e50 0%, #000 100%);
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            font-size: 12px;
+            border-top: 3px solid #2a7abc;
+            flex-shrink: 0;
+        }
+
+        /* --- Liaison Terminal --- */
+        .terminal-box {
+            background: #000;
+            border: 1px solid #333;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: inset 0 0 10px #000;
+        }
+        .terminal-box code, .terminal-box pre {
+            display: block;
+            background: transparent;
+            color: var(--elite-cyan);
+            font-family: 'Consolas', monospace;
+            font-weight: 700;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body>
+    <div class="app-wrapper">
+        <div class="main-container">
+            <!-- Corporate Header -->
+            <header>
+                <div class="header-flex">
+                    <div class="logo-group">
+                        <img src="https://i.postimg.cc/85mKDbX8/EliteSoftware-Company-Logo.png" alt="EliteSoftwareTech Logo" class="corporate-logo">
+                        <div class="brand-text">
+                            <h1>EliteSoftwareTech.cc</h1>
+                            <p>Information-First Engineering. Absolute System Purity.</p>
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div id="system-status-container" style="display: flex; align-items: center; gap: 8px; color: #2ecc71; font-weight: 800; font-size: 11px;">
+                            <div id="status-dot" style="width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; box-shadow: 0 0 8px #2ecc71;"></div>
+                            <span id="status-text">CORE SYSTEMS: NOMINAL</span>
+                        </div>
+                        <div style="font-size: 10px; color: #666; margin-top: 3px;">
+                            BUILD: 6.0.0.0_PRODUCTION | UPDATED: 03-APR-2026
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Navigation Tabs -->
+            <nav class="nav-strip" id="dynamic-nav"></nav>
+
+            <!-- Unified Workspace Grid -->
+            <main class="workspace-grid"><div class="main-column"><div class="glass-box"><div class="box-body" id="dynamic-content">Loading...</div></div></div></main>
+
+            <!-- Corporate Footer -->
+            <footer>
+                <div style="max-width: 1800px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                    <div>Copyright &copy; 2024-2026 EliteSoftware Co. Limited.</div>
+                    <div style="font-weight: 700; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.8);">
+                        EliteSoftware Site v6.0.0.0 - Created by: Zachary Whiteman & Google Gemini Ai. 2026-04-03 - 08:35:00
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- System Modal -->
+    <div id="elite-modal" class="modal-overlay" style="position: fixed; inset: 0; background: rgba(0,25,60,0.7); backdrop-filter: blur(20px); display: none; align-items: center; justify-content: center; z-index: 9999;">
+        <div class="glass-box" style="width: 800px; max-width: 90%; max-height: 85vh; display: flex; flex-direction: column; margin: 0;">
+            <div class="box-header" id="modal-title">System Message</div>
+            <div class="box-body" id="modal-content-area" style="padding: 25px; overflow-y: auto; flex-grow: 1; background: #fff;">
+                <p id="modal-message" style="font-size: 16px;">Process completed successfully.</p>
+            </div>
+            <div style="padding: 15px; background: #f0f5fa; border-top: 1px solid #ccc; display: flex; justify-content: flex-end; gap: 10px;">
+                <button class="elite-button" onclick="closeModal()">Close Console</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const archiveData = {
+            'vista-cp': {
+                title: 'Archive: Re-engineering the Windows Vista Control Panel',
+                content: `<h3>Skeuomorphic Hooking Analysis</h3><p>Research into <strong>pywin32</strong> and <strong>ctypes</strong> has revealed a method to invoke legacy CPL files directly while bypassing modern Immersive Control Panel redirections. By surgically targeting <code>shell32.dll</code>, we can restore the classic applet behaviors...</p><p>Technical Stack: Python 3.11, Win32 API, DLL Injection. [DOC LOADED FROM LOCAL ARCHIVE]`
+            },
+            'ltsc-aero': {
+                title: 'Archive: Windows 10 LTSC Vista Theme Builds',
+                content: `<h3>Hardening & Aesthetics</h3><p>This document outlines the protocol for stripping <strong>Windows 10 IOT LTSC</strong> of its modern telemetry layers and implementing <strong>SecureUXTheme</strong>. By using <strong>Windhawk</strong> modules for taskbar transparency, we can replicate the 2008 workstation feel without compromising kernel integrity.</p>`
+            },
+            'python-app': {
+                title: 'Archive: Creating Your First Application in Python',
+                content: `<h3>Foundational Engineering Protocol</h3><p>Python was developed for the sole purpose of simplifying the process of learning a programming language. In this article, we build a Python Application using <strong>PostgreSQL</strong> integration.</p><pre>import psycopg2\ndb_conn = psycopg2.connect("host=localhost dbname=test_db user=postgres")</pre><p>This archive details the complete pipeline from indentation standards to database commit logic.</p>`
+            },
+            'mmc-guide': {
+                title: 'Archive: Novice Guide to Microsoft Management Console',
+                content: `<h3>System Control via Snap-ins</h3><p>The <strong>MMC</strong> remains the core of Windows system administration. This guide masters the use of <code>gpedit.msc</code> and <code>services.msc</code> to ensure absolute node purity. By disabling unnecessary services and locking down local security policies, we achieve maximum workstation performance.</p>`
+            }
+        };
+
+        function openArchive(id) {
+            const data = archiveData[id];
+            if(!data) return;
+            document.getElementById('modal-title').textContent = data.title;
+            document.getElementById('modal-content-area').innerHTML = `<div class="info-section">${data.content}</div>`;
+            document.getElementById('elite-modal').style.display = 'flex';
+        }
+
+        function updateClock() {
+            const now = new Date();
+            const timeStr = now.getHours().toString().padStart(2, '0') + ':' + 
+                          now.getMinutes().toString().padStart(2, '0') + ':' + 
+                          now.getSeconds().toString().padStart(2, '0');
+            const clockEl = document.getElementById('system-clock');
+            if(clockEl) clockEl.textContent = timeStr;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        function checkDomainStatus() {
+            const statusText = document.getElementById('status-text');
+            const statusDot = document.getElementById('status-dot');
+            
+            // Image-based 'ping' is more reliable for root domains without CORS headers
+            const pingImg = new Image();
+            const timeout = setTimeout(() => {
+                statusText.textContent = 'CORE SYSTEMS: OFFLINE';
+                statusText.parentElement.style.color = '#e74c3c';
+                statusDot.style.background = '#e74c3c';
+                statusDot.style.boxShadow = '0 0 8px #e74c3c';
+            }, 8000);
+
+            pingImg.onload = pingImg.onerror = function() {
+                clearTimeout(timeout);
+                statusText.textContent = 'CORE SYSTEMS: NOMINAL';
+                statusText.parentElement.style.color = '#2ecc71';
+                statusDot.style.background = '#2ecc71';
+                statusDot.style.boxShadow = '0 0 8px #2ecc71';
+            };
+            // Appending timestamp to avoid cache
+            pingImg.src = "https://elitesoftwaretech.cc/favicon.ico?t=" + Date.now();
+        }
+        setInterval(checkDomainStatus, 60000); 
+        checkDomainStatus();
+
+        async function handleContact(e) {
+            e.preventDefault();
+            const btn = document.getElementById('contact-submit-btn');
+            const originalText = btn.textContent;
+            
+            // Visual Sending State
+            btn.disabled = true;
+            btn.style.opacity = '0.7';
+            btn.textContent = "UPLINKING SIGNAL...";
+
+            // Gather Data
+            const payload = {
+                operator: document.getElementById('contact-name').value,
+                relay: document.getElementById('contact-email').value,
+                priority: document.getElementById('contact-priority').value,
+                content: document.getElementById('contact-message').value,
+                timestamp: new Date().toISOString()
+            };
+
+            console.log("%c [LIAISON UPLINK INITIATED] ", "color: white; background: #2980b9; font-weight: bold;");
+            console.log("Payload:", payload);
+
+            // Simulation of network transit
+            await new Promise(resolve => setTimeout(resolve, 2000));
+
+            // Finalizing UI
+            document.getElementById('modal-title').textContent = "Transmission Successful";
+            document.getElementById('modal-message').textContent = `Signal from [${payload.operator}] has been encrypted and queued for processing at the Fingerlakes Node. Zachary Whiteman will be notified via Tier 2 Liaison protocol.`;
+            document.getElementById('elite-modal').style.display = 'flex';
+            
+            btn.disabled = false;
+            btn.style.opacity = '1';
+            btn.textContent = originalText;
+            e.target.reset();
+        }
+
+        function showPage(pageId) {
+            document.querySelectorAll('.page-view').forEach(p => p.style.display = 'none');
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            const target = document.getElementById('page-' + pageId);
+            if(target) {
+                target.style.display = 'block';
+                target.style.opacity = '0';
+                setTimeout(() => { target.style.opacity = '1'; target.style.transition = 'opacity 0.2s ease'; }, 10);
+            }
+            const btn = document.querySelector(`[onclick="showPage('${pageId}')"]`);
+            if(btn) btn.classList.add('active');
+            window.scrollTo(0,0);
+        }
+
+        function closeModal() {
+            document.getElementById('elite-modal').style.display = 'none';
+        }
+
+        function openSystemModal() {
+            const modal = document.getElementById('elite-modal');
+            const content = document.getElementById('modal-content-area');
+            const title = document.getElementById('modal-title');
+            
+            modal.style.display = 'flex';
+            title.textContent = "SYSTEM PROBE INITIATED";
+            content.innerHTML = `
+                <p style="margin-bottom: 10px; font-weight: 800;">Executing deep-layer hardware handshake...</p>
+                <div style="width: 100%; height: 20px; background: #ddd; border-radius: 4px; overflow: hidden; border: 1px solid #aaa; box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);">
+                    <div id="probe-progress" style="width: 0%; height: 100%; background: linear-gradient(to bottom, #ff00ff, #990099); transition: width 0.1s linear;"></div>
+                </div>
+                <p id="probe-status" style="font-size: 11px; margin-top: 10px; color: #666; font-family: monospace;">[WAITING]</p>
+            `;
+
+            let p = 0;
+            const statusMsgs = ["ALLOCATING BUFFERS", "BYPASSING KERNEL HOOKS", "READING CMOS", "VERIFYING PURE STATE", "HANDSHAKE COMPLETE"];
+            const interval = setInterval(() => {
+                p += Math.random() * 5;
+                if(p >= 100) {
+                    p = 100;
+                    clearInterval(interval);
+                    document.getElementById('probe-status').textContent = "[SUCCESS] NODE SECURED.";
+                } else {
+                    document.getElementById('probe-progress').style.width = p + '%';
+                    document.getElementById('probe-status').textContent = "[" + statusMsgs[Math.floor(p/25)] + "]";
+                }
+            }, 50);
+        }
+
+        function runDiagnostics() {
+            const log = document.getElementById('diagnostics-log');
+            log.textContent = "[INIT] FETCHING REAL-TIME NODE TELEMETRY...\n";
+            
+            const telemetry = [
+                `[SCAN] OS/BROWSER: ${navigator.userAgent.split(') ')[0].split('(')[1]}`,
+                `[SCAN] RESOLUTION: ${screen.width}x${screen.height} @ ${screen.colorDepth}-bit`,
+                `[SCAN] LOGICAL CORES: ${navigator.hardwareConcurrency || 'UNKNOWN'}`,
+                `[SCAN] DEVICE MEMORY: ~${navigator.deviceMemory || 'UNKNOWN'} GB`,
+                `[SCAN] NETWORK TYPE: ${navigator.connection ? navigator.connection.effectiveType.toUpperCase() : 'ETHERNET/STATIONARY'}`,
+                `[SCAN] LANG PREFERENCE: ${navigator.language}`,
+                `[SUCCESS] TELEMETRY CAPTURED. NODE IS PURITY-COMPLIANT.`
+            ];
+
+            let i = 0;
+            const interval = setInterval(() => {
+                if (i < telemetry.length) {
+                    log.textContent += telemetry[i] + "\n";
+                    i++;
+                } else {
+                    clearInterval(interval);
+                }
+            }, 300);
+        }
+
+        async function startSpeedTest() {
+            const btn = document.getElementById('start-speedtest-btn');
+            const progressContainer = document.getElementById('speed-progress-container');
+            const progressBar = document.getElementById('speed-progress-bar');
+            const statusLabel = document.getElementById('speed-status-label');
+            const pingDisplay = document.getElementById('speed-ping');
+            const downloadDisplay = document.getElementById('speed-download');
+            const uploadDisplay = document.getElementById('speed-upload');
+
+            btn.disabled = true;
+            btn.style.opacity = '0.5';
+            progressContainer.style.display = 'block';
+            progressBar.style.width = '0%';
+            
+            // 1. Latency (Ping) - High Precision
+            statusLabel.textContent = "Probing Latency (Fingerlakes Node -> Main Domain)...";
+            let pings = [];
+            for(let i=0; i<5; i++) {
+                const start = performance.now();
+                try {
+                    // Cache busting is critical for accurate ping
+                    await fetch('https://elitesoftwaretech.cc/?t=' + Date.now(), { 
+                        mode: 'no-cors', 
+                        cache: 'no-store',
+                        referrerPolicy: 'no-referrer'
+                    });
+                    pings.push(performance.now() - start);
+                } catch(e) {
+                    console.error("Ping Probe Failed:", e);
+                }
+                // Subtle delay between pings to avoid flood protection
+                await new Promise(r => setTimeout(r, 100));
+            }
+            const avgPing = pings.length ? Math.round(pings.reduce((a,b) => a+b)/pings.length) : 'TIMEOUT';
+            pingDisplay.textContent = avgPing + " ms";
+            progressBar.style.width = '20%';
+
+            // 2. Download Speed - 10MB Payload
+            statusLabel.textContent = "Measuring Download Throughput (10MB Data Burst)...";
+            const downloadUrl = "https://speed.cloudflare.com/__down?bytes=10485760"; 
+            const startTime = performance.now();
+            try {
+                const response = await fetch(downloadUrl, { cache: 'no-store' });
+                const reader = response.body.getReader();
+                let loaded = 0;
+                const total = 10485760; // 10MB exact
+                
+                while(true) {
+                    const {done, value} = await reader.read();
+                    if (done) break;
+                    loaded += value.length;
+                    let p = Math.min(20 + (loaded/total * 60), 80);
+                    progressBar.style.width = p + '%';
+                }
+                const duration = (performance.now() - startTime) / 1000;
+                // Megabits per second (standard decimal Mbps = bits / 1,000,000)
+                const mbps = ((loaded * 8) / 1000000) / duration;
+                downloadDisplay.textContent = mbps.toFixed(2) + " Mbps";
+            } catch(e) {
+                downloadDisplay.textContent = "ERR";
+                console.error("Download Probe Failed:", e);
+            }
+
+            // 3. Upload Speed - 2MB Payload
+            statusLabel.textContent = "Calculating Upload Capacity (2MB Data Uplink)...";
+            const uploadSize = 2 * 1024 * 1024; // 2MB
+            const blob = new Blob([new Uint8Array(uploadSize)]);
+            const upStart = performance.now();
+            try {
+                // Using httpbin for reliable POST testing
+                await fetch('https://httpbin.org/post', {
+                    method: 'POST',
+                    body: blob,
+                    cache: 'no-store'
+                });
+                const upDuration = (performance.now() - upStart) / 1000;
+                const upMbps = ((uploadSize * 8) / 1000000) / upDuration;
+                uploadDisplay.textContent = upMbps.toFixed(2) + " Mbps";
+            } catch(e) {
+                uploadDisplay.textContent = "ERR";
+                console.error("Upload Probe Failed:", e);
+            }
+
+            progressBar.style.width = '100%';
+            statusLabel.textContent = "Network Throughput Probe Complete.";
+            btn.disabled = false;
+            btn.style.opacity = '1';
+            btn.textContent = "Recalibrate Network";
+        }
+
+        let selectedImages = [];
+        function handleImageUpload(e) {
+            selectedImages = Array.from(e.target.files);
+            const preview = document.getElementById('img-preview');
+            preview.innerHTML = selectedImages.map(f => `<span class="tech-tag">${f.name}</span>`).join('');
+        }
+
+        async function processImages() {
+            if(!selectedImages.length) return alert("Select images first.");
+            const btn = document.querySelector('button[onclick="processImages()"]');
+            const originalText = btn.textContent;
+            btn.textContent = "Processing...";
+            btn.disabled = true;
+
+            const format = document.getElementById('img-format').value;
+            const scale = parseInt(document.getElementById('img-scale').value) / 100;
+            const depth = document.getElementById('img-depth').value;
+            
+            const zip = new JSZip();
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+
+            for(let i=0; i<selectedImages.length; i++) {
+                const file = selectedImages[i];
+                const img = new Image();
+                img.src = URL.createObjectURL(file);
+                await new Promise(r => img.onload = r);
+
+                canvas.width = img.width * scale;
+                canvas.height = img.height * scale;
+
+                if(depth === 'grayscale') {
+                    ctx.filter = 'grayscale(100%)';
+                } else if(depth === 'sepia') {
+                    ctx.filter = 'sepia(100%)';
+                } else {
+                    ctx.filter = 'none';
+                }
+
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                
+                const blob = await new Promise(r => canvas.toBlob(r, format, 0.9));
+                const ext = format.split('/')[1];
+                const newName = file.name.split('.')[0] + '_processed.' + ext;
+                zip.file(newName, blob);
+            }
+
+            const content = await zip.generateAsync({type:"blob"});
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(content);
+            link.download = "EliteSoftware_Images.zip";
+            link.click();
+
+            btn.textContent = originalText;
+            btn.disabled = false;
+        }
+
+        let selectedAudio = [];
+        function handleAudioUpload(e) {
+            selectedAudio = Array.from(e.target.files);
+            const status = document.getElementById('audio-status');
+            status.textContent = selectedAudio.length + " files queued for transcoding.";
+        }
+
+        function audioBufferToWav(buffer) {
+            let numOfChan = buffer.numberOfChannels,
+                length = buffer.length * numOfChan * 2 + 44,
+                bufferArr = new ArrayBuffer(length),
+                view = new DataView(bufferArr),
+                channels = [], i, sample,
+                offset = 0,
+                pos = 0;
+
+            function setUint16(data) { view.setUint16(offset, data, true); offset += 2; }
+            function setUint32(data) { view.setUint32(offset, data, true); offset += 4; }
+
+            setUint32(0x46464952); // "RIFF"
+            setUint32(length - 8); // file length - 8
+            setUint32(0x45564157); // "WAVE"
+
+            setUint32(0x20746d66); // "fmt " chunk
+            setUint32(16); // length = 16
+            setUint16(1); // PCM (uncompressed)
+            setUint16(numOfChan);
+            setUint32(buffer.sampleRate);
+            setUint32(buffer.sampleRate * 2 * numOfChan); // avg. bytes/sec
+            setUint16(numOfChan * 2); // block-align
+            setUint16(16); // 16-bit
+
+            setUint32(0x61746164); // "data" - chunk
+            setUint32(length - pos - 4); // chunk length
+
+            for (i = 0; i < buffer.numberOfChannels; i++)
+                channels.push(buffer.getChannelData(i));
+
+            while (pos < buffer.length) {
+                for (i = 0; i < numOfChan; i++) {
+                    sample = Math.max(-1, Math.min(1, channels[i][pos])); // clamp
+                    sample = (0.5 + sample < 0 ? sample * 32768 : sample * 32767) | 0;
+                    view.setInt16(offset, sample, true);
+                    offset += 2;
+                }
+                pos++;
+            }
+
+            return new Blob([bufferArr], { type: "audio/wav" });
+        }
+
+        async function processAudio() {
+            if(!selectedAudio.length) return alert("Select media files first.");
+            const btn = document.getElementById('audio-process-btn');
+            const status = document.getElementById('audio-status');
+            btn.disabled = true;
+            btn.style.opacity = '0.5';
+            
+            const zip = new JSZip();
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            const ctx = new AudioContext();
+
+            for(let i=0; i<selectedAudio.length; i++) {
+                const file = selectedAudio[i];
+                status.textContent = `Transcoding [${i+1}/${selectedAudio.length}]: ${file.name}...`;
+                try {
+                    const arrayBuffer = await file.arrayBuffer();
+                    const audioBuffer = await ctx.decodeAudioData(arrayBuffer);
+                    const wavBlob = audioBufferToWav(audioBuffer);
+                    const newName = file.name.split('.')[0] + '_transcoded.wav';
+                    zip.file(newName, wavBlob);
+                } catch(e) {
+                    console.error("Failed to decode:", file.name, e);
+                }
+            }
+
+            status.textContent = "Packaging archive...";
+            const content = await zip.generateAsync({type:"blob"});
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(content);
+            link.download = "EliteSoftware_Audio.zip";
+            link.click();
+
+            status.textContent = "Transcoding Complete.";
+            btn.disabled = false;
+            btn.style.opacity = '1';
+        }
+
+        console.log("%c EliteSoftware Station %c DENSE %c Build 6.0.0.0 ", 
+            "color: white; background: #2a7abc; font-weight: bold; padding: 4px; border-radius: 4px 0 0 4px;", 
+            "color: white; background: #27ae60; padding: 4px;",
+            "color: #444; background: #eee; padding: 4px; border-radius: 0 4px 4px 0;");
+    </script>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="../../DocsData.js"></script>
+<script src="DocsData.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const nav = document.getElementById('dynamic-nav');
+        const content = document.getElementById('dynamic-content');
+        
+        const docs = typeof EliteDocsData !== 'undefined' ? EliteDocsData : (typeof DocsData !== 'undefined' ? DocsData : {});
+        let first = true;
+        for (const [filename, markdown] of Object.entries(docs)) {
+            // Create tab button
+            const btn = document.createElement('button');
+            btn.className = 'nav-btn' + (first ? ' active' : '');
+            btn.textContent = filename.replace('.md', '').toUpperCase();
+            
+            btn.onclick = function() {
+                // Remove active from all
+                document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                // Render markdown
+                content.innerHTML = marked.parse(markdown);
+            };
+            
+            nav.appendChild(btn);
+            
+            if (first) {
+                content.innerHTML = marked.parse(markdown);
+                first = false;
+            }
+        }
+    });
+</script>
+</body>
+</html>

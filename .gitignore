@@ -1,2 +1,26 @@
-
+# Backups & Logs
 Backups/
+*.log
+BuildOutputx64/Logs/
+BuildOutputx86/Logs/
+*.lock
+
+# Internal Documentation & Prompt Outputs
+Documentation/
+Documentation/Prompt_Outputs/
+Documentation/Future_Refactor_References/
+Documentation/References/
+Prompt_Outputs/
+Future_Refactor_References/
+GEMINI.md
+ImplementationPlan.md
+
+# Build Artifacts & Intermediate Files
+*.obj
+*.pdb
+*.res
+*.tlog
+*.idb
+*.iobj
+*.ipdb
+.vs/

@@ -1,3 +1,4 @@
+#include "..\EliteLogger.h"
 #include <iostream>
 #include <windows.h>
 #include <string>
@@ -21,6 +22,7 @@ string GetTimeSafe() {
 }
 
 int main(int argc, char* argv[]) {
+    InitEliteLogger();
     string targetDir = "";
     string outDir = "";
     bool useCab = false;
@@ -71,7 +73,7 @@ int main(int argc, char* argv[]) {
         
         cout << "Creating CAB Backup...\n";
         string cmd = "makecab.exe /F \"" + ddfFile + "\"";
-        system(cmd.c_str());
+        ExecuteCommand(cmd);
         DeleteFileA(ddfFile.c_str());
         DeleteFileA("setup.inf");
         DeleteFileA("setup.rpt");
@@ -80,7 +82,7 @@ int main(int argc, char* argv[]) {
         string wimFile = outDir + "\\Backup_" + ts + ".wim";
         cout << "Creating WIM Backup...\n";
         string cmd = "dism.exe /Capture-Image /ImageFile:\"" + wimFile + "\" /CaptureDir:\"" + targetDir + "\" /Name:\"Backup_" + ts + "\"";
-        system(cmd.c_str());
+        ExecuteCommand(cmd);
         cout << "WIM Backup saved to: " << wimFile << "\n";
     }
 
@@ -90,3 +92,4 @@ int main(int argc, char* argv[]) {
     }
     return 0;
 }
+

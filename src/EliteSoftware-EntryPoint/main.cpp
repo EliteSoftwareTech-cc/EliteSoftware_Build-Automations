@@ -1,3 +1,4 @@
+#include "..\EliteLogger.h"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -34,27 +35,10 @@ string FindToolInVar(const string& toolName) {
     return toolName;
 }
 
-int ExecuteCommand(const string& cmd) {
-    cout << "[EliteBuild] Executing: " << cmd << endl;
-    STARTUPINFOA si;
-    PROCESS_INFORMATION pi;
-    ZeroMemory(&si, sizeof(si));
-    si.cb = sizeof(si);
-    ZeroMemory(&pi, sizeof(pi));
 
-    if (!CreateProcessA(NULL, (LPSTR)cmd.c_str(), NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi)) {
-        cerr << "[EliteBuild] ERROR: Failed to execute. Error: " << GetLastError() << endl;
-        return 1;
-    }
-    WaitForSingleObject(pi.hProcess, INFINITE);
-    DWORD exitCode;
-    GetExitCodeProcess(pi.hProcess, &exitCode);
-    CloseHandle(pi.hProcess);
-    CloseHandle(pi.hThread);
-    return exitCode;
-}
 
 int main(int argc, char* argv[]) {
+    InitEliteLogger();
     vector<string> configs;
     vector<string> toolsToRun;
 
@@ -111,3 +95,4 @@ int main(int argc, char* argv[]) {
     }
     return 0;
 }
+
