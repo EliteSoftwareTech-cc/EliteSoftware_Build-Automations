@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Settings>
+  <History />
+  <Credentials />
+  <Favorites>
+    <Favorite>
+      <Title>System Command Prompt</Title>
+      <Description>Launch an interactive Cmd Shell under NT AUTHORITY\SYSTEM context.</Description>
+      <Path>cmd.exe</Path>
+      <Args>
+      </Args>
+      <WorkingDir>C:\Users\Administrator\Desktop\Projects\EliteSoftware_Build-Automations\BuildOutputx64</WorkingDir>
+      <Scope>NT AUTHORITY\SYSTEM</Scope>
+      <User>
+      </User>
+      <Pass>
+      </Pass>
+      <Interactive>true</Interactive>
+      <NoPassword>false</NoPassword>
+    </Favorite>
+    <Favorite>
+      <Title>Registry Editor (SYSTEM)</Title>
+      <Description>Launch Registry Editor under NT AUTHORITY\SYSTEM to access system-protected keys.</Description>
+      <Path>regedit.exe</Path>
+      <Args>
+      </Args>
+      <WorkingDir>C:\Users\Administrator\Desktop\Projects\EliteSoftware_Build-Automations\BuildOutputx64</WorkingDir>
+      <Scope>NT AUTHORITY\SYSTEM</Scope>
+      <User>
+      </User>
+      <Pass>
+      </Pass>
+      <Interactive>true</Interactive>
+      <NoPassword>false</NoPassword>
+    </Favorite>
+  </Favorites>
+  <LastSettings>
+    <Scope>NT AUTHORITY\SYSTEM</Scope>
+    <User>
+    </User>
+    <Pass>
+    </Pass>
+    <Interactive>true</Interactive>
+    <NoPassword>false</NoPassword>
+    <ArtificialDelay>500</ArtificialDelay>
+    <ToolbarIconSize>24</ToolbarIconSize>
+    <AlwaysOnTop>true</AlwaysOnTop>
+    <StayOpenOnExecution>true</StayOpenOnExecution>
+    <MinimizeToTrayOnClose>false</MinimizeToTrayOnClose>
+    <ShowTooltips>true</ShowTooltips>
+    <WindowOpacity>100</WindowOpacity>
+    <BannerTheme>Vista Teal</BannerTheme>
+  </LastSettings>
+</Settings>

@@ -1,0 +1,1 @@
+icon.ico located in this directory should be applied and used directly inside all exe files as their main icon unless alternate is provided. use this as source of truth copying it to each project sub folder directly and embed it into each exe during build.
