@@ -1,4 +1,4 @@
-<div align="center"> <a href='https://i.postimg.cc/85mKDbX8/EliteSoftware-Company-Logo.png' target='_blank'><img src='https://i.postimg.cc/85mKDbX8/EliteSoftware-Company-Logo.png' height='80' border='0' alt='Elite-Software-Company-Logo'></a> </div>
+﻿<div align="center"> <a href='https://i.postimg.cc/85mKDbX8/EliteSoftware-Company-Logo.png' target='_blank'><img src='https://i.postimg.cc/85mKDbX8/EliteSoftware-Company-Logo.png' height='80' border='0' alt='Elite-Software-Company-Logo'></a> </div>
 
 # EliteSoftware_Build-Automations
 
@@ -8,6 +8,64 @@ Welcome to the official source repository for [EliteSoftware_Build-Automations](
 This project serves as the digital station for EliteSoftware's engineering initiatives, blending the peak of **Frutiger Aero** (2007-2011) aesthetics with hardened, high-performance architectures of 2026.
 
 ### 🔗 Quick Links
+
+#### ?? Master Tools Source Code
+- ?? [EliteSoftware-ADBManager](src/EliteSoftware-ADBManager/README.md)
+- ?? [EliteSoftware-AssetManager](src/EliteSoftware-AssetManager/README.md)
+- ?? [EliteSoftware-BuildLocator](src/EliteSoftware-BuildLocator/README.md)
+- ?? [EliteSoftware-CertManager](src/EliteSoftware-CertManager/README.md)
+- ?? [EliteSoftware-ClipSaver](src/EliteSoftware-ClipSaver/README.md)
+- ?? [EliteSoftware-CLSIDGenerator](src/EliteSoftware-CLSIDGenerator/README.md)
+- ?? [EliteSoftware-ComLoader](src/EliteSoftware-ComLoader/README.md)
+- ?? [EliteSoftware-Compiler](src/EliteSoftware-Compiler/README.md)
+- ?? [EliteSoftware-DevServer](src/EliteSoftware-DevServer/README.md)
+- ?? [EliteSoftware-DocConverter](src/EliteSoftware-DocConverter/README.md)
+- ?? [EliteSoftware-DotNetEnv](src/EliteSoftware-DotNetEnv/README.md)
+- ?? [EliteSoftware-DummyDllGen](src/EliteSoftware-DummyDllGen/README.md)
+- ?? [EliteSoftware-DuplicateSweeper](src/EliteSoftware-DuplicateSweeper/README.md)
+- ?? [EliteSoftware-EasySigner](src/EliteSoftware-EasySigner/changelog.md)
+- ?? [EliteSoftware-EntryPoint](src/EliteSoftware-EntryPoint/README.md)
+- ?? [EliteSoftware-EnvManager](src/EliteSoftware-EnvManager/README.md)
+- ?? [EliteSoftware-EnvManager_GUI](src/EliteSoftware-EnvManager_GUI/README.md)
+- ?? [EliteSoftware-ExecPolToggle](src/EliteSoftware-ExecPolToggle/README.md)
+- ?? [EliteSoftware-EXEKiller](src/EliteSoftware-EXEKiller/README.md)
+- ?? [EliteSoftware-FolderScanner](src/EliteSoftware-FolderScanner/README.md)
+- ?? [EliteSoftware-GitHub_Repo-Automation](src/EliteSoftware-GitHub_Repo-Automation/changelog.md)
+- ?? [EliteSoftware-HostConfigurator](src/EliteSoftware-HostConfigurator/README.md)
+- ?? [EliteSoftware-IconReplacer](src/EliteSoftware-IconReplacer/README.md)
+- ?? [EliteSoftware-InnoCreator](src/EliteSoftware-InnoCreator/README.md)
+- ?? [EliteSoftware-LaunchAsTI](src/EliteSoftware-LaunchAsTI/README.md)
+- ?? [EliteSoftware-MetaStamper](src/EliteSoftware-MetaStamper/README.md)
+- ?? [EliteSoftware-NetworkManager](src/EliteSoftware-NetworkManager/README.md)
+- ?? [EliteSoftware-OptiLink](src/EliteSoftware-OptiLink/README.md)
+- ?? [EliteSoftware-Packager](src/EliteSoftware-Packager/README.md)
+- ?? [EliteSoftware-PIDKiller](src/EliteSoftware-PIDKiller/README.md)
+- ?? [EliteSoftware-ProfileManager](src/EliteSoftware-ProfileManager/README.md)
+- ?? [EliteSoftware-ProjectBackup](src/EliteSoftware-ProjectBackup/README.md)
+- ?? [EliteSoftware-PSWrapper](src/EliteSoftware-PSWrapper/README.md)
+- ?? [EliteSoftware-RCManager](src/EliteSoftware-RCManager/README.md)
+- ?? [EliteSoftware-ReadmeGenerator](src/EliteSoftware-ReadmeGenerator/README.md)
+- ?? [EliteSoftware-RegSnapshot](src/EliteSoftware-RegSnapshot/README.md)
+- ?? [EliteSoftware-RepoCloner](src/EliteSoftware-RepoCloner/README.md)
+- ?? [EliteSoftware-ServiceForge](src/EliteSoftware-ServiceForge/README.md)
+- ?? [EliteSoftware-ShortcutForge](src/EliteSoftware-ShortcutForge/README.md)
+- ?? [EliteSoftware-SiteCompiler](src/EliteSoftware-SiteCompiler/README.md)
+- ?? [EliteSoftware-SmartRegsvr](src/EliteSoftware-SmartRegsvr/README.md)
+- ?? [EliteSoftware-Symlinker](src/EliteSoftware-Symlinker/README.md)
+- ?? [EliteSoftware-SystemRestore](src/EliteSoftware-SystemRestore/README.md)
+- ?? [EliteSoftware-TaskAssassin](src/EliteSoftware-TaskAssassin/README.md)
+- ?? [EliteSoftware-VersionBumper](src/EliteSoftware-VersionBumper/README.md)
+- ?? [EliteSoftware-VSBuildTools](src/EliteSoftware-VSBuildTools/README.md)
+- ?? [EliteSoftware-Win7Enabler](src/EliteSoftware-Win7Enabler/README.md)
+- ?? [FileSplitter_GUI](src/FileSplitter_GUI/README.md)
+- ?? [IconManager_CLI](src/IconManager_CLI/GEMINI.md)
+- ?? [IcoToPngConverter_CLI](src/IcoToPngConverter_CLI/README.md)
+- ?? [PsExec64Launcher_GUI](src/PsExec64Launcher_GUI/readme.md)
+- ?? [ResourceAlchemyHacker_CLI](src/ResourceAlchemyHacker_CLI/README.md)
+- ?? [ResourceAlchemyHacker_GUI](src/ResourceAlchemyHacker_GUI/README.md)
+- ?? [ResourceAlchemyHacker_ShellExt](src/ResourceAlchemyHacker_ShellExt/README.md)
+
+#### ?? Documentation Links
 - 📖 [Continuous Changelog](changelog.md)
 - 🔄 [Execution Order & Workflow Choreography](Execution_Order_and_Workflows.md)
 - 🤖 [Machine-Readable Agent Protocols](agent_protocols.md)

@@ -1,0 +1,6 @@
+#pragma once
+#define RAH_VERSION_MAJOR 1
+#define RAH_VERSION_MINOR 0
+#define RAH_VERSION_PATCH 0
+#define RAH_VERSION_BUILD 0
+#define RAH_VERSION_ANSI "1.0.0.0"

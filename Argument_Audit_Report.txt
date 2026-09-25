@@ -1,0 +1,120 @@
+EliteSoftware C++ Argument Audit Report
+=========================================
+
+[EliteSoftware-ADBManager]
+Arguments Found in Code: --ai-mode
+
+[EliteSoftware-AssetManager]
+Arguments Found in Code: --url, --out
+
+[EliteSoftware-CertManager]
+Arguments Found in Code: --cert, --uninstall
+
+[EliteSoftware-ClipSaver]
+Arguments Found in Code: --dir
+
+[EliteSoftware-CLSIDGenerator]
+Arguments Found in Code: --name, --list, --filter
+
+[EliteSoftware-ComLoader]
+Arguments Found in Code: --dll, --unregister
+
+[EliteSoftware-Compiler]
+Arguments Found in Code: /help, --help, --config
+
+[EliteSoftware-DocConverter]
+Arguments Found in Code: --in, --out
+
+[EliteSoftware-DummyDllGen]
+Arguments Found in Code: --name, --exports
+
+[EliteSoftware-DuplicateSweeper]
+Arguments Found in Code: --dir, --ext, --auto-delete
+
+[EliteSoftware-EasySigner]
+Arguments Found in Code: --help, /help, --file, --password, --ai-mode
+
+[EliteSoftware-EntryPoint]
+Arguments Found in Code: --ai-mode, --config, --tool
+
+[EliteSoftware-EnvManager]
+Arguments Found in Code: --var, --set, --append, --remove
+
+[EliteSoftware-ExecPolToggle]
+Arguments Found in Code: --level
+
+[EliteSoftware-FolderScanner]
+Arguments Found in Code: --dir
+
+[EliteSoftware-HostConfigurator]
+Arguments Found in Code: --domain, --ip, --remove
+
+[EliteSoftware-IconReplacer]
+Arguments Found in Code: --exe, --icon
+
+[EliteSoftware-InnoCreator]
+Arguments Found in Code: --ai-mode, --generate, --compile, --template, --out
+
+[EliteSoftware-LaunchAsTI]
+Arguments Found in Code: --cmd
+
+[EliteSoftware-MetaStamper]
+Arguments Found in Code: --version, --company, --product, --out
+
+[EliteSoftware-NetworkManager]
+Arguments Found in Code: --flush-dns
+
+[EliteSoftware-OptiLink]
+Arguments Found in Code: --server, --target
+
+[EliteSoftware-Packager]
+Arguments Found in Code: /help, --help, --config
+
+[EliteSoftware-ProjectBackup]
+Arguments Found in Code: --dir, --out, --cab
+
+[EliteSoftware-PSWrapper]
+Arguments Found in Code: --ps1, --exe, --icon, --disable-sta, --show-console
+
+[EliteSoftware-RCManager]
+Arguments Found in Code: --rc, --res, --icon
+
+[EliteSoftware-ReadmeGenerator]
+Arguments Found in Code: /help
+
+[EliteSoftware-RegSnapshot]
+Arguments Found in Code: --key, --export, --restore
+
+[EliteSoftware-RepoCloner]
+Arguments Found in Code: --config, --dir
+
+[EliteSoftware-ServiceForge]
+Arguments Found in Code: --name, --display, --bin, --remove
+
+[EliteSoftware-ShortcutForge]
+Arguments Found in Code: --target, --out, --icon, --args, --workdir
+
+[EliteSoftware-SiteCompiler]
+Arguments Found in Code: --dir, --out
+
+[EliteSoftware-SmartRegsvr]
+Arguments Found in Code: --file, --ai-mode
+
+[EliteSoftware-Symlinker]
+Arguments Found in Code: --source, --link, --type
+
+[EliteSoftware-SystemRestore]
+Arguments Found in Code: --desc
+
+[EliteSoftware-TaskAssassin]
+Arguments Found in Code: --targets
+
+[IconManager_CLI]
+Arguments Found in Code: --remove-halo, --remove-bg, --remove-bg-white, --remove-bg-black, --remove-bg-tl, --remove-bg-tr, --remove-bg-bl, --remove-bg-br
+
+[ResourceAlchemyHacker_CLI]
+Arguments Found in Code: /list, /extract, /replace, /add, /delete, /flatten
+
+[ResourceAlchemyHacker_GUI]
+Arguments Found in Code: /replace, /flatten, /extract, /delete
+
